@@ -8,6 +8,7 @@
 
 /*Definir os pinos dos sensor*/
 #define dhtPin 4 //Sensor de temperatura e umidade - DHT11.
+#define dbMeterPin 15 //Entrada analógica do sensor de ruído - MAX9814
 #define RXD2 16 //Sensor de CO2 - MH-Z14A.
 #define TXD2 17 //Sensor de CO2 - MH-Z14A.
 BH1750 lightMeter (0x23); //Sensor de luminosidade - BH1750 (Addr: 0x23)
@@ -27,6 +28,7 @@ uint16_t lux; //Valor em Lux referente à luminosidade.
 float eco2; //Equivalente de Dióxido de carbono.
 float voc; //Total de compostos organicos voláteis.
 float valorCO2; //Dióxido de carbono. 
+float dbLevel; //Valor em DB de ruído do ambiente
 
 /*Configurações de rede e conexão MQTT ThingSpeak*/
 char ssid[] = "XXXXXXXX"; //nome da rede. PACO Internet
@@ -47,6 +49,8 @@ const char* server = "mqtt.thingspeak.com";
 
 unsigned long lastConnectionTime = 0; //Tempo da última conexão.
 const unsigned long postingInterval = 20000L; //Tempo de postagem, 20 segundos.
+const int sampleWindow = 50; // Janela de amostragem em mS (50 mS = 20Hz)
+unsigned int sample;
 
 void setup() {
   Serial.begin(115200); //Iniciar porta serial - USB.
@@ -63,6 +67,7 @@ void setup() {
   lightMeter.begin();
   
   pinMode(dhtPin, INPUT); //Configurar modo dos pinos.
+   pinMode(dbMeterPin, INPUT); //Configurar modo dos pinos.
   
   /*Conectar a rede wifi*/
   while(status != WL_CONNECTED){
@@ -87,6 +92,52 @@ void loop() {
   if(millis() - lastConnectionTime > postingInterval){
     mqttpublish();
     }
+}
+
+//Faz o map de valores, retornando floats (Necessário pois o map nativo retorna apenas inteiros).
+float mapfloat(float x, float in_min, float in_max, float out_min, float out_max)
+{
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+
+float readDb(){
+
+   unsigned long startMillis= millis();  // Inicio da janela de amostragem
+   unsigned int peakToPeak = 0;   // Nível pico a pico
+
+   unsigned int signalMax = 0;  //Valor análogico mínimo
+   unsigned int signalMin = 1024;  //Valor analógico máximo
+
+   // Coleta dados por aproximadamente 50ms
+   while (millis() - startMillis < sampleWindow)
+   {
+      sample = analogRead(dbMeterPin); //Faz a leitura analógica do MAX9814
+      if (sample < 1024) 
+      {
+         if (sample > signalMax)
+         {
+            signalMax = sample;  // Salva apenas os valores máximos
+         }
+         else if (sample < signalMin)
+         {
+            signalMin = sample;  // Salva apenas os valores mínimos
+         }
+      }
+   }
+   peakToPeak = signalMax - signalMin;  // Máximo - Mínimo = Amplitude pico a pico
+   double volts = (peakToPeak * 3.0) / 1024;  // Converte para um valor de tensao aproximado
+
+   
+   
+   if (volts <= 5){ //Valor máximo possível 
+      float value = mapfloat(volts, 0.00, 3.00, 37.00, 82.00);
+      return value;
+    
+   } else {
+      return 37;
+   }
+
 }
 
 
@@ -150,6 +201,7 @@ void reconnect(){
   temp = dht.readTemperature(); //Ler temperatura - DHT11.
   umid = dht.readHumidity(); //Ler umidade - DHT11.
   lux = lightMeter.readLightLevel(); //Ler luminosidade - BH1750.
+  dbLevel = readDb();
   
   //Verifica se a leitura não um número.
   if(isnan(umid) || isnan(temp)){
@@ -178,7 +230,7 @@ void reconnect(){
   valorCO2 = leituraGas(); //Concentração de CO2 - MH-Z14A.
   
   //String de dados para enviar a Thingspeak.
-  String dados = String("field1=" + String(temp, 2) + "&field2=" + String(umid, 2) + "&field3=" +String(eco2, 2)+ "&field4=" +String(voc, 2)+ "&field5=" + String(valorCO2)+ "&field6=" + String(lux,5));
+  String dados = String("field1=" + String(temp, 2) + "&field2=" + String(umid, 2) + "&field3=" +String(eco2, 2)+ "&field4=" +String(voc, 2)+ "&field5=" + String(valorCO2)+ "&field6=" + String(lux,5)+ "&field7=" + String(dbLevel,2));
   int tamanho = dados.length();
   char msgBuffer[tamanho];
   dados.toCharArray(msgBuffer,tamanho+1);
