@@ -1,4 +1,4 @@
-<img src="https://lh5.googleusercontent.com/JeE1PLW4utoXB2UFg5upbdLsSfSHJQHCrjzA2YnOFvCuF6AVAhwwDP2uFrEafLMzI59qB-qF=w16383">
+<img src="https://lh3.googleusercontent.com/pgQBoMnVACPDccM8j6mCv6_shyoWtdKfOJausCkBCi2GqXCUxhJbESWbkSldZCO1EPC7gc_a=w16383">
 
 [AirPure](https://sites.google.com/view/airpure/pagina-inicial?authuser=0) é um sistema embarcado para análise de qualidade do ar.
 
