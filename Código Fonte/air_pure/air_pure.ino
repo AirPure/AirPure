@@ -1,5 +1,6 @@
 /*Bibliotecas*/
 #include <PubSubClient.h>
+#include <BH1750.h>
 #include <DHT.h>
 #include <WiFi.h>
 #include <SPI.h>
@@ -9,6 +10,7 @@
 #define dhtPin 4 //Sensor de temperatura e umidade - DHT11.
 #define RXD2 16 //Sensor de CO2 - MH-Z14A.
 #define TXD2 17 //Sensor de CO2 - MH-Z14A.
+BH1750 lightMeter (0x23); //Sensor de luminosidade - BH1750 (Addr: 0x23)
 
 
 /*Configuração de sensores.*/
@@ -21,6 +23,7 @@ Adafruit_CCS811 ccs; //Objeto sensor de TVOC.
 //Definir variaveis globais.
 float temp; //Temperatura em graus celsius.
 float umid; //Umidade relativa.
+uint16_t lux; //Valor em Lux referente à luminosidade.
 float eco2; //Equivalente de Dióxido de carbono.
 float voc; //Total de compostos organicos voláteis.
 float valorCO2; //Dióxido de carbono. 
@@ -57,6 +60,7 @@ void setup() {
   }
   
   dht.begin(); //Inicializar DHT11.
+  lightMeter.begin();
   
   pinMode(dhtPin, INPUT); //Configurar modo dos pinos.
   
@@ -145,12 +149,20 @@ void reconnect(){
   //DHT11 - Temperatura e Umidade.
   temp = dht.readTemperature(); //Ler temperatura - DHT11.
   umid = dht.readHumidity(); //Ler umidade - DHT11.
+  lux = lightMeter.readLightLevel(); //Ler luminosidade - BH1750.
   
   //Verifica se a leitura não um número.
   if(isnan(umid) || isnan(temp)){
   Serial.println("Erro de leitura DHT11!");
   return;
   }
+
+  //Verifica se a leitura não um número.
+  if(isnan(lux)){
+  Serial.println("Erro de leitura BH1750!");
+  return;
+  }
+  
 
   //CCS811 - TVOC
    if(ccs.available()){
@@ -166,7 +178,7 @@ void reconnect(){
   valorCO2 = leituraGas(); //Concentração de CO2 - MH-Z14A.
   
   //String de dados para enviar a Thingspeak.
-  String dados = String("field1=" + String(temp, 2) + "&field2=" + String(umid, 2) + "&field3=" +String(eco2, 2)+ "&field4=" +String(voc, 2)+ "&field5=" + String(valorCO2));
+  String dados = String("field1=" + String(temp, 2) + "&field2=" + String(umid, 2) + "&field3=" +String(eco2, 2)+ "&field4=" +String(voc, 2)+ "&field5=" + String(valorCO2)+ "&field6=" + String(lux,5));
   int tamanho = dados.length();
   char msgBuffer[tamanho];
   dados.toCharArray(msgBuffer,tamanho+1);
