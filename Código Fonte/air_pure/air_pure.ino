@@ -13,7 +13,7 @@
 
 /*Configuração de sensores.*/
 //DHT11 - Temperatura e Umidade.
-#define dhtType DHT11 //Tipo do sensor DHT.
+#define dhtType DHT22 //Tipo do sensor DHT.
 DHT dht(dhtPin, dhtType); //Objeto sensor de temperatura e umidade
 //CSS811 - TVOC
 Adafruit_CCS811 ccs; //Objeto sensor de TVOC.
@@ -31,7 +31,7 @@ char pass[] = "XXXXXXXXXX"; //senha da rede. SEM SENHA
 char mqttUserName[] = "airpure"; //nome de usuário do MQTT
 char mqttPass[] = "XXXXXXXXXXXXXXXX"; //chave de acesso do MQTT.
 char writeAPIKey[] = "XXXXXXXXXXXXXXXX"; //chave de escrita, canal Thingspeak.
-long channelID = XXXXXX; //Identificação do canal Thingspeak - Pessoal.
+long channelID = 123; //Identificação do canal Thingspeak - Pessoal.
 
 /*Definir identificação de cliente, randomico.*/
 static const char alphanum[] = "0123456789""ABCDEFGHIJKLMNOPQRSTUVWXYZ""abcdefghijklmnopqrstuvwxyz";
