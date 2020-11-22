@@ -1,4 +1,4 @@
-<img src="https://lh3.googleusercontent.com/pgQBoMnVACPDccM8j6mCv6_shyoWtdKfOJausCkBCi2GqXCUxhJbESWbkSldZCO1EPC7gc_a=w16383">
+<img src="https://i.ibb.co/kBXKzV7/header.png">
 
 [AirPure](https://sites.google.com/view/airpure/pagina-inicial?authuser=0) é um sistema embarcado para análise de qualidade do ar.
 
@@ -22,11 +22,29 @@ a necessidade de ações, como a ventilação adequada, para melhoria da qualida
 consequentemente a saúde dos ocupantes.
 
 
-### Tecnologia
-...........
+### Tecnologias
+* MQTT :white_check_mark:
+* IoT :white_check_mark:
+* ThingSpeak :white_check_mark:
+* WiFi :white_check_mark:
 
-### Autores
-...........
+### Hardware
+* ESP32 :white_check_mark:
+* MHZ-14A :white_check_mark:
+* CCS811 :white_check_mark:
+* DHT-22 :white_check_mark:
+* MAX-9814 :white_check_mark:
+* BH-1750 :white_check_mark:
+
+### Participantes do Projeto
+* Prof. Dr. Renato Bulcão Neto :white_check_mark:
+* Prof. Dr. Iwens Sene Júnior :white_check_mark:
+* Bruna Michelly  :white_check_mark:
+* Melyssa Mariana  :white_check_mark:
+* Isabela França :white_check_mark:
+* Lucas Souza  :white_check_mark:
+* Antonio Emílio  :white_check_mark:
+
 
 ### Esquemático
 <img src="https://i.ibb.co/wz89g4Z/esquem-tico.png">
