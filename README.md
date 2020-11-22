@@ -33,9 +33,9 @@ consequentemente a saúde dos ocupantes.
 <img src="https://i.ibb.co/F6QpMSQ/tabela.png">
 
 ### Canais ThingSpeak
-Canal 1: [Clique Aqui](https://thingspeak.com/channels/1160801)</br>
-Canal 2: [Clique Aqui](https://thingspeak.com/channels/1167146)</br>
-Canal 3: [Clique Aqui](https://thingspeak.com/channels/1177969)</br>
+Canal 1 (1160801): [Clique Aqui](https://thingspeak.com/channels/1160801)</br>
+Canal 2 (1167146): [Clique Aqui](https://thingspeak.com/channels/1167146)</br>
+Canal 3 (1177969): [Clique Aqui](https://thingspeak.com/channels/1177969)</br>
 
 ### API Keys
 MQTT PASS: 0QIMS6VELRQUUC0A (GERAL)</br>
