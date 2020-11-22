@@ -30,6 +30,7 @@ consequentemente a saúde dos ocupantes.
 
 ### Esquemático
 <img src="https://i.ibb.co/wz89g4Z/esquem-tico.png">
+<img src="https://i.ibb.co/F6QpMSQ/tabela.png">
 
 ### Como visualizar a aplicação
 Para acessar, [clique aqui.](https://sites.google.com/view/airpure/pagina-inicial?authuser=0)
