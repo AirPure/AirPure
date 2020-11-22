@@ -23,27 +23,27 @@ consequentemente a saúde dos ocupantes.
 
 
 ### Tecnologias
-* MQTT :white_check_mark:
-* IoT :white_check_mark:
-* ThingSpeak :white_check_mark:
-* WiFi :white_check_mark:
+* :white_check_mark: MQTT 
+* :white_check_mark: IoT 
+* :white_check_mark: ThingSpeak 
+* :white_check_mark: WiFi 
 
 ### Hardware
-* ESP32 :white_check_mark:
-* MHZ-14A :white_check_mark:
-* CCS811 :white_check_mark:
-* DHT-22 :white_check_mark:
-* MAX-9814 :white_check_mark:
-* BH-1750 :white_check_mark:
+* :floppy_disk: ESP32 
+* :floppy_disk: MHZ-14A 
+* :floppy_disk: CCS811 
+* :floppy_disk: DHT-22 
+* :floppy_disk: MAX-9814 
+* :floppy_disk: BH-1750
 
 ### Participantes do Projeto
-* Prof. Dr. Renato Bulcão Neto :white_check_mark:
-* Prof. Dr. Iwens Sene Júnior :white_check_mark:
-* Bruna Michelly  :white_check_mark:
-* Melyssa Mariana  :white_check_mark:
-* Isabela França :white_check_mark:
-* Lucas Souza  :white_check_mark:
-* Antonio Emílio  :white_check_mark:
+* :bust_in_silhouette: Prof. Dr. Renato Bulcão Neto 
+* :bust_in_silhouette: Prof. Dr. Iwens Sene Júnior 
+* :bust_in_silhouette: Bruna Michelly  
+* :bust_in_silhouette: Melyssa Mariana 
+* :bust_in_silhouette: Isabela França 
+* :bust_in_silhouette: Lucas Souza 
+* :bust_in_silhouette: Antonio Emílio
 
 
 ### Esquemático
