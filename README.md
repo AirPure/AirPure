@@ -42,7 +42,7 @@ consequentemente a saúde dos ocupantes.
 * :bust_in_silhouette: Bruna Michelly  
 * :bust_in_silhouette: Melyssa Mariana 
 * :bust_in_silhouette: Isabela França 
-* :bust_in_silhouette: Lucas Souza 
+* :bust_in_silhouette: Lucas Felipe 
 * :bust_in_silhouette: Antonio Emílio
 
 
