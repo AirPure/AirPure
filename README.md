@@ -34,6 +34,14 @@ consequentemente a saúde dos ocupantes.
 
 ### Canais ThingSpeak
 Canal 1: [Clique Aqui](https://thingspeak.com/channels/1160801)
+Canal 2: [Clique Aqui](https://thingspeak.com/channels/1167146)
+Canal 3: [Clique Aqui](https://thingspeak.com/channels/1177969)
+
+### API Keys
+MQTT PASS: 0QIMS6VELRQUUC0A (GERAL)
+WRITE API KEY: WDPPXX2EI7II24E0 (AirPure - #001)
+WRITE API KEY: EB6J5ATU4ETP7984 (AirPure - #002)
+WRITE API KEY: 9MPRYZ0YX3F8REMQ (AirPure - #003)
 
 ### Como visualizar a aplicação
 Para acessar, [clique aqui.](https://sites.google.com/view/airpure/pagina-inicial?authuser=0)
