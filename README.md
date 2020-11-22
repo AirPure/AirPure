@@ -33,15 +33,15 @@ consequentemente a saúde dos ocupantes.
 <img src="https://i.ibb.co/F6QpMSQ/tabela.png">
 
 ### Canais ThingSpeak
-Canal 1: [Clique Aqui](https://thingspeak.com/channels/1160801)
-Canal 2: [Clique Aqui](https://thingspeak.com/channels/1167146)
-Canal 3: [Clique Aqui](https://thingspeak.com/channels/1177969)
+Canal 1: [Clique Aqui](https://thingspeak.com/channels/1160801)</br>
+Canal 2: [Clique Aqui](https://thingspeak.com/channels/1167146)</br>
+Canal 3: [Clique Aqui](https://thingspeak.com/channels/1177969)</br>
 
 ### API Keys
-MQTT PASS: 0QIMS6VELRQUUC0A (GERAL)
-WRITE API KEY: WDPPXX2EI7II24E0 (AirPure - #001)
-WRITE API KEY: EB6J5ATU4ETP7984 (AirPure - #002)
-WRITE API KEY: 9MPRYZ0YX3F8REMQ (AirPure - #003)
+MQTT PASS: 0QIMS6VELRQUUC0A (GERAL)</br>
+WRITE API KEY: WDPPXX2EI7II24E0 (AirPure - #001)</br>
+WRITE API KEY: EB6J5ATU4ETP7984 (AirPure - #002)</br>
+WRITE API KEY: 9MPRYZ0YX3F8REMQ (AirPure - #003)</br>
 
 ### Como visualizar a aplicação
 Para acessar, [clique aqui.](https://sites.google.com/view/airpure/pagina-inicial?authuser=0)
