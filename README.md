@@ -1,4 +1,4 @@
-<img src="https://i.ibb.co/kBXKzV7/header.png">
+<img src="https://cdn.discordapp.com/attachments/692689155943301195/780950135030546452/headeratualizado.png">
 
 [AirPure](https://sites.google.com/view/airpure/pagina-inicial?authuser=0) é um sistema embarcado para análise de qualidade do ar.
 
