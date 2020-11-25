@@ -7,7 +7,7 @@
 #include <Adafruit_CCS811.h>
 
 /*Definir os pinos dos sensor*/
-#define dhtPin 4 //Sensor de temperatura e umidade - DHT11.
+#define dhtPin 4 //Sensor de temperatura e umidade - DHT22.
 #define dbMeterPin 15 //Entrada analógica do sensor de ruído - MAX9814
 #define RXD2 16 //Sensor de CO2 - MH-Z14A.
 #define TXD2 17 //Sensor de CO2 - MH-Z14A.
@@ -15,7 +15,7 @@ BH1750 lightMeter (0x23); //Sensor de luminosidade - BH1750 (Addr: 0x23)
 
 
 /*Configuração de sensores.*/
-//DHT11 - Temperatura e Umidade.
+//DHT22 - Temperatura e Umidade.
 #define dhtType DHT22 //Tipo do sensor DHT.
 DHT dht(dhtPin, dhtType); //Objeto sensor de temperatura e umidade
 //CSS811 - TVOC
@@ -50,7 +50,7 @@ const char* server = "mqtt.thingspeak.com";
 unsigned long lastConnectionTime = 0; //Tempo da última conexão.
 const unsigned long postingInterval = 20000L; //Tempo de postagem, 20 segundos.
 const int sampleWindow = 50; // Janela de amostragem em mS (50 mS = 20Hz)
-unsigned int sample;
+unsigned int sample;  //Variável referente a leitura do sensor de ruído
 
 void setup() {
   Serial.begin(115200); //Iniciar porta serial - USB.
@@ -60,17 +60,18 @@ void setup() {
   //Inicializar sensor CCS811.
   if(!ccs.begin()){
     Serial.println("Falha ao iniciar o CCS811! Checar conexão dos fios.");
-    while(1);
+    ESP.restart();
   }
   
-  dht.begin(); //Inicializar DHT11.
-  lightMeter.begin();
+  dht.begin(); //Inicializar DHT22.
+  lightMeter.begin(); //Inicilizar o BH1750.
   
-  pinMode(dhtPin, INPUT); //Configurar modo dos pinos.
-   pinMode(dbMeterPin, INPUT); //Configurar modo dos pinos.
+  pinMode(dhtPin, INPUT); //Configurar modo dos pinos do DHT.
+   pinMode(dbMeterPin, INPUT); //Configurar modo dos pinos do MAX9814.
   
   /*Conectar a rede wifi*/
   while(status != WL_CONNECTED){
+    Serial.println("Tentando se conectar...");
     status = WiFi.begin(ssid, pass); //Conectar a rede WiFi WPA/WPA2.
     delay(5000);
     }
@@ -197,15 +198,15 @@ void reconnect(){
  //Publicar dados ThingSpeak.
  void mqttpublish(){
  //Leitura dos valores.
-  //DHT11 - Temperatura e Umidade.
-  temp = dht.readTemperature(); //Ler temperatura - DHT11.
-  umid = dht.readHumidity(); //Ler umidade - DHT11.
+  //DHT22 - Temperatura e Umidade.
+  temp = dht.readTemperature(); //Ler temperatura - DHT22.
+  umid = dht.readHumidity(); //Ler umidade - DHT22.
   lux = lightMeter.readLightLevel(); //Ler luminosidade - BH1750.
   dbLevel = readDb();
   
   //Verifica se a leitura não um número.
   if(isnan(umid) || isnan(temp)){
-  Serial.println("Erro de leitura DHT11!");
+  Serial.println("Erro de leitura DHT22!");
   return;
   }
 
