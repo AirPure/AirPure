@@ -1,13 +1,15 @@
 /*Bibliotecas*/
 #include <PubSubClient.h>
+#include <WiFiManager.h>         
 #include <BH1750.h>
 #include <DHT.h>
 #include <WiFi.h>
 #include <SPI.h>
 #include <Adafruit_CCS811.h>
 
+
 /*Definir os pinos dos sensor*/
-#define dhtPin 4 //Sensor de temperatura e umidade - DHT11.
+#define dhtPin 4 //Sensor de temperatura e umidade - DHT22.
 #define dbMeterPin 15 //Entrada analógica do sensor de ruído - MAX9814
 #define RXD2 16 //Sensor de CO2 - MH-Z14A.
 #define TXD2 17 //Sensor de CO2 - MH-Z14A.
@@ -15,7 +17,7 @@ BH1750 lightMeter (0x23); //Sensor de luminosidade - BH1750 (Addr: 0x23)
 
 
 /*Configuração de sensores.*/
-//DHT11 - Temperatura e Umidade.
+//DHT22 - Temperatura e Umidade.
 #define dhtType DHT22 //Tipo do sensor DHT.
 DHT dht(dhtPin, dhtType); //Objeto sensor de temperatura e umidade
 //CSS811 - TVOC
@@ -30,13 +32,15 @@ float voc; //Total de compostos organicos voláteis.
 float valorCO2; //Dióxido de carbono. 
 float dbLevel; //Valor em DB de ruído do ambiente
 
+
 /*Configurações de rede e conexão MQTT ThingSpeak*/
 char ssid[] = "XXXXXXXX"; //nome da rede. PACO Internet
 char pass[] = "XXXXXXXXXX"; //senha da rede. SEM SENHA
 char mqttUserName[] = "airpure"; //nome de usuário do MQTT
 char mqttPass[] = "0QIMS6VELRQUUC0A"; //chave de acesso do MQTT.
-char writeAPIKey[] = "WDPPXX2EI7II24E0"; //chave de escrita, canal Thingspeak.
-long channelID = 1160801; //Identificação do canal Thingspeak - Pessoal.
+char writeAPIKey[] = "EB6J5ATU4ETP7984"; //chave de escrita, canal Thingspeak.
+long channelID = 1167146; //Identificação do canal Thingspeak - Pessoal.
+
 
 /*Definir identificação de cliente, randomico.*/
 static const char alphanum[] = "0123456789""ABCDEFGHIJKLMNOPQRSTUVWXYZ""abcdefghijklmnopqrstuvwxyz";
@@ -50,7 +54,7 @@ const char* server = "mqtt.thingspeak.com";
 unsigned long lastConnectionTime = 0; //Tempo da última conexão.
 const unsigned long postingInterval = 20000L; //Tempo de postagem, 20 segundos.
 const int sampleWindow = 50; // Janela de amostragem em mS (50 mS = 20Hz)
-unsigned int sample;
+unsigned int sample;  //Variável referente a leitura do sensor de ruído
 
 void setup() {
   Serial.begin(115200); //Iniciar porta serial - USB.
@@ -60,20 +64,42 @@ void setup() {
   //Inicializar sensor CCS811.
   if(!ccs.begin()){
     Serial.println("Falha ao iniciar o CCS811! Checar conexão dos fios.");
-    while(1);
+    ESP.restart();
   }
   
-  dht.begin(); //Inicializar DHT11.
-  lightMeter.begin();
+  dht.begin(); //Inicializar DHT22.
+  lightMeter.begin(); //Inicilizar o BH1750.
   
-  pinMode(dhtPin, INPUT); //Configurar modo dos pinos.
-   pinMode(dbMeterPin, INPUT); //Configurar modo dos pinos.
+  pinMode(dhtPin, INPUT); //Configurar modo dos pinos do DHT.
+   pinMode(dbMeterPin, INPUT); //Configurar modo dos pinos do MAX9814.
   
-  /*Conectar a rede wifi*/
-  while(status != WL_CONNECTED){
+    /*Conectar a rede wifi
+    while(status != WL_CONNECTED){
+    Serial.println("Tentando se conectar...");
     status = WiFi.begin(ssid, pass); //Conectar a rede WiFi WPA/WPA2.
     delay(5000);
+    }*/
+
+    //WiFiManager
+    WiFiManager wifiManager;
+    wifiManager.setTimeout(180);  //Timeout de 3 minutos
+  
+    //Deixa a configuração quando esta é finalizada
+    wifiManager.setBreakAfterConfig(true);
+  
+  
+    //Tenta conectar com o último SSID conhecido
+    //Se não conseguir, abre um AP para ser configurado
+    //SSID do AP: AiPure  Senha: 12345678
+    //and goes into a blocking loop awaiting configuration
+    if (!wifiManager.autoConnect("AirPure", "12345678")) {
+      Serial.println("Falhou para se conectar... Reiniciando.");
+      delay(3000);
+      ESP.restart();
+      delay(5000);
     }
+
+    
   Serial.print("Conectado ao WiFi: "); //Imprimir nome da rede conectada.
   Serial.println(ssid);
   
@@ -197,15 +223,15 @@ void reconnect(){
  //Publicar dados ThingSpeak.
  void mqttpublish(){
  //Leitura dos valores.
-  //DHT11 - Temperatura e Umidade.
-  temp = dht.readTemperature(); //Ler temperatura - DHT11.
-  umid = dht.readHumidity(); //Ler umidade - DHT11.
+  //DHT22 - Temperatura e Umidade.
+  temp = dht.readTemperature(); //Ler temperatura - DHT22.
+  umid = dht.readHumidity(); //Ler umidade - DHT22.
   lux = lightMeter.readLightLevel(); //Ler luminosidade - BH1750.
   dbLevel = readDb();
   
   //Verifica se a leitura não um número.
   if(isnan(umid) || isnan(temp)){
-  Serial.println("Erro de leitura DHT11!");
+  Serial.println("Erro de leitura DHT22!");
   return;
   }
 

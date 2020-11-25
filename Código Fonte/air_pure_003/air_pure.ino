@@ -36,9 +36,9 @@ float dbLevel; //Valor em DB de ruído do ambiente
 char ssid[] = "XXXXXXXX"; //nome da rede. PACO Internet
 char pass[] = "XXXXXXXXXX"; //senha da rede. SEM SENHA
 char mqttUserName[] = "airpure"; //nome de usuário do MQTT
-char mqttPass[] = "XXXXXXXXXXXXXXXX"; //chave de acesso do MQTT.
-char writeAPIKey[] = "XXXXXXXXXXXXXXXX"; //chave de escrita, canal Thingspeak.
-long channelID = 123; //Identificação do canal Thingspeak - Pessoal.
+char mqttPass[] = "0QIMS6VELRQUUC0A"; //chave de acesso do MQTT.
+char writeAPIKey[] = "9MPRYZ0YX3F8REMQ"; //chave de escrita, canal Thingspeak.
+long channelID = 1177969; //Identificação do canal Thingspeak - Pessoal.
 
 /*Definir identificação de cliente, randomico.*/
 static const char alphanum[] = "0123456789""ABCDEFGHIJKLMNOPQRSTUVWXYZ""abcdefghijklmnopqrstuvwxyz";
