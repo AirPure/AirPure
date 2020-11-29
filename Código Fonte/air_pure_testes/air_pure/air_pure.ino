@@ -10,7 +10,7 @@
 
 /*Definir os pinos dos sensor*/
 #define dhtPin 4 //Sensor de temperatura e umidade - DHT22.
-#define dbMeterPin 15 //Entrada analógica do sensor de ruído - MAX9814
+#define dbMeterPin 34 //Entrada analógica do sensor de ruído - MAX9814
 #define RXD2 16 //Sensor de CO2 - MH-Z14A.
 #define TXD2 17 //Sensor de CO2 - MH-Z14A.
 BH1750 lightMeter (0x23); //Sensor de luminosidade - BH1750 (Addr: 0x23)
@@ -78,7 +78,7 @@ void setup() {
     while(status != WL_CONNECTED){
     Serial.println("Tentando se conectar...");
     status = WiFi.begin(ssid, pass); //Conectar a rede WiFi WPA/WPA2.
-    delay(5000);
+    delay(1000);
     }
 /*
     //WiFiManager
@@ -159,7 +159,7 @@ float readDb(){
 
    
    
-   if (volts <= 5){ //Valor máximo possível 
+   if (volts <= 1000){ //Valor máximo possível 
       float value = mapfloat(volts, 0.00, 3.00, 37.00, 82.00);
       return value;
     
@@ -217,21 +217,22 @@ void reconnect(){
       /*Verificar o porque ocorreu a falha.*/
       //Ver em: https://pubsubclient.knolleary.net/api.html#state explicação do código da falha.
       Serial.print(mqttClient.state());
-      Serial.println("Tentar novamente em 5 segundos.");
-      delay(5000);
+      ESP.restart();
       }
    }
  }
 
  //Publicar dados ThingSpeak.
  void mqttpublish(){
+  delay(100);
+  dbLevel = readDb();
+  delay(100);
  //Leitura dos valores.
   //DHT22 - Temperatura e Umidade.
   temp = dht.readTemperature(); //Ler temperatura - DHT22.
   umid = dht.readHumidity(); //Ler umidade - DHT22.
   lux = lightMeter.readLightLevel(); //Ler luminosidade - BH1750.
-  dbLevel = readDb();
-  
+
 
   //CCS811 - TVOC
    if(ccs.available()){
