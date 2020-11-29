@@ -47,7 +47,7 @@ consequentemente a saúde dos ocupantes.
 
 
 ### Esquemático
-<img src="https://i.ibb.co/wz89g4Z/esquem-tico.png">
+<img src="https://cdn.discordapp.com/attachments/764880223560794172/782582874502725642/esquematico.png">
 <img src="https://cdn.discordapp.com/attachments/764880223560794172/782573039753363456/unknown.png">
 
 ### Canais ThingSpeak
