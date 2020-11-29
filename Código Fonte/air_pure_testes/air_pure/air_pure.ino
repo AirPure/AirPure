@@ -34,8 +34,8 @@ float dbLevel; //Valor em DB de ruído do ambiente
 
 
 /*Configurações de rede e conexão MQTT ThingSpeak*/
-char ssid[] = "XXXXXXXX"; //nome da rede. PACO Internet
-char pass[] = "XXXXXXXXXX"; //senha da rede. SEM SENHA
+char ssid[] = "Antonielli"; //nome da rede. PACO Internet
+char pass[] = "12345678"; //senha da rede. SEM SENHA
 char mqttUserName[] = "airpure"; //nome de usuário do MQTT
 char mqttPass[] = "0QIMS6VELRQUUC0A"; //chave de acesso do MQTT.
 char writeAPIKey[] = "EB6J5ATU4ETP7984"; //chave de escrita, canal Thingspeak.
@@ -69,22 +69,18 @@ void setup() {
   
   dht.begin(); //Inicializar DHT22.
   lightMeter.begin(); //Inicilizar o BH1750.
-while(1){
-  lightMeter.begin(); //Inicilizar o BH1750.
-  mqttpublish();
-  delay(1000);
-}
+
   
   pinMode(dhtPin, INPUT); //Configurar modo dos pinos do DHT.
    pinMode(dbMeterPin, INPUT); //Configurar modo dos pinos do MAX9814.
   
-    /*Conectar a rede wifi
+
     while(status != WL_CONNECTED){
     Serial.println("Tentando se conectar...");
     status = WiFi.begin(ssid, pass); //Conectar a rede WiFi WPA/WPA2.
     delay(5000);
-    }*/
-
+    }
+/*
     //WiFiManager
     WiFiManager wifiManager;
     wifiManager.setTimeout(180);  //Timeout de 3 minutos
@@ -103,7 +99,7 @@ while(1){
       ESP.restart();
       delay(5000);
     }
-
+*/
     
   Serial.print("Conectado ao WiFi: "); //Imprimir nome da rede conectada.
   Serial.println(ssid);
@@ -119,10 +115,12 @@ void loop() {
 
   mqttClient.loop(); //Manter conexão MQTT.
 
-  //Enviar dados.
-  if(millis() - lastConnectionTime > postingInterval){
+  while(1){
+    lightMeter.begin(); //Inicilizar o BH1750.
     mqttpublish();
-    }
+    delay(1000);
+  }
+
 }
 
 //Faz o map de valores, retornando floats (Necessário pois o map nativo retorna apenas inteiros).
@@ -260,8 +258,9 @@ void reconnect(){
   tamanho = topicString.length();
   char topicBuffer[tamanho];
   topicString.toCharArray(topicBuffer, tamanho+1);
+if(millis() - lastConnectionTime > postingInterval){
+  mqttClient.publish(topicBuffer, msgBuffer); //Publicar dados.
+    lastConnectionTime = millis();
+}
 
-  //mqttClient.publish(topicBuffer, msgBuffer); //Publicar dados.
-
-  lastConnectionTime = millis();
   }
