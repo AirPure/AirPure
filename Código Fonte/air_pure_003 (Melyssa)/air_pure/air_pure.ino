@@ -20,7 +20,6 @@ BH1750 lightMeter (0x23); //Sensor de luminosidade - BH1750 (Addr: 0x23)
 //DHT22 - Temperatura e Umidade.
 #define dhtType DHT22 //Tipo do sensor DHT.
 DHT dht(dhtPin, dhtType); //Objeto sensor de temperatura e umidade
-//CSS811 - TVOC
 Adafruit_CCS811 ccs; //Objeto sensor de TVOC.
 
 //Definir variaveis globais.
@@ -34,12 +33,12 @@ float dbLevel; //Valor em DB de ruído do ambiente
 
 
 /*Configurações de rede e conexão MQTT ThingSpeak*/
-char ssid[] = "Antonielli"; //nome da rede. PACO Internet
-char pass[] = "12345678"; //senha da rede. SEM SENHA
+char ssid[] = "XXXX"; //nome da rede. PACO Internet
+char pass[] = "XXXX"; //senha da rede. SEM SENHA
 char mqttUserName[] = "airpure"; //nome de usuário do MQTT
 char mqttPass[] = "0QIMS6VELRQUUC0A"; //chave de acesso do MQTT.
-char writeAPIKey[] = "EB6J5ATU4ETP7984"; //chave de escrita, canal Thingspeak.
-long channelID = 1167146; //Identificação do canal Thingspeak - Pessoal.
+char writeAPIKey[] = "9MPRYZ0YX3F8REMQ"; //chave de escrita, canal Thingspeak.
+long channelID = 1177969; //Identificação do canal Thingspeak - Pessoal.
 
 
 /*Definir identificação de cliente, randomico.*/
@@ -64,62 +63,64 @@ void setup() {
   //Inicializar sensor CCS811.
   if(!ccs.begin()){
     Serial.println("Falha ao iniciar o CCS811! Checar conexão dos fios.");
+    delay(1000);
     ESP.restart();
   }
   
   dht.begin(); //Inicializar DHT22.
   lightMeter.begin(); //Inicilizar o BH1750.
-
   
   pinMode(dhtPin, INPUT); //Configurar modo dos pinos do DHT.
-   pinMode(dbMeterPin, INPUT); //Configurar modo dos pinos do MAX9814.
+  pinMode(dbMeterPin, INPUT); //Configurar modo dos pinos do MAX9814.
   
+  /*
+  Serial.print("Tentando se conectar...");
+  while(status != WL_CONNECTED){
+  Serial.print(".");
+  status = WiFi.begin(ssid, pass); //Conectar a rede WiFi WPA/WPA2.
+  delay(2000);
+  }
+ */
+ 
+  //WiFiManager
+  WiFiManager wifiManager;
+  wifiManager.setTimeout(80);  //Timeout de 1 minuto e 20 segundos
 
-    while(status != WL_CONNECTED){
-    Serial.println("Tentando se conectar...");
-    status = WiFi.begin(ssid, pass); //Conectar a rede WiFi WPA/WPA2.
-    delay(1000);
-    }
-/*
-    //WiFiManager
-    WiFiManager wifiManager;
-    wifiManager.setTimeout(180);  //Timeout de 3 minutos
+  //Deixa a configuração quando esta é finalizada
+  wifiManager.setBreakAfterConfig(true);
+
+  //Tenta conectar com o último SSID conhecido
+  //Se não conseguir, abre um AP para ser configurado
+  //SSID do AP: AiPure  Senha: 12345678
+  //and goes into a blocking loop awaiting configuration
+  if (!wifiManager.autoConnect("AirPure", "12345678")) {
+    Serial.println("Falhou para se conectar... Reiniciando.");
+    delay(3000);
+    ESP.restart();
+    delay(5000);
+  }
   
-    //Deixa a configuração quando esta é finalizada
-    wifiManager.setBreakAfterConfig(true);
-  
-  
-    //Tenta conectar com o último SSID conhecido
-    //Se não conseguir, abre um AP para ser configurado
-    //SSID do AP: AiPure  Senha: 12345678
-    //and goes into a blocking loop awaiting configuration
-    if (!wifiManager.autoConnect("AirPure", "12345678")) {
-      Serial.println("Falhou para se conectar... Reiniciando.");
-      delay(3000);
-      ESP.restart();
-      delay(5000);
-    }
-*/
-    
+  /*
   Serial.print("Conectado ao WiFi: "); //Imprimir nome da rede conectada.
   Serial.println(ssid);
+  */
+
+  Serial.println("Wifi conectado com sucesso!");
   
   mqttClient.setServer(server, 1883); //Configurar Broker MQTT - ThingSpeak.
 }
 
 void loop() {
+  
   //Conectar MQTT.
   if(!mqttClient.connected()){
     reconnect();
-    }
+  }
 
   mqttClient.loop(); //Manter conexão MQTT.
 
-  while(1){
-    lightMeter.begin(); //Inicilizar o BH1750.
-    mqttpublish();
-    delay(1000);
-  }
+  mqttpublish();  //Função para manter a leitura constante dos sensores.
+  delay(1000);    //Delay de 1s.
 
 }
 
@@ -131,10 +132,8 @@ float mapfloat(float x, float in_min, float in_max, float out_min, float out_max
 
 
 float readDb(){
-
    unsigned long startMillis= millis();  // Inicio da janela de amostragem
    unsigned int peakToPeak = 0;   // Nível pico a pico
-
    unsigned int signalMax = 0;  //Valor análogico mínimo
    unsigned int signalMin = 1024;  //Valor analógico máximo
 
@@ -156,15 +155,11 @@ float readDb(){
    }
    peakToPeak = signalMax - signalMin;  // Máximo - Mínimo = Amplitude pico a pico
    double volts = (peakToPeak * 3.0) / 1024;  // Converte para um valor de tensao aproximado
-
-   
-   
-   if (volts <= 1000){ //Valor máximo possível 
+   if (volts <= 1000){ //Filtra possíveis valores residuais 
       float value = mapfloat(volts, 0.00, 3.00, 37.00, 82.00);
-      return value;
-    
+      return value; //Retorna o valor convertido para dB
    } else {
-      return 37;
+      return 37; //Caso seja residual, retorna o menor valor possível
    }
 
 }
@@ -172,17 +167,14 @@ float readDb(){
 
 //Leitura da concentração de gás - MH-Z14A.
 float leituraGas(){
-
   const byte comando[9] =  {0xFF, 0x01, 0x86, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79}; //Comando de leitura da concentração de gás.
   byte resposta[9]; //Armazena a resposta do comando de leitura.
 
   //Escrever comando de leitura.
   for(int i = 0; i<9; i++){
     Serial2.write(comando[i]);
-    }
-
+  }
   delay(30);
-
   //Ler retorno do comando de leitura.
   if(Serial2.available()){
     for(int i=0; i<9; i++){
@@ -190,9 +182,7 @@ float leituraGas(){
       }
     int alto = (int)resposta[2];
     int baixo = (int)resposta[3];
-
     float CO2 = ((alto*256)+baixo); //Concentração de CO2 em ppm, referência datasheet.
-
     return CO2;
   }
 }
@@ -213,24 +203,27 @@ void reconnect(){
   if(mqttClient.connect(clientID, mqttUserName, mqttPass)){
     Serial.println("Conectado.");
     }else{
-      Serial.print("Failed, rc= ");
-      /*Verificar o porque ocorreu a falha.*/
-      //Ver em: https://pubsubclient.knolleary.net/api.html#state explicação do código da falha.
+      Serial.print("Conexão falhou! Código de erro: ");
       Serial.print(mqttClient.state());
+      Serial.print("O sistema irá reiniciar.");
+      delay(1000);
       ESP.restart();
       }
    }
- }
+}
 
- //Publicar dados ThingSpeak.
+ //Leitura e publicação dos dados para o ThingSpeak.
  void mqttpublish(){
-  delay(100);
+  //Leitura dos valores.
+  
+  //MAX9814 - Ruído
   dbLevel = readDb();
-  delay(100);
- //Leitura dos valores.
+  
   //DHT22 - Temperatura e Umidade.
   temp = dht.readTemperature(); //Ler temperatura - DHT22.
   umid = dht.readHumidity(); //Ler umidade - DHT22.
+
+  //BH1750 - Luminosidade
   lux = lightMeter.readLightLevel(); //Ler luminosidade - BH1750.
 
 
@@ -245,6 +238,7 @@ void reconnect(){
     }
   }
 
+  //MHZ-14A - CO2
   valorCO2 = leituraGas(); //Concentração de CO2 - MH-Z14A.
   
   //String de dados para enviar a Thingspeak.
@@ -252,22 +246,27 @@ void reconnect(){
   int tamanho = dados.length();
   char msgBuffer[tamanho];
   dados.toCharArray(msgBuffer,tamanho+1);
-  Serial.println(msgBuffer);
-
+  
   //Cria uma String de tópico e publica os dados na Thingspeak.
   String topicString = "channels/" + String(channelID) + "/publish/"+String(writeAPIKey);
   tamanho = topicString.length();
   char topicBuffer[tamanho];
   topicString.toCharArray(topicBuffer, tamanho+1);
+
+  //Se tiver passado o tempo de intervalo de amostragem, faz o envio. Caso contrário, não faz nada.
   if(millis() - lastConnectionTime > postingInterval){
       Serial.println("Hora de enviar!");
+      Serial.println(msgBuffer);
       int r = mqttClient.publish(topicBuffer, msgBuffer); //Publicar dados.
       if (r){
         Serial.println("Envio feito com sucesso!");
       } else {
         Serial.println("Envio não foi feito!");
+        Serial.println("Resetando para evitar que isto aconteça novamente.");
+        delay(1000);
+        ESP.restart();
       }
       lastConnectionTime = millis();
   }
 
-  }
+}
