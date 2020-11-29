@@ -13,6 +13,8 @@
 #define dbMeterPin 34 //Entrada analógica do sensor de ruído - MAX9814
 #define RXD2 16 //Sensor de CO2 - MH-Z14A.
 #define TXD2 17 //Sensor de CO2 - MH-Z14A.
+#define uS_TO_S_FACTOR 1000000  /* Fator de conversao de microsegundos para segundos */
+#define TIME_TO_SLEEP  20        /* Tempo de sleep do ESP32 em segundos */
 BH1750 lightMeter (0x23); //Sensor de luminosidade - BH1750 (Addr: 0x23)
 
 
@@ -33,12 +35,13 @@ float dbLevel; //Valor em DB de ruído do ambiente
 
 
 /*Configurações de rede e conexão MQTT ThingSpeak*/
-char ssid[] = "XXXX"; //nome da rede. PACO Internet
-char pass[] = "XXXX"; //senha da rede. SEM SENHA
+char ssid[] = "xxxxx"; //nome da rede. PACO Internet
+char pass[] = "xxxxxx"; //senha da rede. SEM SENHA
 char mqttUserName[] = "airpure"; //nome de usuário do MQTT
 char mqttPass[] = "0QIMS6VELRQUUC0A"; //chave de acesso do MQTT.
 char writeAPIKey[] = "9MPRYZ0YX3F8REMQ"; //chave de escrita, canal Thingspeak.
 long channelID = 1177969; //Identificação do canal Thingspeak - Pessoal.
+
 
 
 /*Definir identificação de cliente, randomico.*/
@@ -108,10 +111,7 @@ void setup() {
   Serial.println("Wifi conectado com sucesso!");
   
   mqttClient.setServer(server, 1883); //Configurar Broker MQTT - ThingSpeak.
-}
 
-void loop() {
-  
   //Conectar MQTT.
   if(!mqttClient.connected()){
     reconnect();
@@ -121,6 +121,21 @@ void loop() {
 
   mqttpublish();  //Função para manter a leitura constante dos sensores.
   delay(1000);    //Delay de 1s.
+
+  WiFi.mode(WIFI_OFF); //Desliga o WiFi antes de entrar em modo SLEEP.
+
+  Serial.println("Sleep Mode!");
+  esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
+
+  // Entra no modo Sleep.
+  esp_deep_sleep_start();
+  
+  
+}
+
+void loop() {
+  
+
 
 }
 
@@ -226,18 +241,19 @@ void reconnect(){
   //BH1750 - Luminosidade
   lux = lightMeter.readLightLevel(); //Ler luminosidade - BH1750.
 
-
-  //CCS811 - TVOC
-   if(ccs.available()){
-    if(!ccs.readData()){
-      eco2 = ccs.geteCO2(); //Ler eCO2 - CCS811.
-      voc = ccs.getTVOC(); //Ler TVOC - CCS811.
-    }else{
-      Serial.println("Erro de leitura CCS811!");
-      return;
+  while (!(eco2 > 400 && voc > 0)){
+    //CCS811 - TVOC
+     if(ccs.available()){
+      if(!ccs.readData()){
+        eco2 = ccs.geteCO2(); //Ler eCO2 - CCS811.
+        voc = ccs.getTVOC(); //Ler TVOC - CCS811.
+      }else{
+        Serial.println("Erro de leitura CCS811!");
+        return;
+      }
     }
+    delay(1000);
   }
-
   //MHZ-14A - CO2
   valorCO2 = leituraGas(); //Concentração de CO2 - MH-Z14A.
   
@@ -254,19 +270,19 @@ void reconnect(){
   topicString.toCharArray(topicBuffer, tamanho+1);
 
   //Se tiver passado o tempo de intervalo de amostragem, faz o envio. Caso contrário, não faz nada.
-  if(millis() - lastConnectionTime > postingInterval){
-      Serial.println("Hora de enviar!");
-      Serial.println(msgBuffer);
-      int r = mqttClient.publish(topicBuffer, msgBuffer); //Publicar dados.
-      if (r){
-        Serial.println("Envio feito com sucesso!");
-      } else {
-        Serial.println("Envio não foi feito!");
-        Serial.println("Resetando para evitar que isto aconteça novamente.");
-        delay(1000);
-        ESP.restart();
-      }
-      lastConnectionTime = millis();
+ // if(millis() - lastConnectionTime > postingInterval){
+  Serial.println("Hora de enviar!");
+  Serial.println(msgBuffer);
+  int r = mqttClient.publish(topicBuffer, msgBuffer); //Publicar dados.
+  if (r){
+    Serial.println("Envio feito com sucesso!");
+  } else {
+    Serial.println("Envio não foi feito!");
+    Serial.println("Resetando para evitar que isto aconteça novamente.");
+    delay(1000);
+    ESP.restart();
   }
+  lastConnectionTime = millis();
+  //}
 
 }
