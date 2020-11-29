@@ -259,9 +259,15 @@ void reconnect(){
   tamanho = topicString.length();
   char topicBuffer[tamanho];
   topicString.toCharArray(topicBuffer, tamanho+1);
-if(millis() - lastConnectionTime > postingInterval){
-  mqttClient.publish(topicBuffer, msgBuffer); //Publicar dados.
-    lastConnectionTime = millis();
-}
+  if(millis() - lastConnectionTime > postingInterval){
+      Serial.println("Hora de enviar!");
+      int r = mqttClient.publish(topicBuffer, msgBuffer); //Publicar dados.
+      if (r){
+        Serial.println("Envio feito com sucesso!");
+      } else {
+        Serial.println("Envio não foi feito!");
+      }
+      lastConnectionTime = millis();
+  }
 
   }
