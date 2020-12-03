@@ -39,7 +39,7 @@ char ssid[] = "xxxxx"; //nome da rede. PACO Internet
 char pass[] = "xxxxxx"; //senha da rede. SEM SENHA
 char mqttUserName[] = "airpure"; //nome de usuário do MQTT
 char mqttPass[] = "0QIMS6VELRQUUC0A"; //chave de acesso do MQTT.
-char writeAPIKey[] = "9MPRYZ0YX3F8REMQ"; //chave de escrita, canal Thingspeak.
+char writeAPIKey[] = "W1OE6ARR4S0X2OAT"; //chave de escrita, canal Thingspeak.
 long channelID = 1177969; //Identificação do canal Thingspeak - Pessoal.
 
 
