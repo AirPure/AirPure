@@ -14,7 +14,7 @@
 #define RXD2 16 //Sensor de CO2 - MH-Z14A.
 #define TXD2 17 //Sensor de CO2 - MH-Z14A.
 #define uS_TO_S_FACTOR 1000000  /* Fator de conversao de microsegundos para segundos */
-#define TIME_TO_SLEEP  60        /* Tempo de sleep do ESP32 em segundos */
+#define TIME_TO_SLEEP  20        /* Tempo de sleep do ESP32 em segundos */
 BH1750 lightMeter (0x23); //Sensor de luminosidade - BH1750 (Addr: 0x23)
 
 
@@ -32,7 +32,6 @@ float eco2; //Equivalente de Dióxido de carbono.
 float voc; //Total de compostos organicos voláteis.
 float valorCO2; //Dióxido de carbono. 
 float dbLevel; //Valor em DB de ruído do ambiente
-int highCO2 = 0; //Flag de alto indice de CO2.
 
 
 /*Configurações de rede e conexão MQTT ThingSpeak*/
@@ -40,8 +39,8 @@ char ssid[] = "xxxxx"; //nome da rede. PACO Internet
 char pass[] = "xxxxxx"; //senha da rede. SEM SENHA
 char mqttUserName[] = "airpure"; //nome de usuário do MQTT
 char mqttPass[] = "0QIMS6VELRQUUC0A"; //chave de acesso do MQTT.
-char writeAPIKey[] = "EB6J5ATU4ETP7984"; //chave de escrita, canal Thingspeak.
-long channelID = 1167146; //Identificação do canal Thingspeak - Pessoal.
+char writeAPIKey[] = "W1OE6ARR4S0X2OAT"; //chave de escrita, canal Thingspeak.
+long channelID = 1177969; //Identificação do canal Thingspeak - Pessoal.
 
 
 
@@ -257,15 +256,9 @@ void reconnect(){
   }
   //MHZ-14A - CO2
   valorCO2 = leituraGas(); //Concentração de CO2 - MH-Z14A.
-
-  if(valorCO2 > 1000){
-    highCO2 = 1;
-  } else {
-    highCO2 = 0;
-  }
   
   //String de dados para enviar a Thingspeak.
-  String dados = String("field1=" + String(temp, 2) + "&field2=" + String(umid, 2) + "&field3=" +String(eco2, 2)+ "&field4=" +String(voc, 2)+ "&field5=" + String(valorCO2)+ "&field6=" + String(lux,5)+ "&field7=" + String(dbLevel,2)+ "&field8=" + String(highCO2,2));
+  String dados = String("field1=" + String(temp, 2) + "&field2=" + String(umid, 2) + "&field3=" +String(eco2, 2)+ "&field4=" +String(voc, 2)+ "&field5=" + String(valorCO2)+ "&field6=" + String(lux,5)+ "&field7=" + String(dbLevel,2));
   int tamanho = dados.length();
   char msgBuffer[tamanho];
   dados.toCharArray(msgBuffer,tamanho+1);
