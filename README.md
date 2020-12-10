@@ -63,3 +63,4 @@ WRITE API KEY: 9MPRYZ0YX3F8REMQ (AirPure - #003)</br>
 
 ### Como visualizar a aplicação
 Para acessar, [clique aqui.](https://sites.google.com/view/airpure/pagina-inicial?authuser=0)
+Para visualizar a dashboard que está sendo montada, [clique aqui.](https://arpuro.vercel.app/admin/dashboard)
