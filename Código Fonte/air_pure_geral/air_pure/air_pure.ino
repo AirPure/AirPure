@@ -5,8 +5,9 @@
 #include <DHT.h>
 #include <WiFi.h>
 #include <SPI.h>
-#include <Adafruit_CCS811.h>
-
+#include <Wire.h>
+#include "SparkFunCCS811.h"
+#include <i2cdetect.h>
 
 /*Definir os pinos dos sensor*/
 #define dhtPin 4 //Sensor de temperatura e umidade - DHT22.
@@ -22,7 +23,8 @@ BH1750 lightMeter (0x23); //Sensor de luminosidade - BH1750 (Addr: 0x23)
 //DHT22 - Temperatura e Umidade.
 #define dhtType DHT22 //Tipo do sensor DHT.
 DHT dht(dhtPin, dhtType); //Objeto sensor de temperatura e umidade
-Adafruit_CCS811 ccs; //Objeto sensor de TVOC.
+#define CCS811_ADDR 0x5A //Default I2C Address
+CCS811 mySensor(CCS811_ADDR);
 
 //Definir variaveis globais.
 float temp; //Temperatura em graus celsius.
@@ -33,6 +35,7 @@ float voc; //Total de compostos organicos voláteis.
 float valorCO2; //Dióxido de carbono. 
 float dbLevel; //Valor em DB de ruído do ambiente
 int highCO2 = 0; //Flag de alto indice de CO2.
+int timeOutReading = 30;  //Timeout de leitura
 
 
 /*Configurações de rede e conexão MQTT ThingSpeak*/
@@ -64,10 +67,17 @@ void setup() {
   Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2); //Iniciar porta serial - UART.
   int status = WL_IDLE_STATUS; //Estado da conexão wifi.
 
+
+  Wire.begin(); //Inialize I2C Hardware
+  delay(1000);
+  i2cdetect();  // default range from 0x03 to 0x77
+  delay(1000);
+
   //Inicializar sensor CCS811.
-  if(!ccs.begin()){
-    Serial.println("Falha ao iniciar o CCS811! Checar conexão dos fios.");
-    delay(1000);
+  if (mySensor.begin() == false)
+  {
+    Serial.println("Falhou ao iniciar o CCS811... Reiniciando.");
+    delay(3000);
     ESP.restart();
   }
   
@@ -244,14 +254,16 @@ void reconnect(){
 
   while (!(eco2 > 400 && voc > 0)){
     //CCS811 - TVOC
-     if(ccs.available()){
-      if(!ccs.readData()){
-        eco2 = ccs.geteCO2(); //Ler eCO2 - CCS811.
-        voc = ccs.getTVOC(); //Ler TVOC - CCS811.
-      }else{
-        Serial.println("Erro de leitura CCS811!");
-        return;
-      }
+     if (mySensor.dataAvailable()){
+        mySensor.readAlgorithmResults();
+        eco2 = mySensor.getCO2();
+        voc = mySensor.getTVOC();
+        Serial.print(".");
+        timeOutReading--;
+        if(timeOutReading == 0){
+          Serial.println("Falha de leitura! Reiniciando...");
+          ESP.restart();
+        }
     }
     delay(1000);
   }
