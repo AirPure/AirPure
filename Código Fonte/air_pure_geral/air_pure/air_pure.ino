@@ -23,8 +23,8 @@ BH1750 lightMeter (0x23); //Sensor de luminosidade - BH1750 (Addr: 0x23)
 //DHT22 - Temperatura e Umidade.
 #define dhtType DHT22 //Tipo do sensor DHT.
 DHT dht(dhtPin, dhtType); //Objeto sensor de temperatura e umidade
-#define CCS811_ADDR 0x5A //Default I2C Address
-CCS811 mySensor(CCS811_ADDR);
+#define CCS811_ADDR 0x5A //Endereço I2C padrão
+CCS811 mySensor(CCS811_ADDR); //Instância do CCS811
 
 //Definir variaveis globais.
 float temp; //Temperatura em graus celsius.
@@ -67,58 +67,50 @@ void setup() {
   Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2); //Iniciar porta serial - UART.
   int status = WL_IDLE_STATUS; //Estado da conexão wifi.
 
-
-  Wire.begin(); //Inialize I2C Hardware
-  delay(1000);
-  i2cdetect();  // default range from 0x03 to 0x77
-  delay(1000);
+  Wire.begin(); //Inicia a conexão I2C
+  delay(100);
+  i2cdetect();  // Detecta todos os dispositivos do barramento I2C
 
   //Inicializar sensor CCS811.
+  Serial.println("Iniciando o CCS811...");
   if (mySensor.begin() == false)
   {
     Serial.println("Falhou ao iniciar o CCS811... Reiniciando.");
     delay(3000);
     ESP.restart();
   }
-  
+  Serial.println("CCS811 iniciado!");
+
+  Serial.println("Iniciando o DHT22...");
   dht.begin(); //Inicializar DHT22.
+  Serial.println("DHT22 iniciado!");
+
+  Serial.println("Iniciando o BH1750...");
   lightMeter.begin(); //Inicilizar o BH1750.
+  Serial.println("BH1750 iniciado!");
   
   pinMode(dhtPin, INPUT); //Configurar modo dos pinos do DHT.
   pinMode(dbMeterPin, INPUT); //Configurar modo dos pinos do MAX9814.
-  
-  /*
-  Serial.print("Tentando se conectar...");
-  while(status != WL_CONNECTED){
-  Serial.print(".");
-  status = WiFi.begin(ssid, pass); //Conectar a rede WiFi WPA/WPA2.
-  delay(2000);
-  }
- */
+ 
  
   //WiFiManager
   WiFiManager wifiManager;
-  wifiManager.setTimeout(80);  //Timeout de 1 minuto e 20 segundos
-
-  //Deixa a configuração quando esta é finalizada
-  wifiManager.setBreakAfterConfig(true);
+  WiFi.persistent(true);
+  WiFi.setAutoConnect(true);
+  WiFi.setAutoReconnect(true);
+  wifiManager.setTimeout(120);
+  wifiManager.setConfigPortalTimeout(120);
 
   //Tenta conectar com o último SSID conhecido
   //Se não conseguir, abre um AP para ser configurado
   //SSID do AP: AiPure  Senha: 12345678
-  //and goes into a blocking loop awaiting configuration
-  if (!wifiManager.autoConnect("AirPure", "12345678")) {
-    Serial.println("Falhou para se conectar... Reiniciando.");
-    delay(3000);
-    ESP.restart();
-    delay(5000);
+  if(!wifiManager.autoConnect("AirPure WIFI", "12345678")) {
+  Serial.println("Falhou para se conectar... Reiniciando.");
+  delay(100);
+  ESP.restart();
   }
-  
-  /*
-  Serial.print("Conectado ao WiFi: "); //Imprimir nome da rede conectada.
-  Serial.println(ssid);
-  */
-
+  //Deixa a configuração quando esta é finalizada
+  wifiManager.setBreakAfterConfig(true);
   Serial.println("Wifi conectado com sucesso!");
   
   mqttClient.setServer(server, 1883); //Configurar Broker MQTT - ThingSpeak.
@@ -135,7 +127,7 @@ void setup() {
 
   WiFi.mode(WIFI_OFF); //Desliga o WiFi antes de entrar em modo SLEEP.
 
-  Serial.println("Sleep Mode!");
+  Serial.println("Entrando no modo oscioso!");
   esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
 
   // Entra no modo Sleep.
@@ -145,9 +137,6 @@ void setup() {
 }
 
 void loop() {
-  
-
-
 }
 
 //Faz o map de valores, retornando floats (Necessário pois o map nativo retorna apenas inteiros).
@@ -240,18 +229,27 @@ void reconnect(){
 
  //Leitura e publicação dos dados para o ThingSpeak.
  void mqttpublish(){
+  
   //Leitura dos valores.
+  Serial.println("Iniciando leitura dos sensores.");
   
   //MAX9814 - Ruído
+  Serial.println("Lendo valor de ruido.");
   dbLevel = readDb();
+  Serial.println("(OK)");
   
   //DHT22 - Temperatura e Umidade.
+  Serial.println("Lendo temperatura e umidade.");
   temp = dht.readTemperature(); //Ler temperatura - DHT22.
   umid = dht.readHumidity(); //Ler umidade - DHT22.
+  Serial.println("(OK)");
 
   //BH1750 - Luminosidade
+  Serial.println("Lendo luminosidade.");
   lux = lightMeter.readLightLevel(); //Ler luminosidade - BH1750.
+  Serial.println("(OK)");
 
+  Serial.println("Lendo TVOC.");
   while (!(eco2 > 400 && voc > 0)){
     //CCS811 - TVOC
      if (mySensor.dataAvailable()){
@@ -267,8 +265,11 @@ void reconnect(){
     }
     delay(1000);
   }
+  Serial.println("(OK).");
   //MHZ-14A - CO2
+  Serial.println("Lendo CO2.");
   valorCO2 = leituraGas(); //Concentração de CO2 - MH-Z14A.
+  Serial.println("(OK)");
 
   if(valorCO2 > 1000){
     highCO2 = 1;
