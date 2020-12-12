@@ -36,6 +36,7 @@ float valorCO2; //Dióxido de carbono.
 float dbLevel; //Valor em DB de ruído do ambiente
 int highCO2 = 0; //Flag de alto indice de CO2.
 int timeOutReading = 30;  //Timeout de leitura
+int r = 0; //Variável de retorno de funções
 
 
 /*Configurações de rede e conexão MQTT ThingSpeak*/
@@ -75,42 +76,47 @@ void setup() {
   Serial.println("Iniciando o CCS811...");
   if (mySensor.begin() == false)
   {
-    Serial.println("Falhou ao iniciar o CCS811... Reiniciando.");
-    delay(3000);
-    ESP.restart();
+    Serial.println("CCS811 não foi iniciado!");
+  } else {
+    Serial.println("CCS811 iniciado!");
   }
-  Serial.println("CCS811 iniciado!");
 
   Serial.println("Iniciando o DHT22...");
   dht.begin(); //Inicializar DHT22.
   Serial.println("DHT22 iniciado!");
 
+    
   Serial.println("Iniciando o BH1750...");
-  lightMeter.begin(); //Inicilizar o BH1750.
-  Serial.println("BH1750 iniciado!");
-  
+  r = lightMeter.begin(); //Inicilizar o BH1750.
+  if (r)
+    Serial.println("BH1750 iniciado!");
+  else {
+    Serial.println("BH1750 não foi iniciado!");
+    lux = 0;
+  }
+
+    
   pinMode(dhtPin, INPUT); //Configurar modo dos pinos do DHT.
   pinMode(dbMeterPin, INPUT); //Configurar modo dos pinos do MAX9814.
  
  
   //WiFiManager
   WiFiManager wifiManager;
-  WiFi.persistent(true);
   WiFi.setAutoConnect(true);
   WiFi.setAutoReconnect(true);
-  wifiManager.setTimeout(120);
-  wifiManager.setConfigPortalTimeout(120);
+  wifiManager.setTimeout(80);
+  wifiManager.setBreakAfterConfig(true);
+  wifiManager.setConfigPortalTimeout(80);
 
   //Tenta conectar com o último SSID conhecido
   //Se não conseguir, abre um AP para ser configurado
   //SSID do AP: AiPure  Senha: 12345678
   if(!wifiManager.autoConnect("AirPure WIFI", "12345678")) {
   Serial.println("Falhou para se conectar... Reiniciando.");
-  delay(100);
-  ESP.restart();
+    delay(100);
+    ESP.restart();
   }
-  //Deixa a configuração quando esta é finalizada
-  wifiManager.setBreakAfterConfig(true);
+
   Serial.println("Wifi conectado com sucesso!");
   
   mqttClient.setServer(server, 1883); //Configurar Broker MQTT - ThingSpeak.
@@ -123,7 +129,6 @@ void setup() {
   mqttClient.loop(); //Manter conexão MQTT.
 
   mqttpublish();  //Função para manter a leitura constante dos sensores.
-  delay(1000);    //Delay de 1s.
 
   WiFi.mode(WIFI_OFF); //Desliga o WiFi antes de entrar em modo SLEEP.
 
@@ -259,13 +264,14 @@ void reconnect(){
         Serial.print(".");
         timeOutReading--;
         if(timeOutReading == 0){
-          Serial.println("Falha de leitura! Reiniciando...");
-          ESP.restart();
+          Serial.println("");
+          Serial.println("Falha de leitura!");
+          break;
         }
     }
     delay(1000);
   }
-  Serial.println("(OK).");
+  Serial.println("(OK)");
   //MHZ-14A - CO2
   Serial.println("Lendo CO2.");
   valorCO2 = leituraGas(); //Concentração de CO2 - MH-Z14A.
