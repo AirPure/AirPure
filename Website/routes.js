@@ -6,40 +6,22 @@ var routes = [
     layout: "/admin",
   },
   {
-    path: "/icons",
-    name: "Icons",
+    path: "/dashboard",
+    name: "Visualização Geral",
     icon: "ni ni-planet text-blue",
     layout: "/admin",
   },
   {
-    path: "/maps",
-    name: "Maps",
+    path: "/dashboard",
+    name: "Relatórios",
     icon: "ni ni-pin-3 text-orange",
     layout: "/admin",
   },
   {
-    path: "/profile",
-    name: "User Profile",
+    path: "/dashboard",
+    name: "PMOC",
     icon: "ni ni-single-02 text-yellow",
     layout: "/admin",
-  },
-  {
-    path: "/tables",
-    name: "Tables",
-    icon: "ni ni-bullet-list-67 text-red",
-    layout: "/admin",
-  },
-  {
-    path: "/login",
-    name: "Login",
-    icon: "ni ni-key-25 text-info",
-    layout: "/auth",
-  },
-  {
-    path: "/register",
-    name: "Register",
-    icon: "ni ni-circle-08 text-pink",
-    layout: "/auth",
   },
 ];
 export default routes;
