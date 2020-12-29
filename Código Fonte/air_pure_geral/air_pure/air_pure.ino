@@ -101,6 +101,11 @@ void setup() {
  
  
   //WiFiManager
+  WiFi.disconnect(true);
+  delay(1000);
+  WiFi.mode(WIFI_STA);
+  delay(1000);
+  
   WiFiManager wifiManager;
   WiFi.setAutoConnect(true);
   WiFi.setAutoReconnect(true);
