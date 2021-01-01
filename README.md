@@ -59,7 +59,7 @@ Canal 3 (1177969): [Clique Aqui](https://thingspeak.com/channels/1177969)</br>
 MQTT PASS: 0QIMS6VELRQUUC0A (GERAL)</br>
 WRITE API KEY: WDPPXX2EI7II24E0 (AirPure - #001)</br>
 WRITE API KEY: EB6J5ATU4ETP7984 (AirPure - #002)</br>
-WRITE API KEY: 9MPRYZ0YX3F8REMQ (AirPure - #003)</br>
+WRITE API KEY: W1OE6ARR4S0X2OAT (AirPure - #003)</br>
 
 ### Como visualizar a aplicação
 Para acessar, [clique aqui.](https://sites.google.com/view/airpure/pagina-inicial?authuser=0)
