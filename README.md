@@ -62,5 +62,6 @@ WRITE API KEY: EB6J5ATU4ETP7984 (AirPure - #002)</br>
 WRITE API KEY: W1OE6ARR4S0X2OAT (AirPure - #003)</br>
 
 ### Como visualizar a aplicação
-Para acessar, [clique aqui.](https://sites.google.com/view/airpure/pagina-inicial?authuser=0)
-Para visualizar a dashboard que está sendo montada, [clique aqui.](https://arpuro.vercel.app/admin/dashboard)
+Para acessar, [clique aqui.](https://sites.google.com/view/airpure/pagina-inicial?authuser=0)</br>
+Para visualizar a dashboard que está sendo montada, [clique aqui.](https://airpuredashboard.vercel.app/admin/dashboard)</br>
+Para visualizar o website, [clique aqui.](https://airpurelanding.vercel.app/)
