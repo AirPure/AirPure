@@ -135,6 +135,8 @@ void setup() {
 
   mqttpublish();  //Função para manter a leitura constante dos sensores.
 
+  delay(3000);
+
   WiFi.mode(WIFI_OFF); //Desliga o WiFi antes de entrar em modo SLEEP.
 
   Serial.println("Entrando no modo oscioso!");
@@ -239,7 +241,7 @@ void reconnect(){
 
  //Leitura e publicação dos dados para o ThingSpeak.
  void mqttpublish(){
-  
+    mqttClient.loop(); //Manter conexão MQTT.
   //Leitura dos valores.
   Serial.println("Iniciando leitura dos sensores.");
   
@@ -274,6 +276,7 @@ void reconnect(){
           break;
         }
     }
+      mqttClient.loop(); //Manter conexão MQTT.
     delay(1000);
   }
   Serial.println("(OK)");
