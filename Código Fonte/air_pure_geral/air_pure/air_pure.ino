@@ -8,6 +8,11 @@
 #include <Wire.h>
 #include "SparkFunCCS811.h"
 #include <i2cdetect.h>
+#include <WiFiClientSecure.h>
+#include <UniversalTelegramBot.h>
+#include <ArduinoJson.h>
+#include <NTPClient.h>
+#include <WiFiUdp.h>
 
 /*Definir os pinos dos sensor*/
 #define dhtPin 4 //Sensor de temperatura e umidade - DHT22.
@@ -16,7 +21,15 @@
 #define TXD2 17 //Sensor de CO2 - MH-Z14A.
 #define uS_TO_S_FACTOR 1000000  /* Fator de conversao de microsegundos para segundos */
 #define TIME_TO_SLEEP  60        /* Tempo de sleep do ESP32 em segundos */
+#define BOTtoken "1403262308:AAF1zrbdz0-rEyXTdJUdT20MhA0eBpCT_TQ"  // Token do seu BOT do telegram.
+#define CHAT_ID "1248387297"  //Seu ID no telegram.
+
+
 BH1750 lightMeter (0x23); //Sensor de luminosidade - BH1750 (Addr: 0x23)
+WiFiClientSecure client; //Inicializar cliente wifi
+UniversalTelegramBot bot(BOTtoken, client); //Instanciando bot do telegram
+WiFiUDP ntpUDP; //NTP-UDP
+NTPClient timeClient(ntpUDP);//Cliente NTP
 
 
 /*Configuração de sensores.*/
@@ -36,7 +49,9 @@ float valorCO2; //Dióxido de carbono.
 float dbLevel; //Valor em DB de ruído do ambiente
 int highCO2 = 0; //Flag de alto indice de CO2.
 int timeOutReading = 30;  //Timeout de leitura
+int timeoutHorario = 30;  //Timeout para obter hora
 int r = 0; //Variável de retorno de funções
+String formattedDate; //String para receber o horário.
 
 
 /*Configurações de rede e conexão MQTT ThingSpeak*/
@@ -52,7 +67,7 @@ long channelID = 1167146; //Identificação do canal Thingspeak - Pessoal.
 /*Definir identificação de cliente, randomico.*/
 static const char alphanum[] = "0123456789""ABCDEFGHIJKLMNOPQRSTUVWXYZ""abcdefghijklmnopqrstuvwxyz";
 
-WiFiClient client; //Inicializar cliente wifi
+
 
 //Inicializar a biblioteca pubsubclient e definir o broker MQTT thingspeak.
 PubSubClient mqttClient(client);
@@ -108,7 +123,6 @@ void setup() {
   
   WiFiManager wifiManager;
   WiFi.setAutoConnect(true);
-  WiFi.setAutoReconnect(true);
   wifiManager.setTimeout(80);
   wifiManager.setBreakAfterConfig(true);
   wifiManager.setConfigPortalTimeout(80);
@@ -120,6 +134,26 @@ void setup() {
   Serial.println("Falhou para se conectar... Reiniciando.");
     delay(100);
     ESP.restart();
+  }
+
+  Serial.println("Obtendo horário atual.");
+  timeClient.begin(); //Inicia cliente para obter horário.
+  timeClient.setTimeOffset(-10800); //Fuso horário.
+  while(!timeClient.update()) {
+    timeClient.forceUpdate(); //Atualiza o horário.
+    delay(100);
+    timeoutHorario--;
+    if (timeoutHorario == 0){
+      break;
+    }
+  }
+  formattedDate = "Horário de detecção: ";
+  formattedDate += timeClient.getFormattedDate();  //Obtem o horário formatado.
+  if(timeoutHorario == 0){
+    Serial.println("Não foi possível obter o horário.");
+    formattedDate = "Não foi possível obter o horário.";
+  } else {
+    Serial.println("Horário obtido com sucesso.");
   }
 
   Serial.println("Wifi conectado com sucesso!");
@@ -135,7 +169,7 @@ void setup() {
 
   mqttpublish();  //Função para manter a leitura constante dos sensores.
 
-  delay(3000);
+  delay(3000);  //Delay para permitir que os dados sejam enviados antes de entrar no modo sleep.
 
   WiFi.mode(WIFI_OFF); //Desliga o WiFi antes de entrar em modo SLEEP.
 
@@ -210,6 +244,11 @@ float leituraGas(){
     int alto = (int)resposta[2];
     int baixo = (int)resposta[3];
     float CO2 = ((alto*256)+baixo); //Concentração de CO2 em ppm, referência datasheet.
+
+    if(CO2 >= 65535){
+      CO2 = 400; //Caso o valor bata o fundo de escala (comum no processo de warm-up do sensor), envia o valor base de CO2 em ppm.
+    }
+    
     return CO2;
   }
 }
@@ -287,6 +326,8 @@ void reconnect(){
 
   if(valorCO2 > 1000){
     highCO2 = 1;
+    Serial.println("Níveis de CO2 elevados. Fazendo envio de alerta pelo telegram.");
+    bot.sendMessage(CHAT_ID, "Níveis de CO2 acima do tolerável! " + formattedDate, "");
   } else {
     highCO2 = 0;
   }
