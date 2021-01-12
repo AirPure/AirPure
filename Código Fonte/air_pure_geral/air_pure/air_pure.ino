@@ -26,8 +26,9 @@
 
 
 BH1750 lightMeter (0x23); //Sensor de luminosidade - BH1750 (Addr: 0x23)
-WiFiClientSecure client; //Inicializar cliente wifi
-UniversalTelegramBot bot(BOTtoken, client); //Instanciando bot do telegram
+WiFiClientSecure client2; //Inicializar cliente wifi
+WiFiClient client; //Inicializar cliente wifi
+UniversalTelegramBot bot(BOTtoken, client2); //Instanciando bot do telegram
 WiFiUDP ntpUDP; //NTP-UDP
 NTPClient timeClient(ntpUDP);//Cliente NTP
 
