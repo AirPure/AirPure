@@ -328,7 +328,7 @@ void reconnect(){
   if(valorCO2 > 1000){
     highCO2 = 1;
     Serial.println("Níveis de CO2 elevados. Fazendo envio de alerta pelo telegram.");
-    bot.sendMessage(CHAT_ID, "Níveis de CO2 acima do tolerável! " + formattedDate, "");
+    bot.sendMessage(CHAT_ID, "Níveis de CO2 acima do tolerável! Valor aferido: " + valorCO2 + " ppm. " + formattedDate, "");
   } else {
     highCO2 = 0;
   }
