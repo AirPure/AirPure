@@ -62,7 +62,7 @@ export default function Footer() {
 
                 <div className="w-full lg:w-4/12 px-4">
                   <span className="block uppercase text-gray-600 text-sm font-semibold mb-2">
-                    Alguns links úteis
+                    Integrantes do Grupo:
                   </span>
                   <ul className="list-unstyled">
                     <li>
@@ -70,7 +70,7 @@ export default function Footer() {
                         className="text-gray-700 hover:text-gray-900 font-semibold block pb-2 text-sm"
                         href=""
                       >
-                        Licença de Uso
+                        Prof. Dr. Renato Bulcão Neto
                       </a>
                     </li>
                     <li>
@@ -78,7 +78,7 @@ export default function Footer() {
                         className="text-gray-700 hover:text-gray-900 font-semibold block pb-2 text-sm"
                         href=""
                       >
-                        Termos e Condições
+                        Prof. Dr. Iwens Sene Júnior
                       </a>
                     </li>
                     <li>
@@ -86,7 +86,7 @@ export default function Footer() {
                         className="text-gray-700 hover:text-gray-900 font-semibold block pb-2 text-sm"
                         href=""
                       >
-                        Política de Privacidade
+                        Bruna Michelly
                       </a>
                     </li>
                     <li>
@@ -94,7 +94,31 @@ export default function Footer() {
                         className="text-gray-700 hover:text-gray-900 font-semibold block pb-2 text-sm"
                         href=""
                       >
-                        Contato
+                        Melyssa Mariana
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        className="text-gray-700 hover:text-gray-900 font-semibold block pb-2 text-sm"
+                        href=""
+                      >
+                        Isabela França
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        className="text-gray-700 hover:text-gray-900 font-semibold block pb-2 text-sm"
+                        href=""
+                      >
+                        Lucas Felipe
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        className="text-gray-700 hover:text-gray-900 font-semibold block pb-2 text-sm"
+                        href=""
+                      >
+                        Antonio Emílio
                       </a>
                     </li>
                   </ul>
