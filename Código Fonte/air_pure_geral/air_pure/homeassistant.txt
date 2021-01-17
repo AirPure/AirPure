@@ -1,0 +1,53 @@
+mqtt:
+    broker: localhost
+    username: toinzimcommander
+    password: 014589Oi@
+
+sensor:
+    platform: mqtt
+    name: "Temperatura"
+    state_topic: "sensor/temperatura"
+    qos: 0
+    unit_of_measurement: "ºC"
+
+sensor 2:
+    platform: mqtt
+    name: "Umidade"
+    state_topic: "sensor/umidade"
+    qos: 0
+    unit_of_measurement: "%"
+    
+sensor 3:
+    platform: mqtt
+    name: "CO2"
+    state_topic: "sensor/co2"
+    qos: 0
+    unit_of_measurement: "ppm"
+    
+sensor 4:
+    platform: mqtt
+    name: "eCO2"
+    state_topic: "sensor/eco2"
+    qos: 0
+    unit_of_measurement: "ppm"
+
+sensor 5:
+    platform: mqtt
+    name: "Ruido"
+    state_topic: "sensor/ruido"
+    qos: 0
+    unit_of_measurement: "dB"
+    
+sensor 6:
+    platform: mqtt
+    name: "TVOC"
+    state_topic: "sensor/tvoc"
+    qos: 0
+    unit_of_measurement: "ppb"
+    
+sensor 7:
+    platform: mqtt
+    name: "Lux"
+    state_topic: "sensor/lux"
+    qos: 0
+    unit_of_measurement: "Lux"

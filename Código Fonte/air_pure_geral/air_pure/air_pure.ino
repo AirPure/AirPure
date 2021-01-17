@@ -60,6 +60,8 @@ char ssid[] = "xxxxx"; //nome da rede. PACO Internet
 char pass[] = "xxxxxx"; //senha da rede. SEM SENHA
 char mqttUserName[] = "airpure"; //nome de usuário do MQTT
 char mqttPass[] = "0QIMS6VELRQUUC0A"; //chave de acesso do MQTT.
+char homeassistant_mqtt_user[] = "xxxxxxx"; //nome de usuário do MQTT
+char homeassistant_mqtt_pass[] = "xxxxxxx"; //chave de acesso do MQTT.
 char writeAPIKey[] = "EB6J5ATU4ETP7984"; //chave de escrita, canal Thingspeak.
 long channelID = 1167146; //Identificação do canal Thingspeak - Pessoal.
 
@@ -72,7 +74,20 @@ static const char alphanum[] = "0123456789""ABCDEFGHIJKLMNOPQRSTUVWXYZ""abcdefgh
 
 //Inicializar a biblioteca pubsubclient e definir o broker MQTT thingspeak.
 PubSubClient mqttClient(client);
+PubSubClient mqttClient2(client);
 const char* server = "mqtt.thingspeak.com";
+#define mqtt_server "xxxxxxx"
+#define mqtt_user "xxxxxx"
+#define mqtt_password "xxxxxxx"
+
+#define umidade_topic "sensor/umidade"
+#define temperatura_topic "sensor/temperatura"
+#define tvoc_topic "sensor/tvoc"
+#define co2_topic "sensor/co2"
+#define eco2_topic "sensor/eco2"
+#define ruido_topic "sensor/ruido"
+#define luminosidade_topic "sensor/lux"
+
 
 unsigned long lastConnectionTime = 0; //Tempo da última conexão.
 const unsigned long postingInterval = 20000L; //Tempo de postagem, 20 segundos.
@@ -159,17 +174,39 @@ void setup() {
 
   Serial.println("Wifi conectado com sucesso!");
   
-  mqttClient.setServer(server, 1883); //Configurar Broker MQTT - ThingSpeak.
+  //Configurar Broker MQTT - ThingSpeak.
+  mqttClient.setServer(server, 1883); 
 
   //Conectar MQTT.
   if(!mqttClient.connected()){
     reconnect();
   }
+  
+  //Manter conexão MQTT.
+  mqttClient.loop(); 
+  
+  //Função para manter a leitura constante dos sensores.
+  mqttpublish();  
+  delay(3000);
+  //Finaliza conexão após envio para tentar conexão com o Home-assistant
+  mqttClient.disconnect();
+  delay(1000);
+  
+  //Home-assistant
 
-  mqttClient.loop(); //Manter conexão MQTT.
+  mqttClient2.setServer(mqtt_server, 1883); //Configurar Broker MQTT - Home-assistant.
 
-  mqttpublish();  //Função para manter a leitura constante dos sensores.
+  //Conectar MQTT.
+  if(!mqttClient2.connected()){
+    reconnect2();
+  }
 
+  mqttClient2.loop(); //Manter conexão MQTT.
+  if(!mqttClient2.connected()){
+    Serial.println("Não foi possível publicar ao Home-assistant!");
+  } else {
+     homeassistant_publish();
+  }
   delay(3000);  //Delay para permitir que os dados sejam enviados antes de entrar no modo sleep.
 
   WiFi.mode(WIFI_OFF); //Desliga o WiFi antes de entrar em modo SLEEP.
@@ -279,6 +316,20 @@ void reconnect(){
    }
 }
 
+//Conectar ao Broker MQTT - Home-Assistant.
+void reconnect2() {
+
+    Serial.print("Tentando se conectar ao Home-assistant.");
+    if (mqttClient2.connect("ESP32", homeassistant_mqtt_user, homeassistant_mqtt_pass)) {
+      Serial.println("Conectado.");
+    } else {
+      Serial.print("Conexão falhou. Código de erro: ");
+      Serial.print(mqttClient2.state());
+      Serial.println("Prosseguindo.");
+    }
+  
+}
+
  //Leitura e publicação dos dados para o ThingSpeak.
  void mqttpublish(){
     mqttClient.loop(); //Manter conexão MQTT.
@@ -328,7 +379,7 @@ void reconnect(){
   if(valorCO2 > 1000){
     highCO2 = 1;
     Serial.println("Níveis de CO2 elevados. Fazendo envio de alerta pelo telegram.");
-    bot.sendMessage(CHAT_ID, "Níveis de CO2 acima do tolerável! Valor aferido: " + valorCO2 + " ppm. " + formattedDate, "");
+    bot.sendMessage(CHAT_ID, "Níveis de CO2 acima do tolerável! Valor aferido: " + String(valorCO2) + " ppm. " + String(formattedDate), "");
   } else {
     highCO2 = 0;
   }
@@ -360,5 +411,27 @@ void reconnect(){
   }
   lastConnectionTime = millis();
   //}
+
+}
+
+
+ //Leitura e publicação dos dados para o ThingSpeak.
+ void homeassistant_publish(){
+  Serial.println("Publicando para o Home-Assistant.");
+  mqttClient2.publish(temperatura_topic, String(temp, 2).c_str(), true);
+  delay(100);
+  mqttClient2.publish(umidade_topic, String(umid, 2).c_str(), true);
+  delay(100);
+  mqttClient2.publish(tvoc_topic, String(voc, 5).c_str(), true);
+  delay(100);
+  mqttClient2.publish(co2_topic, String(valorCO2, 5).c_str(), true);
+  delay(100);
+  mqttClient2.publish(eco2_topic, String(eco2, 5).c_str(), true);
+  delay(100);
+  mqttClient2.publish(ruido_topic, String(dbLevel, 2).c_str(), true);
+  delay(100);
+  mqttClient2.publish(luminosidade_topic, String(lux, 5).c_str(), true);
+  delay(100);
+  Serial.println("Publicado com sucesso!");
 
 }
