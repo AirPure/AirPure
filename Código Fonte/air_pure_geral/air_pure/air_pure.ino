@@ -13,6 +13,8 @@
 #include <ArduinoJson.h>
 #include <NTPClient.h>
 #include <WiFiUdp.h>
+#include <ArduinoOTA.h>
+#include <ESPmDNS.h>
 
 /*Definir os pinos dos sensor*/
 #define dhtPin 4 //Sensor de temperatura e umidade - DHT22.
@@ -23,6 +25,7 @@
 #define TIME_TO_SLEEP  60        /* Tempo de sleep do ESP32 em segundos */
 #define BOTtoken "1403262308:AAF1zrbdz0-rEyXTdJUdT20MhA0eBpCT_TQ"  // Token do seu BOT do telegram.
 #define CHAT_ID "1248387297"  //Seu ID no telegram.
+#define AIRPURE_ID 2  //Seu ID do airpure
 
 
 BH1750 lightMeter (0x23); //Sensor de luminosidade - BH1750 (Addr: 0x23)
@@ -53,6 +56,7 @@ int timeOutReading = 30;  //Timeout de leitura
 int timeoutHorario = 30;  //Timeout para obter hora
 int r = 0; //Variável de retorno de funções
 String formattedDate; //String para receber o horário.
+int isWaitingForOta = 0; //Flag que houve uma conexao via OTA.
 
 
 /*Configurações de rede e conexão MQTT ThingSpeak*/
@@ -60,8 +64,8 @@ char ssid[] = "xxxxx"; //nome da rede. PACO Internet
 char pass[] = "xxxxxx"; //senha da rede. SEM SENHA
 char mqttUserName[] = "airpure"; //nome de usuário do MQTT
 char mqttPass[] = "0QIMS6VELRQUUC0A"; //chave de acesso do MQTT.
-char homeassistant_mqtt_user[] = "xxxxx"; //nome de usuário do MQTT
-char homeassistant_mqtt_pass[] = "xxxxxx"; //chave de acesso do MQTT.
+char homeassistant_mqtt_user[] = "airpure"; //nome de usuário do MQTT
+char homeassistant_mqtt_pass[] = "airpure"; //chave de acesso do MQTT.
 char writeAPIKey[] = "EB6J5ATU4ETP7984"; //chave de escrita, canal Thingspeak.
 long channelID = 1167146; //Identificação do canal Thingspeak - Pessoal.
 
@@ -76,9 +80,7 @@ static const char alphanum[] = "0123456789""ABCDEFGHIJKLMNOPQRSTUVWXYZ""abcdefgh
 PubSubClient mqttClient(client);
 PubSubClient mqttClient2(client);
 const char* server = "mqtt.thingspeak.com";
-#define mqtt_server "xxxxx"
-#define mqtt_user "xxxxx"
-#define mqtt_password "xxxxx"
+#define mqtt_server "189.63.21.229"
 
 #define umidade_topic "sensor/umidade"
 #define temperatura_topic "sensor/temperatura"
@@ -93,6 +95,51 @@ unsigned long lastConnectionTime = 0; //Tempo da última conexão.
 const unsigned long postingInterval = 20000L; //Tempo de postagem, 20 segundos.
 const int sampleWindow = 50; // Janela de amostragem em mS (50 mS = 20Hz)
 unsigned int sample;  //Variável referente a leitura do sensor de ruído
+
+TaskHandle_t task_low;
+void vLow(void *pvParameters);
+
+void vLow(void *pvParameters){
+    while (true){
+      //Atualiza estado do OTA.
+      ArduinoOTA.handle();
+      vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+}
+
+void configureOta(){
+    ArduinoOTA
+  .onStart([]() {
+    String type;
+    if (ArduinoOTA.getCommand() == U_FLASH)
+      type = "sketch";
+    else // U_SPIFFS
+      type = "filesystem";
+    // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
+    Serial.println("Iniciando: " + type);
+  })
+  .onEnd([]() {
+    Serial.println("Código foi carregado com sucesso!");
+  })
+  .onProgress([](unsigned int progress, unsigned int total) {
+    Serial.printf(".");
+    isWaitingForOta = 1;
+  })
+  .onError([](ota_error_t error) {
+    Serial.printf("Error[%u]: ", error);
+    if (error == OTA_AUTH_ERROR) Serial.println("Autenticação falhou");
+    else if (error == OTA_BEGIN_ERROR) Serial.println("Início falhou");
+    else if (error == OTA_CONNECT_ERROR) Serial.println("Conexão falhou");
+    else if (error == OTA_RECEIVE_ERROR) Serial.println("Recebimento falhou");
+    else if (error == OTA_END_ERROR) Serial.println("Finalização falhou");
+  });
+  ArduinoOTA.begin();
+  Serial.print("OTA Ativado. Endereço de IP: ");
+  Serial.println(WiFi.localIP());
+
+}
+
+
 
 void setup() {
   Serial.begin(115200); //Iniciar porta serial - USB.
@@ -173,6 +220,13 @@ void setup() {
   }
 
   Serial.println("Wifi conectado com sucesso!");
+
+  //Faz a configuração para o OTA.
+  configureOta();
+
+  //Cria task que mantem a atualização do OTA.
+  xTaskCreate(vLow,"vLow",10000,NULL,0,&task_low);
+  
   
   //Configurar Broker MQTT - ThingSpeak.
   mqttClient.setServer(server, 1883); 
@@ -211,6 +265,7 @@ void setup() {
  
   delay(3000);  //Delay para permitir que os dados sejam enviados antes de entrar no modo sleep.
 
+  if (isWaitingForOta == 0){
   WiFi.mode(WIFI_OFF); //Desliga o WiFi antes de entrar em modo SLEEP.
 
   Serial.println("Entrando no modo oscioso!");
@@ -218,6 +273,19 @@ void setup() {
 
   // Entra no modo Sleep.
   esp_deep_sleep_start();
+  } else {
+    for(int timeoutOTA = 60; timeoutOTA > 0; timeoutOTA--){
+      delay(1000);
+    }
+    WiFi.mode(WIFI_OFF); //Desliga o WiFi antes de entrar em modo SLEEP.
+
+    Serial.println("Entrando no modo oscioso!");
+    esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
+  
+    // Entra no modo Sleep.
+    esp_deep_sleep_start();
+    
+  }
   
   
 }
