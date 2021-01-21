@@ -23,15 +23,15 @@
 #define TXD2 17 //Sensor de CO2 - MH-Z14A.
 #define uS_TO_S_FACTOR 1000000  /* Fator de conversao de microsegundos para segundos */
 #define TIME_TO_SLEEP  60        /* Tempo de sleep do ESP32 em segundos */
-#define BOTtoken "1403262308:AAF1zrbdz0-rEyXTdJUdT20MhA0eBpCT_TQ"  // Token do seu BOT do telegram.
+#define BTKEN "1403262308:AAF1zrbdz0-rEyXTdJUdT20MhA0eBpCT_TQ"  // Token do seu BOT do telegram.
 #define CHAT_ID "1248387297"  //Seu ID no telegram.
-#define AIRPURE_ID 2  //Seu ID do airpure
+int AIRPURE_ID = 2;  //Seu ID do airpure
 
 
 BH1750 lightMeter (0x23); //Sensor de luminosidade - BH1750 (Addr: 0x23)
 WiFiClientSecure client2; //Inicializar cliente wifi
 WiFiClient client; //Inicializar cliente wifi
-UniversalTelegramBot bot(BOTtoken, client2); //Instanciando bot do telegram
+UniversalTelegramBot bot(BTKEN, client2); //Instanciando bot do telegram
 WiFiUDP ntpUDP; //NTP-UDP
 NTPClient timeClient(ntpUDP);//Cliente NTP
 
@@ -66,8 +66,8 @@ char mqttUserName[] = "airpure"; //nome de usuário do MQTT
 char mqttPass[] = "0QIMS6VELRQUUC0A"; //chave de acesso do MQTT.
 char homeassistant_mqtt_user[] = "airpure"; //nome de usuário do MQTT
 char homeassistant_mqtt_pass[] = "airpure"; //chave de acesso do MQTT.
-char writeAPIKey[] = "EB6J5ATU4ETP7984"; //chave de escrita, canal Thingspeak.
-long channelID = 1167146; //Identificação do canal Thingspeak - Pessoal.
+String writeAPIKey[3] = {"WDPPXX2EI7II24E0","EB6J5ATU4ETP7984","W1OE6ARR4S0X2OAT"}; //chave de escrita, canal Thingspeak.
+long channelID[3] = {1160801,1167146,1177969}; //Identificação do canal Thingspeak - Pessoal.
 
 
 
@@ -82,13 +82,13 @@ PubSubClient mqttClient2(client);
 const char* server = "mqtt.thingspeak.com";
 #define mqtt_server "189.63.21.229"
 
-#define umidade_topic "sensor/umidade"
-#define temperatura_topic "sensor/temperatura"
-#define tvoc_topic "sensor/tvoc"
-#define co2_topic "sensor/co2"
-#define eco2_topic "sensor/eco2"
-#define ruido_topic "sensor/ruido"
-#define luminosidade_topic "sensor/lux"
+String umidade_topic = "sensor/umidade/";
+String temperatura_topic = "sensor/temperatura/";
+String tvoc_topic = "sensor/tvoc/";
+String co2_topic = "sensor/co2/";
+String eco2_topic = "sensor/eco2/";
+String ruido_topic = "sensor/ruido/";
+String luminosidade_topic = "sensor/lux/";
 
 
 unsigned long lastConnectionTime = 0; //Tempo da última conexão.
@@ -196,7 +196,7 @@ void setup() {
   if(!wifiManager.autoConnect("AirPure WIFI", "12345678")) {
   Serial.println("Falhou para se conectar... Reiniciando.");
     delay(100);
-    ESP.restart();
+    if (isWaitingForOta == 0){ESP.restart();}
   }
 
   Serial.println("Obtendo horário atual.");
@@ -381,7 +381,7 @@ void reconnect(){
       Serial.print(mqttClient.state());
       Serial.print("O sistema irá reiniciar.");
       delay(1000);
-      ESP.restart();
+      if (isWaitingForOta == 0){ESP.restart();}
       }
    }
 }
@@ -449,7 +449,7 @@ void reconnect2() {
   if(valorCO2 > 1000){
     highCO2 = 1;
     Serial.println("Níveis de CO2 elevados. Fazendo envio de alerta pelo telegram.");
-    bot.sendMessage(CHAT_ID, "Níveis de CO2 acima do tolerável! Valor aferido: " + String(valorCO2) + " ppm. " + String(formattedDate), "");
+    bot.sendMessage(CHAT_ID, "Níveis de CO2 acima do tolerável! AIRPURE-ID: " + String(AIRPURE_ID) + " | Valor aferido: " + String(valorCO2) + " ppm. | " + String(formattedDate), "");
   } else {
     highCO2 = 0;
   }
@@ -461,7 +461,7 @@ void reconnect2() {
   dados.toCharArray(msgBuffer,tamanho+1);
   
   //Cria uma String de tópico e publica os dados na Thingspeak.
-  String topicString = "channels/" + String(channelID) + "/publish/"+String(writeAPIKey);
+  String topicString = "channels/" + String(channelID[AIRPURE_ID-1]) + "/publish/"+String(writeAPIKey[AIRPURE_ID-1]);
   tamanho = topicString.length();
   char topicBuffer[tamanho];
   topicString.toCharArray(topicBuffer, tamanho+1);
@@ -477,7 +477,7 @@ void reconnect2() {
     Serial.println("Envio não foi feito!");
     Serial.println("Resetando para evitar que isto aconteça novamente.");
     delay(1000);
-    ESP.restart();
+    if (isWaitingForOta == 0){ESP.restart();}
   }
   lastConnectionTime = millis();
   //}
@@ -487,27 +487,37 @@ void reconnect2() {
 
  //Leitura e publicação dos dados para o ThingSpeak.
  void homeassistant_publish(){
+
+   //Atualizando os topicos para cada airpure
+   umidade_topic += String(AIRPURE_ID);
+   temperatura_topic += String(AIRPURE_ID);
+   tvoc_topic += String(AIRPURE_ID);
+   co2_topic += String(AIRPURE_ID);
+   eco2_topic += String(AIRPURE_ID);
+   ruido_topic += String(AIRPURE_ID);
+   luminosidade_topic += String(AIRPURE_ID);
+  
   Serial.println("Publicando para o Home-Assistant.");
    mqttClient2.loop(); //Manter conexão MQTT.
-  mqttClient2.publish(temperatura_topic, String(temp, 2).c_str(), true);
+  mqttClient2.publish(temperatura_topic.c_str(), String(temp, 2).c_str(), true);
   delay(1500);
    mqttClient2.loop(); //Manter conexão MQTT.
-  mqttClient2.publish(umidade_topic, String(umid, 2).c_str(), true);
+  mqttClient2.publish(umidade_topic.c_str(), String(umid, 2).c_str(), true);
   delay(1500);
    mqttClient2.loop(); //Manter conexão MQTT.
-  mqttClient2.publish(tvoc_topic, String(voc, 5).c_str(), true);
+  mqttClient2.publish(tvoc_topic.c_str(), String(voc, 5).c_str(), true);
   delay(1500);
    mqttClient2.loop(); //Manter conexão MQTT.
-  mqttClient2.publish(co2_topic, String(valorCO2, 5).c_str(), true);
+  mqttClient2.publish(co2_topic.c_str(), String(valorCO2, 5).c_str(), true);
   delay(1500);
    mqttClient2.loop(); //Manter conexão MQTT.
-  mqttClient2.publish(eco2_topic, String(eco2, 5).c_str(), true);
+  mqttClient2.publish(eco2_topic.c_str(), String(eco2, 5).c_str(), true);
   delay(1500);
    mqttClient2.loop(); //Manter conexão MQTT.
-  mqttClient2.publish(ruido_topic, String(dbLevel, 2).c_str(), true);
+  mqttClient2.publish(ruido_topic.c_str(), String(dbLevel, 2).c_str(), true);
   delay(1500);
    mqttClient2.loop(); //Manter conexão MQTT.
-  mqttClient2.publish(luminosidade_topic, String(lux, 5).c_str(), true);
+  mqttClient2.publish(luminosidade_topic.c_str(), String(lux, 5).c_str(), true);
   delay(1500);
   Serial.println("Publicado com sucesso!");
 
