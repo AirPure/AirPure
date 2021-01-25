@@ -14,7 +14,33 @@
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
+#include <HTTPClient.h>
 #include <ESPmDNS.h>
+
+const char * root_ca=\
+"-----BEGIN CERTIFICATE-----\n" \
+"MIIDujCCAqKgAwIBAgILBAAAAAABD4Ym5g0wDQYJKoZIhvcNAQEFBQAwTDEgMB4G\n" \
+"A1UECxMXR2xvYmFsU2lnbiBSb290IENBIC0gUjIxEzARBgNVBAoTCkdsb2JhbFNp\n" \
+"Z24xEzARBgNVBAMTCkdsb2JhbFNpZ24wHhcNMDYxMjE1MDgwMDAwWhcNMjExMjE1\n" \
+"MDgwMDAwWjBMMSAwHgYDVQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMjETMBEG\n" \
+"A1UEChMKR2xvYmFsU2lnbjETMBEGA1UEAxMKR2xvYmFsU2lnbjCCASIwDQYJKoZI\n" \
+"hvcNAQEBBQADggEPADCCAQoCggEBAKbPJA6+Lm8omUVCxKs+IVSbC9N/hHD6ErPL\n" \
+"v4dfxn+G07IwXNb9rfF73OX4YJYJkhD10FPe+3t+c4isUoh7SqbKSaZeqKeMWhG8\n" \
+"eoLrvozps6yWJQeXSpkqBy+0Hne/ig+1AnwblrjFuTosvNYSuetZfeLQBoZfXklq\n" \
+"tTleiDTsvHgMCJiEbKjNS7SgfQx5TfC4LcshytVsW33hoCmEofnTlEnLJGKRILzd\n" \
+"C9XZzPnqJworc5HGnRusyMvo4KD0L5CLTfuwNhv2GXqF4G3yYROIXJ/gkwpRl4pa\n" \
+"zq+r1feqCapgvdzZX99yqWATXgAByUr6P6TqBwMhAo6CygPCm48CAwEAAaOBnDCB\n" \
+"mTAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUm+IH\n" \
+"V2ccHsBqBt5ZtJot39wZhi4wNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5n\n" \
+"bG9iYWxzaWduLm5ldC9yb290LXIyLmNybDAfBgNVHSMEGDAWgBSb4gdXZxwewGoG\n" \
+"3lm0mi3f3BmGLjANBgkqhkiG9w0BAQUFAAOCAQEAmYFThxxol4aR7OBKuEQLq4Gs\n" \
+"J0/WwbgcQ3izDJr86iw8bmEbTUsp9Z8FHSbBuOmDAGJFtqkIk7mpM0sYmsL4h4hO\n" \
+"291xNBrBVNpGP+DTKqttVCL1OmLNIG+6KYnX3ZHu01yiPqFbQfXf5WRDLenVOavS\n" \
+"ot+3i9DAgBkcRcAtjOj4LaR0VknFBbVPFd5uRHg5h6h+u/N5GJG79G+dwfCMNYxd\n" \
+"AfvDbbnvRG15RjF+Cv6pgsH/76tuIMRQyV+dTZsXjAzlAcmgQWpzU/qlULRuJQ/7\n" \
+"TBj0/VLZjmmx6BEP3ojY+x1J96relc8geMJgEtslQIxq/H5COEBkEveegeGTLg==\n" \
+"-----END CERTIFICATE-----\n";
+
 
 /*Definir os pinos dos sensor*/
 #define dhtPin 4 //Sensor de temperatura e umidade - DHT22.
@@ -67,6 +93,7 @@ char mqttPass[] = "0QIMS6VELRQUUC0A"; //chave de acesso do MQTT.
 char homeassistant_mqtt_user[] = "airpure"; //nome de usuário do MQTT
 char homeassistant_mqtt_pass[] = "airpure"; //chave de acesso do MQTT.
 String writeAPIKey[3] = {"WDPPXX2EI7II24E0","EB6J5ATU4ETP7984","W1OE6ARR4S0X2OAT"}; //chave de escrita, canal Thingspeak.
+String GOOGLE_SCRIPT_ID[3] = {"AKfycbyTjkzdpp9rY3XtslFZvW5jxvUnXPAYHTeV4eMmk4uSXMNe5DXV","AKfycbyc1aXXiS_7kK6o7It_4Bit2T4Y8Ub1Un-ofFATPdNSCKDwmmz6","AKfycbyLI0hLaPGFe7XIY6012YkjHCZeKCEcrg0FifhmsBEY2QaRXszV"}; //Google Sheets
 long channelID[3] = {1160801,1167146,1177969}; //Identificação do canal Thingspeak - Pessoal.
 
 
@@ -137,6 +164,18 @@ void configureOta(){
   Serial.print("OTA Ativado. Endereço de IP: ");
   Serial.println(WiFi.localIP());
 
+}
+
+//Faz o envio dos registros para uma tabela
+void sendData(String params) {
+  HTTPClient http;
+  String url="https://script.google.com/a/discente.ufg.br/macros/s/"+GOOGLE_SCRIPT_ID[AIRPURE_ID-1]+"/exec?"+params;
+  Serial.print(url);
+  Serial.print("Fazendo requisição ");
+  http.begin(url, root_ca); //Specify the URL and certificate
+  int httpCode = http.GET();  
+  http.end();
+  Serial.println(": Finalizado: "+httpCode);
 }
 
 
@@ -265,6 +304,12 @@ void setup() {
  
   delay(3000);  //Delay para permitir que os dados sejam enviados antes de entrar no modo sleep.
 
+  Serial.println("Fazendo o envio para o Google Sheets.");
+  sendData(String("Temperatura=" + String(temp, 2) + "&Umidade=" + String(umid, 2) + "&eCO2=" +String(eco2, 2)+ "&TVOC=" +String(voc, 2)+ "&CO2=" + String(valorCO2)+ "&Lux=" + String(lux,5)+ "&Ruido=" + String(dbLevel,2)+ "&Alarme=" + String(highCO2,2) + "&ID=" + String(AIRPURE_ID)));
+  Serial.println("Envio executado.");
+
+  delay(3000);  //Delay para permitir que os dados sejam enviados antes de entrar no modo sleep.
+  
   if (isWaitingForOta == 0){
   WiFi.mode(WIFI_OFF); //Desliga o WiFi antes de entrar em modo SLEEP.
 
