@@ -51,7 +51,7 @@ const char * root_ca=\
 #define TIME_TO_SLEEP  60        /* Tempo de sleep do ESP32 em segundos */
 #define BTKEN "1403262308:AAF1zrbdz0-rEyXTdJUdT20MhA0eBpCT_TQ"  // Token do seu BOT do telegram.
 #define CHAT_ID "1248387297"  //Seu ID no telegram.
-int AIRPURE_ID = 1;  //Seu ID do airpure
+int AIRPURE_ID = 3;  //Seu ID do airpure
 
 
 BH1750 lightMeter (0x23); //Sensor de luminosidade - BH1750 (Addr: 0x23)
@@ -320,6 +320,7 @@ void loop() {
   }
  
   delay(3000);  //Delay para permitir que os dados sejam enviados antes de entrar no modo sleep.
+  mqttClient2.disconnect();
 
   Serial.println("Fazendo o envio para o Google Sheets.");
   sendData(String("Temperatura=" + String(temp, 2) + "&Umidade=" + String(umid, 2) + "&eCO2=" +String(eco2, 2)+ "&TVOC=" +String(voc, 2)+ "&CO2=" + String(valorCO2)+ "&Lux=" + String(lux,5)+ "&Ruido=" + String(dbLevel,2)+ "&Alarme=" + String(highCO2,2) + "&ID=" + String(AIRPURE_ID)));
