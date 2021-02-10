@@ -211,6 +211,9 @@ void setup() {
     Serial.println("CCS811 iniciado!");
   }
 
+      //Cria task que obtém os dados do ccs811
+  xTaskCreate(vCCS811,"vCCS811",10000,NULL,0,&task_ccs811);
+
   Serial.println("Iniciando o DHT22...");
   dht.begin(); //Inicializar DHT22.
   Serial.println("DHT22 iniciado!");
@@ -279,8 +282,7 @@ void setup() {
   //Cria task que mantem a atualização do OTA.
   xTaskCreate(vLow,"vLow",10000,NULL,0,&task_low);
 
-    //Cria task que obtém os dados do ccs811
-  xTaskCreate(vCCS811,"vCCS811",10000,NULL,0,&task_ccs811);
+
   
   
 }
@@ -333,6 +335,8 @@ void loop() {
     delay(1000);
     Serial.print(".");
   }
+
+  ESP.restart();
 
     
   
