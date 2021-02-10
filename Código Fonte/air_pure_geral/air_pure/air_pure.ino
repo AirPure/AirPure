@@ -6,7 +6,7 @@
 #include <WiFi.h>
 #include <SPI.h>
 #include <Wire.h>
-#include "SparkFunCCS811.h"
+#include <Adafruit_CCS811.h>
 #include <i2cdetect.h>
 #include <WiFiClientSecure.h>
 #include <UniversalTelegramBot.h>
@@ -51,7 +51,7 @@ const char * root_ca=\
 #define TIME_TO_SLEEP  60        /* Tempo de sleep do ESP32 em segundos */
 #define BTKEN "1403262308:AAF1zrbdz0-rEyXTdJUdT20MhA0eBpCT_TQ"  // Token do seu BOT do telegram.
 #define CHAT_ID "1248387297"  //Seu ID no telegram.
-int AIRPURE_ID = 2;  //Seu ID do airpure
+int AIRPURE_ID = 1;  //Seu ID do airpure
 
 
 BH1750 lightMeter (0x23); //Sensor de luminosidade - BH1750 (Addr: 0x23)
@@ -67,7 +67,7 @@ NTPClient timeClient(ntpUDP);//Cliente NTP
 #define dhtType DHT22 //Tipo do sensor DHT.
 DHT dht(dhtPin, dhtType); //Objeto sensor de temperatura e umidade
 #define CCS811_ADDR 0x5A //Endereço I2C padrão
-CCS811 mySensor(CCS811_ADDR); //Instância do CCS811
+Adafruit_CCS811 ccs; //Objeto sensor de TVOC. //Instância do CCS811
 
 //Definir variaveis globais.
 float temp; //Temperatura em graus celsius.
@@ -134,6 +134,19 @@ void vLow(void *pvParameters){
     }
 }
 
+TaskHandle_t task_ccs811;
+void vCCS811(void *pvParameters);
+
+void vCCS811(void *pvParameters){
+    while (true){
+        if(!ccs.readData()){
+              eco2 = ccs.geteCO2(); //Ler eCO2 - CCS811.
+              voc = ccs.getTVOC(); //Ler TVOC - CCS811.
+        }
+      vTaskDelay(pdMS_TO_TICKS(2000));
+    }
+}
+
 void configureOta(){
     ArduinoOTA
   .onStart([]() {
@@ -191,7 +204,7 @@ void setup() {
 
   //Inicializar sensor CCS811.
   Serial.println("Iniciando o CCS811...");
-  if (mySensor.begin() == false)
+    if(!ccs.begin())
   {
     Serial.println("CCS811 não foi iniciado!");
   } else {
@@ -265,7 +278,14 @@ void setup() {
 
   //Cria task que mantem a atualização do OTA.
   xTaskCreate(vLow,"vLow",10000,NULL,0,&task_low);
+
+    //Cria task que obtém os dados do ccs811
+  xTaskCreate(vCCS811,"vCCS811",10000,NULL,0,&task_ccs811);
   
+  
+}
+
+void loop() {
   
   //Configurar Broker MQTT - ThingSpeak.
   mqttClient.setServer(server, 1883); 
@@ -274,10 +294,7 @@ void setup() {
   if(!mqttClient.connected()){
     reconnect();
   }
-  
-  //Manter conexão MQTT.
-  mqttClient.loop(); 
-  
+
   //Função para manter a leitura constante dos sensores.
   mqttpublish();  
   delay(3000);
@@ -306,36 +323,19 @@ void setup() {
 
   Serial.println("Fazendo o envio para o Google Sheets.");
   sendData(String("Temperatura=" + String(temp, 2) + "&Umidade=" + String(umid, 2) + "&eCO2=" +String(eco2, 2)+ "&TVOC=" +String(voc, 2)+ "&CO2=" + String(valorCO2)+ "&Lux=" + String(lux,5)+ "&Ruido=" + String(dbLevel,2)+ "&Alarme=" + String(highCO2,2) + "&ID=" + String(AIRPURE_ID)));
-  Serial.println("Envio executado.");
+  Serial.println("Envio executado. Um novo envio será feito em um minuto.");
 
   delay(3000);  //Delay para permitir que os dados sejam enviados antes de entrar no modo sleep.
   
-  if (isWaitingForOta == 0){
-  WiFi.mode(WIFI_OFF); //Desliga o WiFi antes de entrar em modo SLEEP.
-
-  Serial.println("Entrando no modo oscioso!");
-  esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
-
-  // Entra no modo Sleep.
-  esp_deep_sleep_start();
-  } else {
-    for(int timeoutOTA = 60; timeoutOTA > 0; timeoutOTA--){
-      delay(1000);
-    }
-    WiFi.mode(WIFI_OFF); //Desliga o WiFi antes de entrar em modo SLEEP.
-
-    Serial.println("Entrando no modo oscioso!");
-    esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
-  
-    // Entra no modo Sleep.
-    esp_deep_sleep_start();
-    
+  //Delay de um minuto para a próxima amostragem
+  for(int timeoutOTA = 60; timeoutOTA > 0; timeoutOTA--){
+    delay(1000);
+    Serial.print(".");
   }
-  
-  
-}
 
-void loop() {
+    
+  
+  
 }
 
 //Faz o map de valores, retornando floats (Necessário pois o map nativo retorna apenas inteiros).
@@ -468,21 +468,13 @@ void reconnect2() {
   Serial.println("(OK)");
 
   Serial.println("Lendo TVOC.");
-  while (!(eco2 > 400 && voc > 0)){
-    //CCS811 - TVOC
-     if (mySensor.dataAvailable()){
-        mySensor.readAlgorithmResults();
-        eco2 = mySensor.getCO2();
-        voc = mySensor.getTVOC();
-        Serial.print(".");
-        timeOutReading--;
-        if(timeOutReading == 0){
-          Serial.println("");
-          Serial.println("Falha de leitura!");
-          break;
-        }
+  timeOutReading = 30;
+  while(voc <= 0 && eco2 <=400){
+    timeOutReading--; 
+    if (timeOutReading == 0){
+      Serial.println("Erro de leitura CCS811.");
+      break;
     }
-      mqttClient.loop(); //Manter conexão MQTT.
     delay(1000);
   }
   Serial.println("(OK)");
