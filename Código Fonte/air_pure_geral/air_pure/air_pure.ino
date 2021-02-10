@@ -130,22 +130,16 @@ void vLow(void *pvParameters){
     while (true){
       //Atualiza estado do OTA.
       ArduinoOTA.handle();
-      vTaskDelay(pdMS_TO_TICKS(1000));
-    }
-}
 
-TaskHandle_t task_ccs811;
-void vCCS811(void *pvParameters);
-
-void vCCS811(void *pvParameters){
-    while (true){
         if(!ccs.readData()){
               eco2 = ccs.geteCO2(); //Ler eCO2 - CCS811.
               voc = ccs.getTVOC(); //Ler TVOC - CCS811.
         }
-      vTaskDelay(pdMS_TO_TICKS(2000));
+      
+      vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
+
 
 void configureOta(){
     ArduinoOTA
@@ -227,10 +221,7 @@ void setup() {
   }
 
   delay(1000);
-      //Cria task que obtém os dados do ccs811
-  xTaskCreate(vCCS811,"vCCS811",1000,NULL,0,&task_ccs811);
 
-    
   pinMode(dhtPin, INPUT); //Configurar modo dos pinos do DHT.
   pinMode(dbMeterPin, INPUT); //Configurar modo dos pinos do MAX9814.
  
