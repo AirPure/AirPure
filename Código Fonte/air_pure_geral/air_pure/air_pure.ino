@@ -397,6 +397,11 @@ void reconnect2() {
   eco2 = eco2Sum/20;
   voc = vocSum/20;
 
+  if (eco2 > 10000 || voc > 10000){
+    eco2 = 400;
+    voc = 0;
+  }
+
   Serial.println("eCO2: " + String(eco2) + " ppm| TVOC: " + String(voc) + " ppb");
   
   Serial.println("(OK)");
