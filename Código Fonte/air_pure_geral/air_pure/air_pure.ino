@@ -73,8 +73,8 @@ Adafruit_CCS811 ccs; //Objeto sensor de TVOC. //Instância do CCS811
 float temp; //Temperatura em graus celsius.
 float umid; //Umidade relativa.
 uint16_t lux; //Valor em Lux referente à luminosidade.
-float eco2; //Equivalente de Dióxido de carbono.
-float voc; //Total de compostos organicos voláteis.
+float eco2, eco2Sum; //Equivalente de Dióxido de carbono.
+float voc, vocSum; //Total de compostos organicos voláteis.
 float valorCO2; //Dióxido de carbono. 
 float dbLevel; //Valor em DB de ruído do ambiente
 int highCO2 = 0; //Flag de alto indice de CO2.
@@ -97,11 +97,8 @@ String GOOGLE_SCRIPT_ID[3] = {"AKfycbyTjkzdpp9rY3XtslFZvW5jxvUnXPAYHTeV4eMmk4uSX
 long channelID[3] = {1160801,1167146,1177969}; //Identificação do canal Thingspeak - Pessoal.
 
 
-
 /*Definir identificação de cliente, randomico.*/
 static const char alphanum[] = "0123456789""ABCDEFGHIJKLMNOPQRSTUVWXYZ""abcdefghijklmnopqrstuvwxyz";
-
-
 
 //Inicializar a biblioteca pubsubclient e definir o broker MQTT thingspeak.
 PubSubClient mqttClient(client);
@@ -109,6 +106,7 @@ PubSubClient mqttClient2(client);
 const char* server = "mqtt.thingspeak.com";
 #define mqtt_server "189.63.21.229"
 
+//Topicos do MQTT para o HomeAssistant
 String umidade_topic = "sensor/umidade/";
 String temperatura_topic = "sensor/temperatura/";
 String tvoc_topic = "sensor/tvoc/";
@@ -130,17 +128,12 @@ void vLow(void *pvParameters){
     while (true){
       //Atualiza estado do OTA.
       ArduinoOTA.handle();
-
-        if(!ccs.readData()){
-              eco2 = ccs.geteCO2(); //Ler eCO2 - CCS811.
-              voc = ccs.getTVOC(); //Ler TVOC - CCS811.
-        }
       
       vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
 
-
+//Configuração OTA
 void configureOta(){
     ArduinoOTA
   .onStart([]() {
@@ -192,104 +185,13 @@ void setup() {
   Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2); //Iniciar porta serial - UART.
   int status = WL_IDLE_STATUS; //Estado da conexão wifi.
 
-  Wire.begin(); //Inicia a conexão I2C
-  delay(100);
-  i2cdetect();  // Detecta todos os dispositivos do barramento I2C
-
-  //Inicializar sensor CCS811.
-  Serial.println("Iniciando o CCS811...");
-    if(!ccs.begin())
-  {
-    Serial.println("CCS811 não foi iniciado!");
-  } else {
-    Serial.println("CCS811 iniciado!");
-  }
-
-
-  Serial.println("Iniciando o DHT22...");
-  dht.begin(); //Inicializar DHT22.
-  Serial.println("DHT22 iniciado!");
-
-    
-  Serial.println("Iniciando o BH1750...");
-  r = lightMeter.begin(); //Inicilizar o BH1750.
-  if (r)
-    Serial.println("BH1750 iniciado!");
-  else {
-    Serial.println("BH1750 não foi iniciado!");
-    lux = 0;
-  }
-
-  delay(1000);
-
   pinMode(dhtPin, INPUT); //Configurar modo dos pinos do DHT.
   pinMode(dbMeterPin, INPUT); //Configurar modo dos pinos do MAX9814.
  
- 
-  //WiFiManager
-  WiFi.disconnect(true);
-  delay(1000);
-  WiFi.mode(WIFI_STA);
-  delay(1000);
-  
-  WiFiManager wifiManager;
-  WiFi.setAutoConnect(true);
-  wifiManager.setTimeout(80);
-  wifiManager.setBreakAfterConfig(true);
-  wifiManager.setConfigPortalTimeout(80);
-
-  //Tenta conectar com o último SSID conhecido
-  //Se não conseguir, abre um AP para ser configurado
-  //SSID do AP: AiPure  Senha: 12345678
-  if(!wifiManager.autoConnect("AirPure WIFI", "12345678")) {
-  Serial.println("Falhou para se conectar... Reiniciando.");
-    delay(100);
-    if (isWaitingForOta == 0){ESP.restart();}
-  }
-
-  Serial.println("Obtendo horário atual.");
-  timeClient.begin(); //Inicia cliente para obter horário.
-  timeClient.setTimeOffset(-10800); //Fuso horário.
-  while(!timeClient.update()) {
-    timeClient.forceUpdate(); //Atualiza o horário.
-    delay(100);
-    timeoutHorario--;
-    if (timeoutHorario == 0){
-      break;
-    }
-  }
-  formattedDate = "Horário de detecção: ";
-  formattedDate += timeClient.getFormattedDate();  //Obtem o horário formatado.
-  if(timeoutHorario == 0){
-    Serial.println("Não foi possível obter o horário.");
-    formattedDate = "Não foi possível obter o horário.";
-  } else {
-    Serial.println("Horário obtido com sucesso.");
-  }
-
-  Serial.println("Wifi conectado com sucesso!");
-
-  //Faz a configuração para o OTA.
-  configureOta();
-
-  //Cria task que mantem a atualização do OTA.
-  xTaskCreate(vLow,"vLow",10000,NULL,0,&task_low);
-
-
-  
-  
 }
 
 void loop() {
   
-  //Configurar Broker MQTT - ThingSpeak.
-  mqttClient.setServer(server, 1883); 
-
-  //Conectar MQTT.
-  if(!mqttClient.connected()){
-    reconnect();
-  }
-
   //Função para manter a leitura constante dos sensores.
   mqttpublish();  
   delay(3000);
@@ -298,10 +200,9 @@ void loop() {
   delay(1000);
   
   //Home-assistant
-
   mqttClient2.setServer(mqtt_server, 1883); //Configurar Broker MQTT - Home-assistant.
 
-  //Conectar MQTT.
+  //Conectar MQTT - HomeAssistant.
   if(!mqttClient2.connected()){
     reconnect2();
   }
@@ -329,13 +230,9 @@ void loop() {
     Serial.print(".");
   }
 
-  ESP.restart();
-
-
-
-    
-  
-  
+  //Resetando para iniciar uma nova amostragem
+  if (isWaitingForOta == 0){ESP.restart();}
+ 
 }
 
 //Faz o map de valores, retornando floats (Necessário pois o map nativo retorna apenas inteiros).
@@ -447,10 +344,69 @@ void reconnect2() {
 
  //Leitura e publicação dos dados para o ThingSpeak.
  void mqttpublish(){
-    mqttClient.loop(); //Manter conexão MQTT.
-  //Leitura dos valores.
+
+    //Leitura dos valores.
   Serial.println("Iniciando leitura dos sensores.");
+
+  //Inicializar sensor CCS811.
+  Serial.println("Iniciando o CCS811...");
+    if(!ccs.begin())
+  {
+    Serial.println("CCS811 não foi iniciado!");
+  } else {
+    Serial.println("CCS811 iniciado!");
+  }
+
+  Serial.println("Aquecendo CCS811...");
+  eco2 = 0;
+  eco2Sum = 0;
+  vocSum = 0;
+  voc = 0;
+  for (int i = 0; i < 10; i++){
+    mqttClient.loop(); //Manter conexão MQTT.
+   if(ccs.available()){
+    if(!ccs.readData()){
+      eco2 = ccs.geteCO2(); //Ler eCO2 - CCS811.
+      voc = ccs.getTVOC(); //Ler TVOC - CCS811.
+      Serial.println("eCO2: " + String(eco2) + " ppm| TVOC: " + String(voc) + " ppb");
+    }else{
+      Serial.println("Erro de leitura CCS811!");
+
+    }
+  }
+  delay(1000);
+  }
+  Serial.println("Lendo TVOC...");
+    for (int i = 0; i < 20; i++){
+      mqttClient.loop(); //Manter conexão MQTT.
+   if(ccs.available()){
+    if(!ccs.readData()){
+      eco2 = ccs.geteCO2(); //Ler eCO2 - CCS811.
+      voc = ccs.getTVOC(); //Ler TVOC - CCS811.
+      vocSum += voc;
+      eco2Sum += eco2;
+      Serial.println("eCO2: " + String(eco2) + " ppm| TVOC: " + String(voc) + " ppb");
+    }else{
+      Serial.println("Erro de leitura CCS811!");
+
+    }
+  }
+  delay(1000);
+  }
+  //Media dos valores...
+  eco2 = eco2Sum/20;
+  voc = vocSum/20;
+
+  Serial.println("eCO2: " + String(eco2) + " ppm| TVOC: " + String(voc) + " ppb");
   
+  Serial.println("(OK)");
+
+  mqttClient.loop(); //Manter conexão MQTT.
+  
+  Serial.println("Iniciando o DHT22...");
+  dht.begin(); //Inicializar DHT22.
+  Serial.println("DHT22 iniciado!");
+
   //MAX9814 - Ruído
   Serial.println("Lendo valor de ruido.");
   dbLevel = readDb();
@@ -461,23 +417,7 @@ void reconnect2() {
   temp = dht.readTemperature(); //Ler temperatura - DHT22.
   umid = dht.readHumidity(); //Ler umidade - DHT22.
   Serial.println("(OK)");
-
-  //BH1750 - Luminosidade
-  Serial.println("Lendo luminosidade.");
-  lux = lightMeter.readLightLevel(); //Ler luminosidade - BH1750.
-  Serial.println("(OK)");
-
-  Serial.println("Lendo TVOC.");
-  timeOutReading = 30;
-  while(voc <= 0 && eco2 <=400){
-    timeOutReading--; 
-    if (timeOutReading == 0){
-      Serial.println("Erro de leitura CCS811.");
-      break;
-    }
-    delay(1000);
-  }
-  Serial.println("(OK)");
+  
   //MHZ-14A - CO2
   Serial.println("Lendo CO2.");
   valorCO2 = leituraGas(); //Concentração de CO2 - MH-Z14A.
@@ -489,6 +429,83 @@ void reconnect2() {
     bot.sendMessage(CHAT_ID, "Níveis de CO2 acima do tolerável! AIRPURE-ID: " + String(AIRPURE_ID) + " | Valor aferido: " + String(valorCO2) + " ppm. | " + String(formattedDate), "");
   } else {
     highCO2 = 0;
+  }
+
+
+    
+  Serial.println("Iniciando o BH1750...");
+  r = lightMeter.begin(); //Inicilizar o BH1750.
+  if (r)
+    Serial.println("BH1750 iniciado!");
+  else {
+    Serial.println("BH1750 não foi iniciado!");
+    lux = 0;
+  }
+
+  delay(1000);
+  
+
+  //BH1750 - Luminosidade
+  Serial.println("Lendo luminosidade.");
+  lux = lightMeter.readLightLevel(); //Ler luminosidade - BH1750.
+  Serial.println("(OK)");
+
+  //WiFiManager
+  WiFi.disconnect(true);
+  delay(1000);
+  WiFi.mode(WIFI_STA);
+  delay(1000);
+  
+  WiFiManager wifiManager;
+  WiFi.setAutoConnect(true);
+  wifiManager.setTimeout(80);
+  wifiManager.setBreakAfterConfig(true);
+  wifiManager.setConfigPortalTimeout(80);
+
+  //Tenta conectar com o último SSID conhecido
+  //Se não conseguir, abre um AP para ser configurado
+  //SSID do AP: AiPure  Senha: 12345678
+  if(!wifiManager.autoConnect("AirPure WIFI", "12345678")) {
+  Serial.println("Falhou para se conectar... Reiniciando.");
+    delay(100);
+    if (isWaitingForOta == 0){ESP.restart();}
+  }
+
+  Serial.println("Wifi conectado com sucesso!");  
+
+  Serial.println("Obtendo horário atual.");
+  timeClient.begin(); //Inicia cliente para obter horário.
+  timeClient.setTimeOffset(-10800); //Fuso horário.
+  while(!timeClient.update()) {
+    timeClient.forceUpdate(); //Atualiza o horário.
+    delay(100);
+    timeoutHorario--;
+    if (timeoutHorario == 0){
+      break;
+    }
+  }
+  
+  formattedDate = "Horário de detecção: ";
+  formattedDate += timeClient.getFormattedDate();  //Obtem o horário formatado.
+  if(timeoutHorario == 0){
+    Serial.println("Não foi possível obter o horário.");
+    formattedDate = "Não foi possível obter o horário.";
+  } else {
+    Serial.println("Horário obtido com sucesso.");
+  }
+  
+  //Faz a configuração para o OTA.
+  configureOta();
+
+  //Cria task que mantem a atualização do OTA.
+  xTaskCreate(vLow,"vLow",10000,NULL,0,&task_low);
+  
+  //Configurar Broker MQTT - ThingSpeak.
+  mqttClient.setServer(server, 1883); 
+
+  //Conectar MQTT.
+  if(!mqttClient.connected()){
+    reconnect();
   }
   
   //String de dados para enviar a Thingspeak.
