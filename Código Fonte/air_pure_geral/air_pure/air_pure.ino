@@ -428,15 +428,6 @@ void reconnect2() {
   valorCO2 = leituraGas(); //Concentração de CO2 - MH-Z14A.
   Serial.println("(OK)");
 
-  if(valorCO2 > 1000){
-    highCO2 = 1;
-    Serial.println("Níveis de CO2 elevados. Fazendo envio de alerta pelo telegram.");
-    bot.sendMessage(CHAT_ID, "Níveis de CO2 acima do tolerável! AIRPURE-ID: " + String(AIRPURE_ID) + " | Valor aferido: " + String(valorCO2) + " ppm. | " + String(formattedDate), "");
-  } else {
-    highCO2 = 0;
-  }
-
-
     
   Serial.println("Iniciando o BH1750...");
   r = lightMeter.begin(); //Inicilizar o BH1750.
@@ -477,6 +468,14 @@ void reconnect2() {
   }
 
   Serial.println("Wifi conectado com sucesso!");  
+
+  if(valorCO2 > 1000){
+    highCO2 = 1;
+    Serial.println("Níveis de CO2 elevados. Fazendo envio de alerta pelo telegram.");
+    bot.sendMessage(CHAT_ID, "Níveis de CO2 acima do tolerável! AIRPURE-ID: " + String(AIRPURE_ID) + " | Valor aferido: " + String(valorCO2) + " ppm. | " + String(formattedDate), "");
+  } else {
+    highCO2 = 0;
+  }
 
   Serial.println("Obtendo horário atual.");
   timeClient.begin(); //Inicia cliente para obter horário.
