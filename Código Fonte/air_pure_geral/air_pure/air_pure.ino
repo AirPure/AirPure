@@ -42,7 +42,7 @@ const char * root_ca=\
 "-----END CERTIFICATE-----\n";
 
 
-/*Definir os pinos dos sensor*/
+/*Definição*/
 #define dhtPin 4 //Sensor de temperatura e umidade - DHT22.
 #define dbMeterPin 34 //Entrada analógica do sensor de ruído - MAX9814
 #define RXD2 16 //Sensor de CO2 - MH-Z14A.
@@ -51,25 +51,24 @@ const char * root_ca=\
 #define TIME_TO_SLEEP  60        /* Tempo de sleep do ESP32 em segundos */
 #define BTKEN "1403262308:AAF1zrbdz0-rEyXTdJUdT20MhA0eBpCT_TQ"  // Token do seu BOT do telegram.
 #define CHAT_ID "1248387297"  //Seu ID no telegram.
-int AIRPURE_ID = 3;  //Seu ID do airpure
+#define dhtType DHT22 //Tipo do sensor DHT.
+#define CCS811_ADDR 0x5A //Endereço I2C padrão
+#define mqtt_server "189.63.21.229"
 
 
+/*Declaração*/
 BH1750 lightMeter (0x23); //Sensor de luminosidade - BH1750 (Addr: 0x23)
 WiFiClientSecure client2; //Inicializar cliente wifi
 WiFiClient client; //Inicializar cliente wifi
 UniversalTelegramBot bot(BTKEN, client2); //Instanciando bot do telegram
 WiFiUDP ntpUDP; //NTP-UDP
 NTPClient timeClient(ntpUDP);//Cliente NTP
-
-
-/*Configuração de sensores.*/
-//DHT22 - Temperatura e Umidade.
-#define dhtType DHT22 //Tipo do sensor DHT.
 DHT dht(dhtPin, dhtType); //Objeto sensor de temperatura e umidade
-#define CCS811_ADDR 0x5A //Endereço I2C padrão
+PubSubClient mqttClient(client);  //ThingSpeak
+PubSubClient mqttClient2(client); //HomeAssistant
 Adafruit_CCS811 ccs; //Objeto sensor de TVOC. //Instância do CCS811
 
-//Definir variaveis globais.
+/*Variáveis*/
 float temp; //Temperatura em graus celsius.
 float umid; //Umidade relativa.
 uint16_t lux; //Valor em Lux referente à luminosidade.
@@ -83,11 +82,6 @@ int timeoutHorario = 30;  //Timeout para obter hora
 int r = 0; //Variável de retorno de funções
 String formattedDate; //String para receber o horário.
 int isWaitingForOta = 0; //Flag que houve uma conexao via OTA.
-
-
-/*Configurações de rede e conexão MQTT ThingSpeak*/
-char ssid[] = "xxxxx"; //nome da rede. PACO Internet
-char pass[] = "xxxxxx"; //senha da rede. SEM SENHA
 char mqttUserName[] = "airpure"; //nome de usuário do MQTT
 char mqttPass[] = "0QIMS6VELRQUUC0A"; //chave de acesso do MQTT.
 char homeassistant_mqtt_user[] = "airpure"; //nome de usuário do MQTT
@@ -95,35 +89,24 @@ char homeassistant_mqtt_pass[] = "airpure"; //chave de acesso do MQTT.
 String writeAPIKey[3] = {"WDPPXX2EI7II24E0","EB6J5ATU4ETP7984","W1OE6ARR4S0X2OAT"}; //chave de escrita, canal Thingspeak.
 String GOOGLE_SCRIPT_ID[3] = {"AKfycbyTjkzdpp9rY3XtslFZvW5jxvUnXPAYHTeV4eMmk4uSXMNe5DXV","AKfycbyc1aXXiS_7kK6o7It_4Bit2T4Y8Ub1Un-ofFATPdNSCKDwmmz6","AKfycbyLI0hLaPGFe7XIY6012YkjHCZeKCEcrg0FifhmsBEY2QaRXszV"}; //Google Sheets
 long channelID[3] = {1160801,1167146,1177969}; //Identificação do canal Thingspeak - Pessoal.
-
-
-/*Definir identificação de cliente, randomico.*/
-static const char alphanum[] = "0123456789""ABCDEFGHIJKLMNOPQRSTUVWXYZ""abcdefghijklmnopqrstuvwxyz";
-
-//Inicializar a biblioteca pubsubclient e definir o broker MQTT thingspeak.
-PubSubClient mqttClient(client);
-PubSubClient mqttClient2(client);
-const char* server = "mqtt.thingspeak.com";
-#define mqtt_server "189.63.21.229"
-
-//Topicos do MQTT para o HomeAssistant
-String umidade_topic = "sensor/umidade/";
-String temperatura_topic = "sensor/temperatura/";
-String tvoc_topic = "sensor/tvoc/";
-String co2_topic = "sensor/co2/";
-String eco2_topic = "sensor/eco2/";
-String ruido_topic = "sensor/ruido/";
-String luminosidade_topic = "sensor/lux/";
-
-
+static const char alphanum[] = "0123456789""ABCDEFGHIJKLMNOPQRSTUVWXYZ""abcdefghijklmnopqrstuvwxyz"; //Definir identificação de cliente, randomico.
+const char* server = "mqtt.thingspeak.com"; //Servidor do MQTT para o ThingSpeak
+String umidade_topic = "sensor/umidade/";  //Topicos do MQTT para o HomeAssistant
+String temperatura_topic = "sensor/temperatura/";  //Topicos do MQTT para o HomeAssistant
+String tvoc_topic = "sensor/tvoc/";  //Topicos do MQTT para o HomeAssistant
+String co2_topic = "sensor/co2/";  //Topicos do MQTT para o HomeAssistant
+String eco2_topic = "sensor/eco2/";  //Topicos do MQTT para o HomeAssistant 
+String ruido_topic = "sensor/ruido/";  //Topicos do MQTT para o HomeAssistant
+String luminosidade_topic = "sensor/lux/";  //Topicos do MQTT para o HomeAssistant
 unsigned long lastConnectionTime = 0; //Tempo da última conexão.
 const unsigned long postingInterval = 20000L; //Tempo de postagem, 20 segundos.
 const int sampleWindow = 50; // Janela de amostragem em mS (50 mS = 20Hz)
 unsigned int sample;  //Variável referente a leitura do sensor de ruído
+int AIRPURE_ID = 3;  //Seu ID do airpure
 
+/*Tasks*/
 TaskHandle_t task_low;
 void vLow(void *pvParameters);
-
 void vLow(void *pvParameters){
     while (true){
       //Atualiza estado do OTA.
@@ -133,7 +116,7 @@ void vLow(void *pvParameters){
     }
 }
 
-//Configuração OTA
+/*Configuração OTA*/
 void configureOta(){
     ArduinoOTA
   .onStart([]() {
@@ -166,7 +149,7 @@ void configureOta(){
 
 }
 
-//Faz o envio dos registros para uma tabela
+/*Faz o envio dos registros para uma tabela*/
 void sendData(String params) {
   HTTPClient http;
   String url="https://script.google.com/a/discente.ufg.br/macros/s/"+GOOGLE_SCRIPT_ID[AIRPURE_ID-1]+"/exec?"+params;
@@ -179,36 +162,29 @@ void sendData(String params) {
 }
 
 
-
+/*Setup*/
 void setup() {
   Serial.begin(115200); //Iniciar porta serial - USB.
   Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2); //Iniciar porta serial - UART.
   int status = WL_IDLE_STATUS; //Estado da conexão wifi.
-
   pinMode(dhtPin, INPUT); //Configurar modo dos pinos do DHT.
   pinMode(dbMeterPin, INPUT); //Configurar modo dos pinos do MAX9814.
- 
 }
 
+/*Loop*/
 void loop() {
-  
-  //Função para manter a leitura constante dos sensores.
-  mqttpublish();  
-  delay(3000);
-  //Finaliza conexão após envio para tentar conexão com o Home-assistant
-  mqttClient.disconnect();
-  delay(1000);
-  
-  //Home-assistant
+  mqttpublish();  //Leitura dos sensores e envio.
+  delay(3000);  //Delay para término do envio
+  mqttClient.disconnect(); //Finaliza conexão após envio para tentar conexão com o Home-assistant
+  delay(1000); //Delay de 1s
   mqttClient2.setServer(mqtt_server, 1883); //Configurar Broker MQTT - Home-assistant.
 
   //Conectar MQTT - HomeAssistant.
   if(!mqttClient2.connected()){
     reconnect2();
   }
-
+  
   mqttClient2.loop(); //Manter conexão MQTT.
-
   if(!mqttClient2.connected()){
     Serial.println("Não foi possível publicar ao Home-assistant!");
   } else {
@@ -241,7 +217,7 @@ float mapfloat(float x, float in_min, float in_max, float out_min, float out_max
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
-
+/*Leitura de ruído*/
 float readDb(){
    unsigned long startMillis= millis();  // Inicio da janela de amostragem
    unsigned int peakToPeak = 0;   // Nível pico a pico
@@ -276,7 +252,7 @@ float readDb(){
 }
 
 
-//Leitura da concentração de gás - MH-Z14A.
+/*Leitura da concentração de gás - MH-Z14A.*/
 float leituraGas(){
   const byte comando[9] =  {0xFF, 0x01, 0x86, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79}; //Comando de leitura da concentração de gás.
   byte resposta[9]; //Armazena a resposta do comando de leitura.
@@ -303,7 +279,7 @@ float leituraGas(){
   }
 }
 
-//Conectar ao Broker MQTT.
+/*Conectar ao Broker MQTT.*/
 void reconnect(){
   char clientID[9]; //Identificação do cliente.
 
@@ -328,7 +304,7 @@ void reconnect(){
    }
 }
 
-//Conectar ao Broker MQTT - Home-Assistant.
+/*Conectar ao Broker MQTT - Home-Assistant.*/
 void reconnect2() {
 
     Serial.print("Tentando se conectar ao Home-assistant.");
@@ -342,10 +318,10 @@ void reconnect2() {
   
 }
 
- //Leitura e publicação dos dados para o ThingSpeak.
+/*Leitura e publicação dos dados para o ThingSpeak.*/
  void mqttpublish(){
 
-    //Leitura dos valores.
+  //Leitura dos valores.
   Serial.println("Iniciando leitura dos sensores.");
 
   //Inicializar sensor CCS811.
@@ -356,7 +332,6 @@ void reconnect2() {
   } else {
     Serial.println("CCS811 iniciado!");
   }
-
   Serial.println("Aquecendo CCS811...");
   eco2 = 0;
   eco2Sum = 0;
@@ -368,7 +343,7 @@ void reconnect2() {
     if(!ccs.readData()){
       eco2 = ccs.geteCO2(); //Ler eCO2 - CCS811.
       voc = ccs.getTVOC(); //Ler TVOC - CCS811.
-      Serial.println("eCO2: " + String(eco2) + " ppm| TVOC: " + String(voc) + " ppb");
+      //Serial.println("eCO2: " + String(eco2) + " ppm| TVOC: " + String(voc) + " ppb");
     }else{
       Serial.println("Erro de leitura CCS811!");
 
@@ -385,7 +360,7 @@ void reconnect2() {
       voc = ccs.getTVOC(); //Ler TVOC - CCS811.
       vocSum += voc;
       eco2Sum += eco2;
-      Serial.println("eCO2: " + String(eco2) + " ppm| TVOC: " + String(voc) + " ppb");
+      //Serial.println("eCO2: " + String(eco2) + " ppm| TVOC: " + String(voc) + " ppb");
     }else{
       Serial.println("Erro de leitura CCS811!");
 
@@ -402,7 +377,7 @@ void reconnect2() {
     voc = 0;
   }
 
-  Serial.println("eCO2: " + String(eco2) + " ppm| TVOC: " + String(voc) + " ppb");
+  //Serial.println("eCO2: " + String(eco2) + " ppm| TVOC: " + String(voc) + " ppb");
   
   Serial.println("(OK)");
 
