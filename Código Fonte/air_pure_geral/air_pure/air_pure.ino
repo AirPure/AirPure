@@ -193,6 +193,31 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
 void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
   memcpy(&myData, incomingData, sizeof(myData));
 
+
+ //WiFiManager
+  WiFi.disconnect(true);
+  delay(1000);
+  WiFi.mode(WIFI_STA);
+  delay(1000);
+
+
+  WiFiManager wifiManager;
+  WiFi.setAutoConnect(true);
+  wifiManager.setTimeout(80);
+  wifiManager.setBreakAfterConfig(true);
+  wifiManager.setConfigPortalTimeout(80);
+
+  //Tenta conectar com o último SSID conhecido
+  //Se não conseguir, abre um AP para ser configurado
+  //SSID do AP: AiPure  Senha: 12345678
+  if(!wifiManager.autoConnect("AirPure WIFI", "12345678")) {
+  Serial.println("Falhou para se conectar... Reiniciando.");
+    delay(100);
+    if (isWaitingForOta == 0){ESP.restart();}
+  }
+  Serial.println("Wifi conectado com sucesso!");  
+
+
   //Configurar Broker MQTT - ThingSpeak.
   mqttClient.setServer(server, 1883); 
 
@@ -263,11 +288,7 @@ void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
 
   delay(3000);  //Delay para permitir que os dados sejam enviados antes de entrar no modo sleep.
   
-  //Delay de um minuto para a próxima amostragem
-  for(int timeoutOTA = 60; timeoutOTA > 0; timeoutOTA--){
-    delay(1000);
-    Serial.print(".");
-  }
+  ESP.restart();
 
 
 
@@ -308,33 +329,13 @@ void setup() {
 #endif
 
 #if isGateway == 1
-
- // Define o modo do Wifi como STATION
-  WiFi.mode(WIFI_STA);
-
-  WiFiManager wifiManager;
-  WiFi.setAutoConnect(true);
-  wifiManager.setTimeout(80);
-  wifiManager.setBreakAfterConfig(true);
-  wifiManager.setConfigPortalTimeout(80);
-
-  //Tenta conectar com o último SSID conhecido
-  //Se não conseguir, abre um AP para ser configurado
-  //SSID do AP: AiPure  Senha: 12345678
-  if(!wifiManager.autoConnect("AirPure WIFI", "12345678")) {
-  Serial.println("Falhou para se conectar... Reiniciando.");
-    delay(100);
-    if (isWaitingForOta == 0){ESP.restart();}
-  }
-
-  Serial.println("Wifi conectado com sucesso!");  
-  
+ WiFi.mode(WIFI_STA);
 
   if (esp_now_init() != ESP_OK) {
     Serial.println("Erro ao iniciar o ESP-NOW");
     return;
   }
-  Serial.println(WiFi.macAddress());
+
   esp_now_register_recv_cb(OnDataRecv);
 
 #endif
@@ -709,6 +710,12 @@ void reconnect2() {
   }
   else {
     Serial.println("Erro ao enviar o pacote.");
+  }
+
+    //Delay de um minuto para a próxima amostragem
+  for(int timeoutOTA = 60; timeoutOTA > 0; timeoutOTA--){
+    delay(1000);
+    Serial.print(".");
   }
   #endif
 
