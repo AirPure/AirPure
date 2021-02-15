@@ -4,6 +4,7 @@
 #include <BH1750.h>
 #include <DHT.h>
 #include <WiFi.h>
+#include <esp_now.h>
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_CCS811.h>
@@ -54,6 +55,9 @@ const char * root_ca=\
 #define dhtType DHT22 //Tipo do sensor DHT.
 #define CCS811_ADDR 0x5A //Endereço I2C padrão
 #define mqtt_server "189.63.21.229"
+#define gatewayNodeMode 0
+#define isReceiver 0
+#define isGateway 0
 
 
 /*Declaração*/
@@ -102,7 +106,7 @@ unsigned long lastConnectionTime = 0; //Tempo da última conexão.
 const unsigned long postingInterval = 20000L; //Tempo de postagem, 20 segundos.
 const int sampleWindow = 50; // Janela de amostragem em mS (50 mS = 20Hz)
 unsigned int sample;  //Variável referente a leitura do sensor de ruído
-int AIRPURE_ID = 3;  //Seu ID do airpure
+int AIRPURE_ID = 2;  //Seu ID do airpure
 
 /*Tasks*/
 TaskHandle_t task_low;
@@ -161,19 +165,78 @@ void sendData(String params) {
   Serial.println(": Finalizado: "+httpCode);
 }
 
+/*ESPNOW*/
+// MACADDRESS do gateway
+uint8_t broadcastAddress[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
-/*Setup*/
-void setup() {
-  Serial.begin(115200); //Iniciar porta serial - USB.
-  Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2); //Iniciar porta serial - UART.
-  int status = WL_IDLE_STATUS; //Estado da conexão wifi.
-  pinMode(dhtPin, INPUT); //Configurar modo dos pinos do DHT.
-  pinMode(dbMeterPin, INPUT); //Configurar modo dos pinos do MAX9814.
+typedef struct struct_message {
+  float a;
+  float b;
+  int c;
+  int d;
+  int e;
+  int f;
+  int g;
+  int h;
+  String i;
+} struct_message;
+
+struct_message myData;
+
+// Callback de quando a função é  chamada
+void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
+  Serial.print("\r\nÚltimo pacote:\t");
+  Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Entregue" : "Falhou ao ser entregue");
 }
 
-/*Loop*/
-void loop() {
-  mqttpublish();  //Leitura dos sensores e envio.
+// callback function that will be executed when data is received
+void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
+  memcpy(&myData, incomingData, sizeof(myData));
+
+  //Configurar Broker MQTT - ThingSpeak.
+  mqttClient.setServer(server, 1883); 
+
+  //Conectar MQTT.
+  if(!mqttClient.connected()){
+    reconnect();
+  }
+
+  temp = myData.a;
+  umid = myData.b;
+  eco2 = myData.c;
+  voc = myData.d;
+  valorCO2 = myData.e;
+  lux = myData.f;
+  
+
+ //String de dados para enviar a Thingspeak.
+  String dados = String("field1=" + String(myData.a, 2) + "&field2=" + String(myData.b, 2) + "&field3=" +String(myData.c, 2)+ "&field4=" +String(myData.d, 2)+ "&field5=" + String(myData.e)+ "&field6=" + String(myData.f,5)+ "&field7=" + String(myData.g,2)+ "&field8=" + String(0));
+  int tamanho = dados.length();
+  char msgBuffer[tamanho];
+  dados.toCharArray(msgBuffer,tamanho+1);
+  
+  //Cria uma String de tópico e publica os dados na Thingspeak.
+  String topicString = "channels/" + String(channelID[myData.h-1]) + "/publish/"+String(myData.i);
+  tamanho = topicString.length();
+  char topicBuffer[tamanho];
+  topicString.toCharArray(topicBuffer, tamanho+1);
+
+  //Se tiver passado o tempo de intervalo de amostragem, faz o envio. Caso contrário, não faz nada.
+ // if(millis() - lastConnectionTime > postingInterval){
+  Serial.println("Hora de enviar!");
+  Serial.println(msgBuffer);
+
+  int r = mqttClient.publish(topicBuffer, msgBuffer); //Publicar dados.
+  
+  if (r){
+    Serial.println("Envio feito com sucesso!");
+  } else {
+    Serial.println("Envio não foi feito!");
+    Serial.println("Resetando para evitar que isto aconteça novamente.");
+    delay(1000);
+    if (isWaitingForOta == 0){ESP.restart();}
+  }
+  lastConnectionTime = millis();
   delay(3000);  //Delay para término do envio
   mqttClient.disconnect(); //Finaliza conexão após envio para tentar conexão com o Home-assistant
   delay(1000); //Delay de 1s
@@ -206,8 +269,121 @@ void loop() {
     Serial.print(".");
   }
 
-  //Resetando para iniciar uma nova amostragem
-  if (isWaitingForOta == 0){ESP.restart();}
+
+
+
+
+  
+}
+
+
+/*Setup*/
+void setup() {
+  Serial.begin(115200); //Iniciar porta serial - USB.
+  Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2); //Iniciar porta serial - UART.
+  int status = WL_IDLE_STATUS; //Estado da conexão wifi.
+  pinMode(dhtPin, INPUT); //Configurar modo dos pinos do DHT.
+  pinMode(dbMeterPin, INPUT); //Configurar modo dos pinos do MAX9814.
+  Wire.begin();
+  i2cdetect();  // default range from 0x03 to 0x77
+  delay(2000);
+#if gatewayNodeMode == 1
+  //Inicializa ESPNOW
+  WiFi.mode(WIFI_STA);
+  if (esp_now_init() != ESP_OK) {
+    Serial.println("Erro ao inicializar ESP-NOW");
+    return;
+  }
+  
+  esp_now_register_send_cb(OnDataSent);
+  esp_now_peer_info_t peerInfo;
+  memcpy(peerInfo.peer_addr, broadcastAddress, 6);
+  peerInfo.channel = 0;  
+  peerInfo.encrypt = false;
+    
+  if (esp_now_add_peer(&peerInfo) != ESP_OK){
+    Serial.println("Falhou ao adicionar gateway.");
+    return;
+  }
+#endif
+
+#if isGateway == 1
+
+ // Define o modo do Wifi como STATION
+  WiFi.mode(WIFI_STA);
+
+  WiFiManager wifiManager;
+  WiFi.setAutoConnect(true);
+  wifiManager.setTimeout(80);
+  wifiManager.setBreakAfterConfig(true);
+  wifiManager.setConfigPortalTimeout(80);
+
+  //Tenta conectar com o último SSID conhecido
+  //Se não conseguir, abre um AP para ser configurado
+  //SSID do AP: AiPure  Senha: 12345678
+  if(!wifiManager.autoConnect("AirPure WIFI", "12345678")) {
+  Serial.println("Falhou para se conectar... Reiniciando.");
+    delay(100);
+    if (isWaitingForOta == 0){ESP.restart();}
+  }
+
+  Serial.println("Wifi conectado com sucesso!");  
+  
+
+  if (esp_now_init() != ESP_OK) {
+    Serial.println("Erro ao iniciar o ESP-NOW");
+    return;
+  }
+  Serial.println(WiFi.macAddress());
+  esp_now_register_recv_cb(OnDataRecv);
+
+#endif
+
+  
+}
+
+/*Loop*/
+void loop() {
+  #if isGateway == 0
+  mqttpublish();  //Leitura dos sensores e envio.
+
+  #if gatewayNodeMode == 0
+  delay(3000);  //Delay para término do envio
+  mqttClient.disconnect(); //Finaliza conexão após envio para tentar conexão com o Home-assistant
+  delay(1000); //Delay de 1s
+  mqttClient2.setServer(mqtt_server, 1883); //Configurar Broker MQTT - Home-assistant.
+
+  //Conectar MQTT - HomeAssistant.
+  if(!mqttClient2.connected()){
+    reconnect2();
+  }
+  
+  mqttClient2.loop(); //Manter conexão MQTT.
+  if(!mqttClient2.connected()){
+    Serial.println("Não foi possível publicar ao Home-assistant!");
+  } else {
+     homeassistant_publish();
+  }
+ 
+  delay(3000);  //Delay para permitir que os dados sejam enviados antes de entrar no modo sleep.
+  mqttClient2.disconnect();
+
+  Serial.println("Fazendo o envio para o Google Sheets.");
+  sendData(String("Temperatura=" + String(temp, 2) + "&Umidade=" + String(umid, 2) + "&eCO2=" +String(eco2, 2)+ "&TVOC=" +String(voc, 2)+ "&CO2=" + String(valorCO2)+ "&Lux=" + String(lux,5)+ "&Ruido=" + String(dbLevel,2)+ "&Alarme=" + String(highCO2,2) + "&ID=" + String(AIRPURE_ID)));
+  Serial.println("Envio executado. Um novo envio será feito em um minuto.");
+
+  delay(3000);  //Delay para permitir que os dados sejam enviados antes de entrar no modo sleep.
+  
+  //Delay de um minuto para a próxima amostragem
+  for(int timeoutOTA = 60; timeoutOTA > 0; timeoutOTA--){
+    delay(1000);
+    Serial.print(".");
+  }
+  #endif  //isGatewayNodeMode
+  if (isWaitingForOta == 0){ESP.restart();}  //Resetando para iniciar uma nova amostragem
+  #endif //isGateway
+
+  
  
 }
 
@@ -338,7 +514,6 @@ void reconnect2() {
   vocSum = 0;
   voc = 0;
   for (int i = 0; i < 10; i++){
-    mqttClient.loop(); //Manter conexão MQTT.
    if(ccs.available()){
     if(!ccs.readData()){
       eco2 = ccs.geteCO2(); //Ler eCO2 - CCS811.
@@ -353,7 +528,6 @@ void reconnect2() {
   }
   Serial.println("Lendo TVOC...");
     for (int i = 0; i < 20; i++){
-      mqttClient.loop(); //Manter conexão MQTT.
    if(ccs.available()){
     if(!ccs.readData()){
       eco2 = ccs.geteCO2(); //Ler eCO2 - CCS811.
@@ -380,8 +554,6 @@ void reconnect2() {
   //Serial.println("eCO2: " + String(eco2) + " ppm| TVOC: " + String(voc) + " ppb");
   
   Serial.println("(OK)");
-
-  mqttClient.loop(); //Manter conexão MQTT.
   
   Serial.println("Iniciando o DHT22...");
   dht.begin(); //Inicializar DHT22.
@@ -426,7 +598,8 @@ void reconnect2() {
   delay(1000);
   WiFi.mode(WIFI_STA);
   delay(1000);
-  
+
+  #if gatewayNodeMode == 0
   WiFiManager wifiManager;
   WiFi.setAutoConnect(true);
   wifiManager.setTimeout(80);
@@ -443,7 +616,8 @@ void reconnect2() {
   }
 
   Serial.println("Wifi conectado com sucesso!");  
-
+  #endif
+  #if gatewayNodeMode == 0
   if(valorCO2 > 1000){
     highCO2 = 1;
     Serial.println("Níveis de CO2 elevados. Fazendo envio de alerta pelo telegram.");
@@ -486,7 +660,7 @@ void reconnect2() {
   if(!mqttClient.connected()){
     reconnect();
   }
-  
+  #endif
   //String de dados para enviar a Thingspeak.
   String dados = String("field1=" + String(temp, 2) + "&field2=" + String(umid, 2) + "&field3=" +String(eco2, 2)+ "&field4=" +String(voc, 2)+ "&field5=" + String(valorCO2)+ "&field6=" + String(lux,5)+ "&field7=" + String(dbLevel,2)+ "&field8=" + String(highCO2,2));
   int tamanho = dados.length();
@@ -503,7 +677,9 @@ void reconnect2() {
  // if(millis() - lastConnectionTime > postingInterval){
   Serial.println("Hora de enviar!");
   Serial.println(msgBuffer);
+  #if gatewayNodeMode == 0
   int r = mqttClient.publish(topicBuffer, msgBuffer); //Publicar dados.
+  
   if (r){
     Serial.println("Envio feito com sucesso!");
   } else {
@@ -513,7 +689,28 @@ void reconnect2() {
     if (isWaitingForOta == 0){ESP.restart();}
   }
   lastConnectionTime = millis();
-  //}
+  #endif
+  #if gatewayNodeMode == 1
+  myData.a = temp;
+  myData.b = umid;
+  myData.c = eco2;
+  myData.d = voc;
+  myData.e = valorCO2;
+  myData.f = lux;
+  myData.g = dbLevel;
+  myData.h = AIRPURE_ID;
+  myData.i = String(writeAPIKey[AIRPURE_ID-1]);
+
+  // Send message via ESP-NOW
+  esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &myData, sizeof(myData));
+   
+  if (result == ESP_OK) {
+    Serial.println("Enviou com sucesso.");
+  }
+  else {
+    Serial.println("Erro ao enviar o pacote.");
+  }
+  #endif
 
 }
 
