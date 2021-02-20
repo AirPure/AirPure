@@ -81,7 +81,7 @@ char* test_root_ca= \
 #define gatewayNodeMode 0
 #define isReceiver 0
 #define isGateway 0
-#define V_FIRMWARE 1
+#define V_FIRMWARE 2
 
 /*Declaração*/
 BH1750 lightMeter (0x23); //Sensor de luminosidade - BH1750 (Addr: 0x23)
@@ -400,9 +400,9 @@ void loop() {
   delay(3000);  //Delay para permitir que os dados sejam enviados antes de entrar no modo sleep.
 
   secureEsp32FOTA._host="raw.githubusercontent.com"; //e.g. example.com
-  secureEsp32FOTA._descriptionOfFirmwareURL="/AirPure/AirPure/tree/main/Código%20Fonte/air_pure_geral/air_pure/firmware.json"; 
+  secureEsp32FOTA._descriptionOfFirmwareURL="/AirPure/AirPure/main/C%C3%B3digo%20Fonte/air_pure_geral/air_pure/firmware.json"; 
   secureEsp32FOTA._certificate=test_root_ca;
-  secureEsp32FOTA.clientForOta=clientForOta;
+  secureEsp32FOTA.clientForOta=client2;
 
   bool shouldExecuteFirmwareUpdate=secureEsp32FOTA.execHTTPSCheck();
   if(shouldExecuteFirmwareUpdate)
