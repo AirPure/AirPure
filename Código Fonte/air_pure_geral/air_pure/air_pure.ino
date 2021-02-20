@@ -17,6 +17,7 @@
 #include <ArduinoOTA.h>
 #include <HTTPClient.h>
 #include <ESPmDNS.h>
+#include <esp32fota.h>
 
 const char * root_ca=\
 "-----BEGIN CERTIFICATE-----\n" \
@@ -43,6 +44,28 @@ const char * root_ca=\
 "-----END CERTIFICATE-----\n";
 
 
+
+char* test_root_ca= \
+     "-----BEGIN CERTIFICATE-----\n"  
+  "MIIDxTCCAq2gAwIBAgIQAqxcJmoLQJuPC3nyrkYldzANBgkqhkiG9w0BAQUFADBsMQswCQYDVQQG\n"  
+  "EwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYDVQQLExB3d3cuZGlnaWNlcnQuY29tMSsw\n"  
+  "KQYDVQQDEyJEaWdpQ2VydCBIaWdoIEFzc3VyYW5jZSBFViBSb290IENBMB4XDTA2MTExMDAwMDAw\n"  
+  "MFoXDTMxMTExMDAwMDAwMFowbDELMAkGA1UEBhMCVVMxFTATBgNVBAoTDERpZ2lDZXJ0IEluYzEZ\n"  
+  "MBcGA1UECxMQd3d3LmRpZ2ljZXJ0LmNvbTErMCkGA1UEAxMiRGlnaUNlcnQgSGlnaCBBc3N1cmFu\n"  
+  "Y2UgRVYgUm9vdCBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMbM5XPm+9S75S0t\n"  
+  "Mqbf5YE/yc0lSbZxKsPVlDRnogocsF9ppkCxxLeyj9CYpKlBWTrT3JTWPNt0OKRKzE0lgvdKpVMS\n"  
+  "OO7zSW1xkX5jtqumX8OkhPhPYlG++MXs2ziS4wblCJEMxChBVfvLWokVfnHoNb9Ncgk9vjo4UFt3\n"  
+  "MRuNs8ckRZqnrG0AFFoEt7oT61EKmEFBIk5lYYeBQVCmeVyJ3hlKV9Uu5l0cUyx+mM0aBhakaHPQ\n"  
+  "NAQTXKFx01p8VdteZOE3hzBWBOURtCmAEvF5OYiiAhF8J2a3iLd48soKqDirCmTCv2ZdlYTBoSUe\n"  
+  "h10aUAsgEsxBu24LUTi4S8sCAwEAAaNjMGEwDgYDVR0PAQH/BAQDAgGGMA8GA1UdEwEB/wQFMAMB\n"  
+  "Af8wHQYDVR0OBBYEFLE+w2kD+L9HAdSYJhoIAu9jZCvDMB8GA1UdIwQYMBaAFLE+w2kD+L9HAdSY\n"  
+  "JhoIAu9jZCvDMA0GCSqGSIb3DQEBBQUAA4IBAQAcGgaX3NecnzyIZgYIVyHbIUf4KmeqvxgydkAQ\n"  
+  "V8GK83rZEWWONfqe/EW1ntlMMUu4kehDLI6zeM7b41N5cdblIZQB2lWHmiRk9opmzN6cN82oNLFp\n"  
+  "myPInngiK3BD41VHMWEZ71jFhS9OMPagMRYjyOfiZRYzy78aG6A9+MpeizGLYAiJLQwGXFK3xPkK\n"  
+  "mNEVX58Svnw2Yzi9RKR/5CYrCsSXaQ3pjOLAEFe4yHYSkVXySGnYvCoCWw9E1CAx2/S6cCZdkGCe\n"  
+  "vEsXCS+0yx5DaMkHJ8HSXPfqIbloEpw8nL+e/IBcm2PN7EeqJSdnoDfzAIJ9VNep+OkuE6N36B9K\n" 
+  "-----END CERTIFICATE-----\n" ;
+
 /*Definição*/
 #define dhtPin 4 //Sensor de temperatura e umidade - DHT22.
 #define dbMeterPin 34 //Entrada analógica do sensor de ruído - MAX9814
@@ -58,7 +81,7 @@ const char * root_ca=\
 #define gatewayNodeMode 0
 #define isReceiver 0
 #define isGateway 0
-
+#define V_FIRMWARE 1
 
 /*Declaração*/
 BH1750 lightMeter (0x23); //Sensor de luminosidade - BH1750 (Addr: 0x23)
@@ -70,6 +93,7 @@ NTPClient timeClient(ntpUDP);//Cliente NTP
 DHT dht(dhtPin, dhtType); //Objeto sensor de temperatura e umidade
 PubSubClient mqttClient(client);  //ThingSpeak
 PubSubClient mqttClient2(client); //HomeAssistant
+secureEsp32FOTA secureEsp32FOTA("esp32-fota-https", V_FIRMWARE);
 Adafruit_CCS811 ccs; //Objeto sensor de TVOC. //Instância do CCS811
 
 /*Variáveis*/
@@ -374,6 +398,20 @@ void loop() {
   Serial.println("Envio executado. Um novo envio será feito em um minuto.");
 
   delay(3000);  //Delay para permitir que os dados sejam enviados antes de entrar no modo sleep.
+
+  secureEsp32FOTA._host="raw.githubusercontent.com"; //e.g. example.com
+  secureEsp32FOTA._descriptionOfFirmwareURL="/AirPure/AirPure/tree/main/Código%20Fonte/air_pure_geral/air_pure/firmware.json"; 
+  secureEsp32FOTA._certificate=test_root_ca;
+  secureEsp32FOTA.clientForOta=clientForOta;
+
+  bool shouldExecuteFirmwareUpdate=secureEsp32FOTA.execHTTPSCheck();
+  if(shouldExecuteFirmwareUpdate)
+  {
+    Serial.println("Firmware update available!");
+    secureEsp32FOTA.executeOTA();
+  }
+
+
   
   //Delay de um minuto para a próxima amostragem
   for(int timeoutOTA = 60; timeoutOTA > 0; timeoutOTA--){
