@@ -14,6 +14,8 @@
 #include <ArduinoJson.h>
 #include <NTPClient.h>
 #include <WiFiUdp.h>
+#include <Arduino.h>
+#include "ArduinoNvs.h"
 #include <ArduinoOTA.h>
 #include <HTTPClient.h>
 #include <ESPmDNS.h>
@@ -130,7 +132,8 @@ unsigned long lastConnectionTime = 0; //Tempo da última conexão.
 const unsigned long postingInterval = 20000L; //Tempo de postagem, 20 segundos.
 const int sampleWindow = 50; // Janela de amostragem em mS (50 mS = 20Hz)
 unsigned int sample;  //Variável referente a leitura do sensor de ruído
-int AIRPURE_ID = 2;  //Seu ID do airpure
+String input;
+int AIRPURE_ID;  //Seu ID do airpure
 
 /*Tasks*/
 TaskHandle_t task_low;
@@ -139,8 +142,39 @@ void vLow(void *pvParameters){
     while (true){
       //Atualiza estado do OTA.
       ArduinoOTA.handle();
-      
       vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+}
+
+TaskHandle_t task_low_serial;
+void vLowSerial(void *pvParameters);
+void vLowSerial(void *pvParameters){
+    while (true){
+      if(Serial.available()){
+        input = Serial.readStringUntil('\n');
+        Serial.println(input);
+        if(input.equals("setid")){
+        input = "";
+        while(input.equals(""))
+          input = Serial.readStringUntil('\n');
+
+        NVS.setString("id", input);
+        Serial.println("ID do Airpure definido: " + input);
+        ESP.restart();
+        
+        
+          
+          
+        }
+        if(input.equals("help")){
+          Serial.println("~~~~~~~~~~~~~~~AirPure - POWERED BY UFG~~~~~~~~~~~~~~~");
+          Serial.println("Lista de comandos disponiveis:");
+          Serial.println("'setid': Define o ID do AirPure.");
+          Serial.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+
+        }
+     }
+      vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
 
@@ -330,8 +364,16 @@ void setup() {
   pinMode(dhtPin, INPUT); //Configurar modo dos pinos do DHT.
   pinMode(dbMeterPin, INPUT); //Configurar modo dos pinos do MAX9814.
   Wire.begin();
+  NVS.begin();
+
+  AIRPURE_ID = NVS.getString("id").toInt(); 
+  Serial.println("ID AIRPURE: " + String(AIRPURE_ID));
+  
+  //Cria task que mantem a atualização do OTA.
+  xTaskCreate(vLowSerial,"vLowSerial",10000,NULL,0,&task_low_serial);
   i2cdetect();  // default range from 0x03 to 0x77
   delay(2000);
+  
 #if gatewayNodeMode == 1
   //Inicializa ESPNOW
   WiFi.mode(WIFI_STA);
