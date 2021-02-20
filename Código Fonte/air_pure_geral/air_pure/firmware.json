@@ -1,7 +1,0 @@
-{
-    "type": "esp32-fota-https",
-    "version": 2,
-    "host": "raw.githubusercontent.com",
-    "port": 443,
-    "bin": "/AirPure/AirPure/main/C%C3%B3digo%20Fonte/air_pure_geral/air_pure/air_pure.ino.esp32.bin"
-}
