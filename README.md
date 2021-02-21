@@ -27,6 +27,10 @@ consequentemente a saúde dos ocupantes.
 * :white_check_mark: IoT 
 * :white_check_mark: ThingSpeak 
 * :white_check_mark: WiFi 
+* :white_check_mark: Over-the-Air Updates 
+* :white_check_mark: ESP-NOW 
+* :white_check_mark: Home Assistant 
+* :white_check_mark: HTTP Protocol 
 
 ### Hardware
 * :floppy_disk: ESP32 
@@ -47,7 +51,7 @@ consequentemente a saúde dos ocupantes.
 
 
 ### Esquemático
-<img src="https://cdn.discordapp.com/attachments/764880223560794172/810969944434933830/esquematico.png">
+<img src="https://cdn.discordapp.com/attachments/764880223560794172/813089331379830805/esquematico.png">
 <img src="https://cdn.discordapp.com/attachments/764880223560794172/782573039753363456/unknown.png">
 
 ### Canais ThingSpeak
