@@ -79,11 +79,11 @@ char* test_root_ca= \
 #define CHAT_ID "1248387297"  //Seu ID no telegram.
 #define dhtType DHT22 //Tipo do sensor DHT.
 #define CCS811_ADDR 0x5A //Endereço I2C padrão
-#define mqtt_server "189.63.21.229"
+#define mqtt_server "airpure-home-assistant.duckdns.org"
 #define gatewayNodeMode 0
 #define isReceiver 0
 #define isGateway 0
-#define V_FIRMWARE 2
+#define V_FIRMWARE 3
 
 /*Declaração*/
 BH1750 lightMeter (0x23); //Sensor de luminosidade - BH1750 (Addr: 0x23)
