@@ -83,7 +83,7 @@ char* test_root_ca= \
 #define gatewayNodeMode 0
 #define isReceiver 0
 #define isGateway 0
-#define V_FIRMWARE 3
+#define V_FIRMWARE 4
 
 /*Declaração*/
 BH1750 lightMeter (0x23); //Sensor de luminosidade - BH1750 (Addr: 0x23)
@@ -436,7 +436,7 @@ void loop() {
   mqttClient2.disconnect();
 
   Serial.println("Fazendo o envio para o Google Sheets.");
-  sendData(String("Temperatura=" + String(temp, 2) + "&Umidade=" + String(umid, 2) + "&eCO2=" +String(eco2, 2)+ "&TVOC=" +String(voc, 2)+ "&CO2=" + String(valorCO2)+ "&Lux=" + String(lux,5)+ "&Ruido=" + String(dbLevel,2)+ "&Alarme=" + String(highCO2,2) + "&ID=" + String(AIRPURE_ID)));
+  sendData(String("Temperatura=" + String(temp, 2) + "&Umidade=" + String(umid, 2) + "&eCO2=" +String(eco2, 2)+ "&TVOC=" +String(voc, 2)+ "&CO2=" + String(valorCO2)+ "&Lux=" + String(lux,5)+ "&Ruido=" + String(dbLevel,2)+ "&Alarme=" + String(highCO2,2) + "&ID=" + String(AIRPURE_ID) + "&V_FIRMWARE=" + String(V_FIRMWARE)));
   Serial.println("Envio executado. Um novo envio será feito em um minuto.");
 
   delay(3000);  //Delay para permitir que os dados sejam enviados antes de entrar no modo sleep.
