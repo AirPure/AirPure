@@ -79,11 +79,14 @@ char* test_root_ca= \
 #define CHAT_ID "1248387297"  //Seu ID no telegram.
 #define dhtType DHT22 //Tipo do sensor DHT.
 #define CCS811_ADDR 0x5A //Endereço I2C padrão
-#define mqtt_server "airpure-home-assistant.duckdns.org"
-#define gatewayNodeMode 0
-#define isReceiver 0
-#define isGateway 0
-#define V_FIRMWARE 4
+#define mqtt_server "airpure-home-assistant.duckdns.org" //Endereço MQTT Home Assistant
+#define gatewayNodeMode 0 //Modo GW
+#define isGateway 0 //Modo GW
+#define outputPin 25 //Contador de pessoas
+#define btn01 32  //Contador de pessoas
+#define btn02 12 //Contador de pessoas
+#define isBtn 0 //Contador de pessoas
+#define V_FIRMWARE 4  //Versão do Firmware
 
 /*Declaração*/
 BH1750 lightMeter (0x23); //Sensor de luminosidade - BH1750 (Addr: 0x23)
@@ -123,6 +126,7 @@ static const char alphanum[] = "0123456789""ABCDEFGHIJKLMNOPQRSTUVWXYZ""abcdefgh
 const char* server = "mqtt.thingspeak.com"; //Servidor do MQTT para o ThingSpeak
 String umidade_topic = "sensor/umidade/";  //Topicos do MQTT para o HomeAssistant
 String temperatura_topic = "sensor/temperatura/";  //Topicos do MQTT para o HomeAssistant
+String botao_topic = "sensor/botao/1";  //Topicos do MQTT para o HomeAssistant
 String tvoc_topic = "sensor/tvoc/";  //Topicos do MQTT para o HomeAssistant
 String co2_topic = "sensor/co2/";  //Topicos do MQTT para o HomeAssistant
 String eco2_topic = "sensor/eco2/";  //Topicos do MQTT para o HomeAssistant 
@@ -133,6 +137,7 @@ const unsigned long postingInterval = 20000L; //Tempo de postagem, 20 segundos.
 const int sampleWindow = 50; // Janela de amostragem em mS (50 mS = 20Hz)
 unsigned int sample;  //Variável referente a leitura do sensor de ruído
 String input;
+int cont = 0; //Contador de pessoas
 int AIRPURE_ID;  //Seu ID do airpure
 
 /*Tasks*/
@@ -187,7 +192,6 @@ void configureOta(){
       type = "sketch";
     else // U_SPIFFS
       type = "filesystem";
-    // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
     Serial.println("Iniciando: " + type);
   })
   .onEnd([]() {
@@ -347,19 +351,48 @@ void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
   delay(3000);  //Delay para permitir que os dados sejam enviados antes de entrar no modo sleep.
   
   ESP.restart();
-
-
-
-
-
   
 }
+
 
 
 /*Setup*/
 void setup() {
   Serial.begin(115200); //Iniciar porta serial - USB.
   Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2); //Iniciar porta serial - UART.
+  /*Se estiver no modo contador de pessoas, define as portas pre-definidas como entrada/saida.*/
+  #if isBtn == 1
+  pinMode(outputPin, OUTPUT);
+  pinMode(btn01,INPUT_PULLDOWN);
+  pinMode(btn02,INPUT_PULLUP);
+  int val = 0;
+
+
+ //WiFiManager
+  WiFi.disconnect(true);
+  delay(1000);
+  WiFi.mode(WIFI_STA);
+  delay(1000);
+
+
+  WiFiManager wifiManager;
+  WiFi.setAutoConnect(true);
+  wifiManager.setTimeout(80);
+  wifiManager.setBreakAfterConfig(true);
+  wifiManager.setConfigPortalTimeout(80);
+
+  //Tenta conectar com o último SSID conhecido
+  //Se não conseguir, abre um AP para ser configurado
+  //SSID do AP: AiPure  Senha: 12345678
+  if(!wifiManager.autoConnect("AirPure WIFI", "12345678")) {
+  Serial.println("Falhou para se conectar... Reiniciando.");
+    delay(100);
+    if (isWaitingForOta == 0){ESP.restart();}
+  }
+  Serial.println("Wifi conectado com sucesso!"); 
+  /*Se não for contador de pessoas segue o fluxo normal.*/
+  #else
+  
   int status = WL_IDLE_STATUS; //Estado da conexão wifi.
   pinMode(dhtPin, INPUT); //Configurar modo dos pinos do DHT.
   pinMode(dbMeterPin, INPUT); //Configurar modo dos pinos do MAX9814.
@@ -405,12 +438,53 @@ void setup() {
   esp_now_register_recv_cb(OnDataRecv);
 
 #endif
-
+#endif
   
-}
+} 
 
 /*Loop*/
 void loop() {
+  /*Se for contador de pessoas, verifica constantemente o estado dos pinos e envia ao Home Assistant periodicamente.*/
+  #if isBtn == 1
+ int val = 0;
+ digitalWrite(outputPin,HIGH);
+ val = digitalRead(btn01);
+
+if(val){
+  cont++;
+  delay(300);
+ 
+}
+
+ val = digitalRead(btn02);
+ if(val == 0){
+  cont--;
+  delay(300);
+ }
+
+  if(millis() - lastConnectionTime > postingInterval){
+
+  mqttClient2.setServer(mqtt_server, 1883); //Configurar Broker MQTT - Home-assistant.
+
+  //Conectar MQTT - HomeAssistant.
+  if(!mqttClient2.connected()){
+    reconnect2();
+  }
+  
+  mqttClient2.loop(); //Manter conexão MQTT.
+  if(!mqttClient2.connected()){
+    Serial.println("Não foi possível publicar ao Home-assistant!");
+  } else {
+     homeassistant_publish_button();
+  }
+ 
+  delay(3000);  //Delay para permitir que os dados sejam enviados antes de entrar no modo sleep.
+  mqttClient2.disconnect();
+
+lastConnectionTime = millis();
+  }
+  #else
+  
   #if isGateway == 0
   mqttpublish();  //Leitura dos sensores e envio.
 
@@ -465,7 +539,9 @@ void loop() {
   #endif //isGateway
 
   
+ #endif
  
+
 }
 
 //Faz o map de valores, retornando floats (Necessário pois o map nativo retorna apenas inteiros).
@@ -835,6 +911,17 @@ void reconnect2() {
   delay(1500);
    mqttClient2.loop(); //Manter conexão MQTT.
   mqttClient2.publish(luminosidade_topic.c_str(), String(lux, 5).c_str(), true);
+  delay(1500);
+  Serial.println("Publicado com sucesso!");
+
+}
+ //Leitura e publicação dos dados para o ThingSpeak.
+ void homeassistant_publish_button(){
+  
+  Serial.println("Publicando para o Home-Assistant.");
+  mqttClient2.loop(); //Manter conexão MQTT.
+  mqttClient2.publish(botao_topic.c_str(), String(cont).c_str(), true);
+  Serial.println(String(cont));
   delay(1500);
   Serial.println("Publicado com sucesso!");
 
