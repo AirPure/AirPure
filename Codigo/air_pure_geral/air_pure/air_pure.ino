@@ -11,11 +11,11 @@ void setup() {
 Serial.begin(115200); //Iniciar porta serial - USB.
 Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2); //Iniciar porta serial - UART.
       
-#if isContadorPessoas == 1 /*Se estiver no modo contador de pessoas, define as portas pre-definidas como entrada/saida.*/
-  pinMode(outputPin, OUTPUT);
-  pinMode(btn01,INPUT_PULLDOWN);
-  pinMode(btn02,INPUT_PULLUP);
-  
+#if isContadorPessoas == 1 /*Se estiver no modo contador de pessoas, define as portas pre-definidas como entrada/saida.*/  
+  pinMode(PORTA_TRIGGER1, OUTPUT); 
+  pinMode(PORTA_ECHO1, INPUT); 
+  pinMode(PORTA_TRIGGER2, OUTPUT); 
+  pinMode(PORTA_ECHO2, INPUT); 
   init_WiFi(); /*Inicializa o WiFi*/
   Serial.println("Wifi conectado com sucesso!"); 
 
@@ -53,18 +53,64 @@ Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2); //Iniciar porta serial - UART.
 void loop() {
  
 #if isContadorPessoas == 1 /*Se for contador de pessoas, verifica constantemente o estado dos pinos e envia ao Home Assistant periodicamente.*/
-digitalWrite(outputPin,HIGH);
-val = digitalRead(btn01);
 
-if(val){
-  cont++;
+// Clears the trigPin
+digitalWrite(PORTA_TRIGGER1, LOW);
+delayMicroseconds(2);
+
+digitalWrite(PORTA_TRIGGER1, HIGH);
+delayMicroseconds(10);
+digitalWrite(PORTA_TRIGGER1, LOW);
+
+duration1 = pulseIn(PORTA_ECHO1, HIGH);
+distance1= duration1*0.034/2;
+
+if(distance1 < 30){
   delay(300);
+  digitalWrite(PORTA_TRIGGER2, LOW);
+  delayMicroseconds(2);
+  
+  digitalWrite(PORTA_TRIGGER2, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(PORTA_TRIGGER2, LOW);
+  
+  duration2 = pulseIn(PORTA_ECHO2, HIGH);
+  distance2= duration2*0.034/2;
+  if (distance2 < 30){
+    cont++;
+    delay(300);
+  }
 }
 
-val = digitalRead(btn02);
-if(val == 0){
-  cont--;
+
+
+
+// Clears the trigPin
+digitalWrite(PORTA_TRIGGER2, LOW);
+delayMicroseconds(2);
+
+digitalWrite(PORTA_TRIGGER2, HIGH);
+delayMicroseconds(10);
+digitalWrite(PORTA_TRIGGER2, LOW);
+
+duration2 = pulseIn(PORTA_ECHO2, HIGH);
+distance2= duration2*0.034/2;
+
+if(distance2 < 30){
   delay(300);
+  digitalWrite(PORTA_TRIGGER1, LOW);
+  delayMicroseconds(2);
+  
+  digitalWrite(PORTA_TRIGGER1, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(PORTA_TRIGGER1, LOW);
+  
+  duration1 = pulseIn(PORTA_ECHO1, HIGH);
+  distance1= duration1*0.034/2;
+  if (distance1 < 30){
+    cont--;
+    delay(300);
+  }
 }
 
 if(millis() - lastConnectionTime > postingInterval){
