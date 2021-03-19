@@ -47,6 +47,10 @@ Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2); //Iniciar porta serial - UART.
 #endif /*endif isGateway*/
 #endif /*endif isContadorPessoas*/
 
+/*Iniciando o watchdog*/
+esp_task_wdt_init(4, true);
+esp_task_wdt_add(NULL);
+
 }
 
 /*Loop*/

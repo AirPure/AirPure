@@ -84,6 +84,7 @@ void vLow(void *pvParameters) {
 /*Tasks*/
 void vLowSerial(void *pvParameters) {
   while (true) {
+    esp_task_wdt_reset();
     if (Serial.available()) {
       input = Serial.readStringUntil('\n');
       Serial.println(input);

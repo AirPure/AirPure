@@ -26,6 +26,7 @@ Confira nosso repositório no GitHub: https://github.com/AirPure/AirPure
 #include <HTTPClient.h>
 #include <ESPmDNS.h>
 #include <esp32fota.h>
+#include <esp_task_wdt.h> 
 #include "globalvar.h"
 #include "globaldef.h"
 
