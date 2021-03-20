@@ -77,14 +77,17 @@ void vLow(void *pvParameters) {
   while (true) {
 //Atualiza estado do OTA.
     ArduinoOTA.handle();
+    esp_task_wdt_reset();
     vTaskDelay(pdMS_TO_TICKS(1000));
   }
 }
 
 /*Tasks*/
 void vLowSerial(void *pvParameters) {
+  /*Iniciando o watchdog*/
+
   while (true) {
-    esp_task_wdt_reset();
+
     if (Serial.available()) {
       input = Serial.readStringUntil('\n');
       Serial.println(input);
@@ -111,6 +114,31 @@ void vLowSerial(void *pvParameters) {
     vTaskDelay(pdMS_TO_TICKS(100));
   }
 }
+
+void vLowLED(void *pvParameters) {
+  esp_task_wdt_init(8, true);
+  esp_task_wdt_add(NULL);
+  while (true) {
+    esp_task_wdt_reset();
+    if(estado == ON_IDLE){
+      digitalWrite(ledPin,HIGH);
+      vTaskDelay(pdMS_TO_TICKS(100));
+      digitalWrite(ledPin,LOW);
+      vTaskDelay(pdMS_TO_TICKS(1000));
+    } else if (estado == WORKING){
+      digitalWrite(ledPin,HIGH);
+      vTaskDelay(pdMS_TO_TICKS(100));
+      digitalWrite(ledPin,LOW);
+      vTaskDelay(pdMS_TO_TICKS(100));
+    } else {
+      digitalWrite(ledPin,HIGH);
+      vTaskDelay(pdMS_TO_TICKS(1000));
+      digitalWrite(ledPin,LOW);
+      vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+  }
+}
+
 
 /*Faz o envio dos registros para o gateway ESPNOW*/
 void sendToESPNOW(String params) {

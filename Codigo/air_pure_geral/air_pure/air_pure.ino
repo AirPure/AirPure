@@ -10,7 +10,10 @@ Confira nosso repositório no GitHub: https://github.com/AirPure/AirPure
 void setup() {
 Serial.begin(115200); //Iniciar porta serial - USB.
 Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2); //Iniciar porta serial - UART.
-      
+pinMode(ledPin, OUTPUT); 
+        /*Cria task que mantem a atualização do OTA.*/
+  xTaskCreate(vLowSerial, "vLowSerial", 10000, NULL, 0, &task_low_serial);
+  xTaskCreate(vLowLED, "vLowLED", 10000, NULL, 0, &task_low_led);
 #if isContadorPessoas == 1 /*Se estiver no modo contador de pessoas, define as portas pre-definidas como entrada/saida.*/  
   pinMode(PORTA_TRIGGER1, OUTPUT); 
   pinMode(PORTA_ECHO1, INPUT); 
@@ -31,8 +34,7 @@ Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2); //Iniciar porta serial - UART.
   AIRPURE_ID = NVS.getString("id").toInt();
   Serial.println("ID AIRPURE: " + String(AIRPURE_ID));
 
-  /*Cria task que mantem a atualização do OTA.*/
-  xTaskCreate(vLowSerial, "vLowSerial", 10000, NULL, 0, &task_low_serial);
+
   i2cdetect();  // Mostra o barramento I2C
   delayTimes(2);
 
@@ -47,9 +49,7 @@ Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2); //Iniciar porta serial - UART.
 #endif /*endif isGateway*/
 #endif /*endif isContadorPessoas*/
 
-/*Iniciando o watchdog*/
-esp_task_wdt_init(4, true);
-esp_task_wdt_add(NULL);
+
 
 }
 
@@ -138,6 +138,8 @@ if(millis() - lastConnectionTime > postingInterval){
 
 #else /*Se não for contador de pessoas...*/
 
+estado = WORKING;
+
 #if isGateway == 0  /*Se não for gateway...*/
   mqttpublish();  //Leitura dos sensores e envio.
 
@@ -178,6 +180,7 @@ if(millis() - lastConnectionTime > postingInterval){
 
   lookForUpdates(); //Procura pela ultima versao disponivel do software. Se estiver desatualizado, inicia o upgrade.
 
+estado = ON_IDLE;
   /*Delay de um minuto para a próxima amostragem*/
   for (int timeoutOTA = 60; timeoutOTA > 0; timeoutOTA--) {
     delayTimes(1);

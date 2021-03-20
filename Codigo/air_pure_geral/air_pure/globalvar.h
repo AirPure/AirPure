@@ -92,6 +92,7 @@ long duration1;
 int distance1;
 long duration2;
 int distance2;
+int estado;
 
 /*ESPNOW*/
 uint8_t broadcastAddress[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF }; /* MACADDRESS do gateway*/

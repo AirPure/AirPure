@@ -46,7 +46,9 @@ secureEsp32FOTA secureEsp32FOTA("esp32-fota-https", V_FIRMWARE);
 Adafruit_CCS811 ccs; //Objeto sensor de TVOC. //Instância do CCS811
 
 TaskHandle_t task_low_serial;
+TaskHandle_t task_low_led;
 TaskHandle_t task_low;
 void vLow(void *pvParameters);
 void vLowSerial(void *pvParameters);
+void vLowLED(void *pvParameters);
 void homeassistant_publish(void);
