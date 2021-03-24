@@ -11,6 +11,26 @@ void delayTimes(int times){
   }
 }
 
+int getDistance1()
+{
+    int distanciaCM;
+    long microsec = ultrasonic1.timing();
+    distanciaCM = ultrasonic1.convert(microsec, Ultrasonic::CM);
+
+    return distanciaCM;
+
+}
+
+int getDistance2()
+{
+    int distanciaCM;
+    long microsec = ultrasonic2.timing();
+    distanciaCM = ultrasonic2.convert(microsec, Ultrasonic::CM);
+
+    return distanciaCM;
+
+}
+
 
 /*Faz o map de valores, retornando floats (Necessário pois o map nativo retorna apenas inteiros).*/
 float mapfloat(float x, float in_min, float in_max, float out_min, float out_max) {

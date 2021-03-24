@@ -15,10 +15,6 @@ pinMode(ledPin, OUTPUT);
   xTaskCreate(vLowSerial, "vLowSerial", 10000, NULL, 0, &task_low_serial);
   xTaskCreate(vLowLED, "vLowLED", 10000, NULL, 0, &task_low_led);
 #if isContadorPessoas == 1 /*Se estiver no modo contador de pessoas, define as portas pre-definidas como entrada/saida.*/  
-  pinMode(PORTA_TRIGGER1, OUTPUT); 
-  pinMode(PORTA_ECHO1, INPUT); 
-  pinMode(PORTA_TRIGGER2, OUTPUT); 
-  pinMode(PORTA_ECHO2, INPUT); 
   init_WiFi(); /*Inicializa o WiFi*/
   Serial.println("Wifi conectado com sucesso!"); 
 
@@ -58,64 +54,30 @@ void loop() {
  
 #if isContadorPessoas == 1 /*Se for contador de pessoas, verifica constantemente o estado dos pinos e envia ao Home Assistant periodicamente.*/
 
-// Clears the trigPin
-digitalWrite(PORTA_TRIGGER1, LOW);
-delayMicroseconds(2);
-
-digitalWrite(PORTA_TRIGGER1, HIGH);
-delayMicroseconds(10);
-digitalWrite(PORTA_TRIGGER1, LOW);
-
-duration1 = pulseIn(PORTA_ECHO1, HIGH);
-distance1= duration1*0.034/2;
+distance1 = getDistance1();
 
 if(distance1 < 30){
   delay(300);
-  digitalWrite(PORTA_TRIGGER2, LOW);
-  delayMicroseconds(2);
-  
-  digitalWrite(PORTA_TRIGGER2, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(PORTA_TRIGGER2, LOW);
-  
-  duration2 = pulseIn(PORTA_ECHO2, HIGH);
-  distance2= duration2*0.034/2;
-  if (distance2 < 30){
+  distance2= getDistance2();
     cont++;
     delay(300);
   }
-}
 
 
 
-
-// Clears the trigPin
-digitalWrite(PORTA_TRIGGER2, LOW);
-delayMicroseconds(2);
-
-digitalWrite(PORTA_TRIGGER2, HIGH);
-delayMicroseconds(10);
-digitalWrite(PORTA_TRIGGER2, LOW);
-
-duration2 = pulseIn(PORTA_ECHO2, HIGH);
-distance2= duration2*0.034/2;
+distance2= getDistance2();
 
 if(distance2 < 30){
   delay(300);
-  digitalWrite(PORTA_TRIGGER1, LOW);
-  delayMicroseconds(2);
   
-  digitalWrite(PORTA_TRIGGER1, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(PORTA_TRIGGER1, LOW);
-  
-  duration1 = pulseIn(PORTA_ECHO1, HIGH);
-  distance1= duration1*0.034/2;
+  distance1= getDistance1();
   if (distance1 < 30){
     cont--;
     delay(300);
   }
 }
+
+delay(250);
 
 if(millis() - lastConnectionTime > postingInterval){
   mqttClient2.setServer(mqtt_server, 1883); //Configurar Broker MQTT - Home-assistant.

@@ -29,6 +29,7 @@ Confira nosso repositório no GitHub: https://github.com/AirPure/AirPure
 #include <esp_task_wdt.h> 
 #include "globalvar.h"
 #include "globaldef.h"
+#include <Ultrasonic.h>
 
 
 
@@ -44,6 +45,8 @@ PubSubClient mqttClient(client);  //ThingSpeak
 PubSubClient mqttClient2(client); //HomeAssistant
 secureEsp32FOTA secureEsp32FOTA("esp32-fota-https", V_FIRMWARE);
 Adafruit_CCS811 ccs; //Objeto sensor de TVOC. //Instância do CCS811
+Ultrasonic ultrasonic1(PORTA_TRIGGER1, PORTA_ECHO1);
+Ultrasonic ultrasonic2(PORTA_TRIGGER2, PORTA_ECHO2);
 
 TaskHandle_t task_low_serial;
 TaskHandle_t task_low_led;
