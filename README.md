@@ -69,3 +69,4 @@ WRITE API KEY: W1OE6ARR4S0X2OAT (AirPure - #003)</br>
 Para acessar, [clique aqui.](https://sites.google.com/view/airpure/pagina-inicial?authuser=0)</br>
 Para visualizar a dashboard que está sendo montada, [clique aqui.](https://airpuredashboard.vercel.app/admin/dashboard)</br>
 Para visualizar o website, [clique aqui.](https://airpurelanding.vercel.app/)
+Para visualizar o HomeAssistant, [clique aqui.](https://airpure-home-assistant.duckdns.org/lovelace/airpure2/)
