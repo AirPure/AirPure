@@ -26,8 +26,8 @@ Confira nosso repositório no GitHub: https://github.com/AirPure/AirPure
 #define V_FIRMWARE 5  //Versão do Firmware
 #define PORTA_TRIGGER1   13
 #define PORTA_ECHO1      14
-#define PORTA_TRIGGER2   15
-#define PORTA_ECHO2      16
+#define PORTA_TRIGGER2   4
+#define PORTA_ECHO2      5
 #define ON_IDLE 1
 #define WORKING 2
 #define LOOKING_FOR_WIFI
