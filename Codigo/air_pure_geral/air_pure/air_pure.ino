@@ -6,25 +6,37 @@ Confira nosso repositório no GitHub: https://github.com/AirPure/AirPure
 
 #include "prototypes.h"
 
+
 /*Setup*/
 void setup() {
+NVS.begin();  //Inicializa a memoria nao volátil
 Serial.begin(115200); //Iniciar porta serial - USB.
 Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2); //Iniciar porta serial - UART.
 pinMode(ledPin, OUTPUT); 
+
+
+
+isContadorPessoas = NVS.getString("mode").toInt();
+if(isContadorPessoas){
+  Serial.println("Contador de pessoas ATIVADO.");
+} else {
+  Serial.println("Contador de pessoas DESATIVADO.");
+}
+
         /*Cria task que mantem a atualização do OTA.*/
   xTaskCreate(vLowSerial, "vLowSerial", 10000, NULL, 0, &task_low_serial);
   xTaskCreate(vLowLED, "vLowLED", 10000, NULL, 0, &task_low_led);
-#if isContadorPessoas == 1 /*Se estiver no modo contador de pessoas, define as portas pre-definidas como entrada/saida.*/  
+if (isContadorPessoas == 1){ /*Se estiver no modo contador de pessoas, define as portas pre-definidas como entrada/saida.*/  
   init_WiFi(); /*Inicializa o WiFi*/
   Serial.println("Wifi conectado com sucesso!"); 
 
-#else /*Se não for contador de pessoas segue o fluxo normal.*/
+} else {
 
   int status = WL_IDLE_STATUS; //Estado da conexão wifi.
   pinMode(dhtPin, INPUT); //Configurar modo dos pinos do DHT.
   pinMode(dbMeterPin, INPUT); //Configurar modo dos pinos do MAX9814.
   Wire.begin(); //Inicializa I2C
-  NVS.begin();  //Inicializa a memoria nao volátil
+
 
   /*Obtem o ID do AirPure*/
   AIRPURE_ID = NVS.getString("id").toInt();
@@ -43,7 +55,7 @@ pinMode(ledPin, OUTPUT);
   configGWEspNOW();
 
 #endif /*endif isGateway*/
-#endif /*endif isContadorPessoas*/
+}
 
 
 
@@ -52,26 +64,31 @@ pinMode(ledPin, OUTPUT);
 /*Loop*/
 void loop() {
  
-#if isContadorPessoas == 1 /*Se for contador de pessoas, verifica constantemente o estado dos pinos e envia ao Home Assistant periodicamente.*/
+if (isContadorPessoas == 1){ /*Se for contador de pessoas, verifica constantemente o estado dos pinos e envia ao Home Assistant periodicamente.*/
 
 distance1 = getDistance1();
-
-if(distance1 < 30){
+ Serial.println((String)distance1);
+if(distance1 < 50){
+  Serial.println("Detectei algo (1)...");
   delay(300);
   distance2= getDistance2();
+  if (distance2 < 50){
+    Serial.println("Contabilizado.");
     cont++;
     delay(300);
   }
+}
 
 
 
 distance2= getDistance2();
-
-if(distance2 < 30){
+ Serial.println((String)distance2);
+if(distance2 < 50){
+  Serial.println("Detectei algo (2)...");
   delay(300);
-  
   distance1= getDistance1();
-  if (distance1 < 30){
+  if (distance1 < 50){
+    Serial.println("Descontabilizado.");
     cont--;
     delay(300);
   }
@@ -98,7 +115,7 @@ if(millis() - lastConnectionTime > postingInterval){
     lastConnectionTime = millis();
 }
 
-#else /*Se não for contador de pessoas...*/
+} else {
 
 estado = WORKING;
 
@@ -154,6 +171,6 @@ estado = ON_IDLE;
   }  //Resetando para iniciar uma nova amostragem
 #endif //isGateway
 
-#endif
+}
 
 }

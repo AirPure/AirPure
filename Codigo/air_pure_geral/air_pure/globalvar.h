@@ -89,10 +89,11 @@ int cont = 0; //Contador de pessoas
 int AIRPURE_ID;  //Seu ID do airpure
 int val = 0; //Variavel auxiliar
 long duration1;
-int distance1;
+int distance1 = 0;
 long duration2;
-int distance2;
+int distance2 = 0;
 int estado;
+int isContadorPessoas = 0;  
 
 /*ESPNOW*/
 uint8_t broadcastAddress[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF }; /* MACADDRESS do gateway*/

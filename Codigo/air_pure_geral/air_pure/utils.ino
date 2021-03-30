@@ -4,6 +4,10 @@ Seu código atualmente é mantido por professores e estudantes da UFG.
 Confira nosso repositório no GitHub: https://github.com/AirPure/AirPure
 */
 
+Ultrasonic ultrasonic1(PORTA_TRIGGER1, PORTA_ECHO1);
+Ultrasonic ultrasonic2(PORTA_TRIGGER2, PORTA_ECHO2);
+
+
 /*Função geral para delay*/
 void delayTimes(int times){
   for(int i = 0; i < times; i++){
@@ -121,11 +125,26 @@ void vLowSerial(void *pvParameters) {
         ESP.restart();
 
       }
+      if (input.equals("contaPessoas")) {
+        if (NVS.getString("mode").toInt()){
+          NVS.setString("mode", "0");
+          Serial.println("Contador de pessoas DESABILITADO");
+          ESP.restart();
+        } else {
+          NVS.setString("mode", "1");
+          Serial.println("Contador de pessoas DESABILITADO");
+          ESP.restart();
+        }
+
+
+      }
+      
       if (input.equals("help")) {
         Serial.println(
             "~~~~~~~~~~~~~~~AirPure - POWERED BY UFG~~~~~~~~~~~~~~~");
         Serial.println("Lista de comandos disponiveis:");
         Serial.println("'setid': Define o ID do AirPure.");
+        Serial.println("'contaPessoas': Define o dispositivo como contador de pessoas.");
         Serial.println(
             "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
@@ -136,20 +155,50 @@ void vLowSerial(void *pvParameters) {
 }
 
 void vLowLED(void *pvParameters) {
+  const int freq = 5000;
+  const int ledChannel = 0;
+  const int resolution = 8;
   esp_task_wdt_init(8, true);
   esp_task_wdt_add(NULL);
+  ledcSetup(ledChannel, freq, resolution);
+  ledcAttachPin(ledPin, ledChannel);
   while (true) {
     esp_task_wdt_reset();
     if(estado == ON_IDLE){
-      digitalWrite(ledPin,HIGH);
-      vTaskDelay(pdMS_TO_TICKS(100));
-      digitalWrite(ledPin,LOW);
-      vTaskDelay(pdMS_TO_TICKS(1000));
+      for(int i = 0; i< 255; i++){
+        ledcWrite(ledChannel, i);
+        esp_task_wdt_reset();
+        delay(1);
+      }
+
+      for(int i = 255; i> 0; i--){
+        ledcWrite(ledChannel, i);
+        esp_task_wdt_reset();
+        delay(1);
+      }
+      
+      for(int i = 0; i< 255; i++){
+        ledcWrite(ledChannel, i);
+        esp_task_wdt_reset();
+        delay(1);
+      }
+      for(int i = 255; i> 0; i--){
+        ledcWrite(ledChannel, i);
+        esp_task_wdt_reset();
+        delay(15);
+      }
     } else if (estado == WORKING){
-      digitalWrite(ledPin,HIGH);
-      vTaskDelay(pdMS_TO_TICKS(100));
-      digitalWrite(ledPin,LOW);
-      vTaskDelay(pdMS_TO_TICKS(100));
+      for(int i = 0; i< 255; i++){
+        ledcWrite(ledChannel, i);
+        esp_task_wdt_reset();
+        delay(10);
+      }
+
+      for(int i = 255; i> 0; i--){
+        ledcWrite(ledChannel, i);
+        esp_task_wdt_reset();
+        delay(10);
+      }
     } else {
       digitalWrite(ledPin,HIGH);
       vTaskDelay(pdMS_TO_TICKS(1000));
