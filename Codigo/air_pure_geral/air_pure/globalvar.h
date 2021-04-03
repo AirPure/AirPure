@@ -94,6 +94,7 @@ long duration2;
 int distance2 = 0;
 int estado;
 int isContadorPessoas = 0;  
+int isSendingAirServer = 0;
 
 /*ESPNOW*/
 uint8_t broadcastAddress[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF }; /* MACADDRESS do gateway*/

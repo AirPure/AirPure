@@ -125,6 +125,17 @@ void vLowSerial(void *pvParameters) {
         ESP.restart();
 
       }
+
+      if (input.equals("setHostAirServer")) {
+        input = "";
+        while (input.equals(""))
+          input = Serial.readStringUntil('\n');
+
+        NVS.setString("hostAirServer", input);
+        Serial.println("Host AirServer definido: " + input);
+        ESP.restart();
+
+      }
       if (input.equals("contaPessoas")) {
         if (NVS.getString("mode").toInt()){
           NVS.setString("mode", "0");
@@ -138,6 +149,21 @@ void vLowSerial(void *pvParameters) {
 
 
       }
+
+      if (input.equals("airServer")) {
+        if (NVS.getString("airserver").toInt()){
+          NVS.setString("airserver", "0");
+          Serial.println("Envio ao AirServer ATIVADO.");
+          ESP.restart();
+        } else {
+          NVS.setString("airserver", "1");
+          Serial.println("Envio ao AirServer DESATIVADO.");
+          ESP.restart();
+        }
+
+
+      }
+      
       
       if (input.equals("help")) {
         Serial.println(
@@ -145,6 +171,8 @@ void vLowSerial(void *pvParameters) {
         Serial.println("Lista de comandos disponiveis:");
         Serial.println("'setid': Define o ID do AirPure.");
         Serial.println("'contaPessoas': Define o dispositivo como contador de pessoas.");
+        Serial.println("'airServer': Configura o AirPure para fazer os envios ao servidor AirServer.");
+        Serial.println("'setHostAirServer': Configura o host para fazer os envios ao servidor AirServer.");
         Serial.println(
             "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 

@@ -65,7 +65,7 @@ def classificatePackage(conn, addr):
 
                 # Abre o arquivo de amostras e escreve a amostra que acabou de receber
                 f2 = open('data_airpure.txt', 'a')
-                f2.write("\n" + comando[1] + " " + comando[2] + " " + comando[3] + " " + comando[4] + " " + comando[5])
+                f2.write("\n" + comando[1] + " " + comando[2] + " " + comando[3] + " " + comando[4] + " " + comando[5] + " " + comando[6])
                 f2.close()
 
                 print("\n[SERVIDOR ", addr, "] Classifição dos dados executada com sucesso.")

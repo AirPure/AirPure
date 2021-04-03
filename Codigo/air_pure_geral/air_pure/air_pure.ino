@@ -23,9 +23,16 @@ if(isContadorPessoas){
   Serial.println("Contador de pessoas DESATIVADO.");
 }
 
-        /*Cria task que mantem a atualização do OTA.*/
-  xTaskCreate(vLowSerial, "vLowSerial", 10000, NULL, 0, &task_low_serial);
-  xTaskCreate(vLowLED, "vLowLED", 10000, NULL, 0, &task_low_led);
+isSendingAirServer = NVS.getString("airserver").toInt();
+if(isSendingAirServer){
+  Serial.println("Envio ao AirServer ATIVADO.");
+} else {
+  Serial.println("Envio ao AirServer DESATIVADO.");
+}
+
+/*Cria task que mantem a atualização do OTA.*/
+xTaskCreate(vLowSerial, "vLowSerial", 10000, NULL, 0, &task_low_serial);
+xTaskCreate(vLowLED, "vLowLED", 10000, NULL, 0, &task_low_led);
 if (isContadorPessoas == 1){ /*Se estiver no modo contador de pessoas, define as portas pre-definidas como entrada/saida.*/  
   init_WiFi(); /*Inicializa o WiFi*/
   Serial.println("Wifi conectado com sucesso!"); 
@@ -156,6 +163,15 @@ estado = WORKING;
   Serial.println("Envio executado. Um novo envio será feito em um minuto.");
 
   delayTimes(3); //Delay para permitir que os dados sejam enviados antes de entrar no modo sleep.
+
+  if(isSendingAirServer){
+    if (!client.connect((NVS.getString("hostAirServer")).c_str(), 7007)) {
+      Serial.println("Conexao socket falhou!");
+    }
+        
+    client.print("INSERT " + String(temp, 2) + " " + String(umid, 2) + " " + String(eco2,2) + " " + String(voc, 2) + " " + String(valorCO2) + " " + String(AIRPURE_ID));
+    client.stop();
+  }
 
   lookForUpdates(); //Procura pela ultima versao disponivel do software. Se estiver desatualizado, inicia o upgrade.
 
