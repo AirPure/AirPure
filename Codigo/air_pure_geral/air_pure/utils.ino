@@ -203,40 +203,68 @@ void vLowLED(void *pvParameters) {
     if(estado == ON_IDLE){
       valorCO2 = leituraGas(); //Concentração de CO2 - MH-Z14A.
       value = mapfloat(valorCO2, 390, 1200, 0, 255);
-      ledcWrite(ledChannel2, 255 - value);
-      
+
       for(int i = 0; i< 255; i++){
         ledcWrite(ledChannel, i);
-        
+      if(valorCO2 < 1000){
+        ledcWrite(ledChannel2, 255 - value);
+      } else {
+        ledcWrite(ledChannel2, i);
+      }
         esp_task_wdt_reset();
         delay(1);
       }
 
       for(int i = 255; i> 0; i--){
         ledcWrite(ledChannel, i);
+              if(valorCO2 < 1000){
+        ledcWrite(ledChannel2, 255 - value);
+      } else {
+        ledcWrite(ledChannel2, i);
+      }
         esp_task_wdt_reset();
         delay(1);
       }
       
       for(int i = 0; i< 255; i++){
         ledcWrite(ledChannel, i);
+              if(valorCO2 < 1000){
+        ledcWrite(ledChannel2, 255 - value);
+      } else {
+        ledcWrite(ledChannel2, i);
+      }
         esp_task_wdt_reset();
         delay(1);
       }
       for(int i = 255; i> 0; i--){
         ledcWrite(ledChannel, i);
+      if(valorCO2 < 1000){
+        ledcWrite(ledChannel2, 255 - value);
+      } else {
+        ledcWrite(ledChannel2, i);
+      }
         esp_task_wdt_reset();
         delay(15);
       }
     } else if (estado == WORKING){
       for(int i = 0; i< 255; i++){
         ledcWrite(ledChannel, i);
+              if(valorCO2 < 1000){
+        ledcWrite(ledChannel2, 255 - value);
+      } else {
+        ledcWrite(ledChannel2, i);
+      }
         esp_task_wdt_reset();
         delay(5);
       }
 
       for(int i = 255; i> 0; i--){
         ledcWrite(ledChannel, i);
+              if(valorCO2 < 1000){
+        ledcWrite(ledChannel2, 255 - value);
+      } else {
+        ledcWrite(ledChannel2, i);
+      }
         esp_task_wdt_reset();
         delay(5);
       }
