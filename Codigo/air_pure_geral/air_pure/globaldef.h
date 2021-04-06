@@ -32,3 +32,4 @@ Confira nosso repositório no GitHub: https://github.com/AirPure/AirPure
 #define WORKING 2
 #define LOOKING_FOR_WIFI
 #define ledPin 15
+#define ledPin2 2

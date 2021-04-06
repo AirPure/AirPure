@@ -13,7 +13,7 @@ NVS.begin();  //Inicializa a memoria nao volátil
 Serial.begin(115200); //Iniciar porta serial - USB.
 Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2); //Iniciar porta serial - UART.
 pinMode(ledPin, OUTPUT); 
-
+pinMode(ledPin2,OUTPUT);
 
 
 isContadorPessoas = NVS.getString("mode").toInt();

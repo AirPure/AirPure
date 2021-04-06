@@ -165,13 +165,15 @@ void mqttpublish() {
   //Leitura dos valores.
   Serial.println("Iniciando leitura dos sensores.");
 
+    
+  valorCO2 = leituraGas(); //Concentração de CO2 - MH-Z14A.
+
   readCCS811(); //Leitura do CCS811
 
   readDHT22();  //Leitura do DHT22
 
   dbLevel = readDb();//MAX9814 - Ruído
-  
-  valorCO2 = leituraGas(); //Concentração de CO2 - MH-Z14A.
+
   
   readLux();  //Leitura do BH1750
 

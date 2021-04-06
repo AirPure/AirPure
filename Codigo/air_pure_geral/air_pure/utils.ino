@@ -186,15 +186,28 @@ void vLowLED(void *pvParameters) {
   const int freq = 5000;
   const int ledChannel = 0;
   const int resolution = 8;
+  const int ledChannel2 = 1;
   esp_task_wdt_init(8, true);
   esp_task_wdt_add(NULL);
   ledcSetup(ledChannel, freq, resolution);
   ledcAttachPin(ledPin, ledChannel);
+  ledcSetup(ledChannel2, freq, resolution);
+  ledcAttachPin(ledPin2, ledChannel2);
+
+  valorCO2 = leituraGas(); //Concentração de CO2 - MH-Z14A.
+  float value = mapfloat(valorCO2, 390, 1200, 0, 255);
+  ledcWrite(ledChannel2, 255 - value);
+  
   while (true) {
     esp_task_wdt_reset();
     if(estado == ON_IDLE){
+      valorCO2 = leituraGas(); //Concentração de CO2 - MH-Z14A.
+      value = mapfloat(valorCO2, 390, 1200, 0, 255);
+      ledcWrite(ledChannel2, 255 - value);
+      
       for(int i = 0; i< 255; i++){
         ledcWrite(ledChannel, i);
+        
         esp_task_wdt_reset();
         delay(1);
       }
@@ -219,13 +232,13 @@ void vLowLED(void *pvParameters) {
       for(int i = 0; i< 255; i++){
         ledcWrite(ledChannel, i);
         esp_task_wdt_reset();
-        delay(10);
+        delay(5);
       }
 
       for(int i = 255; i> 0; i--){
         ledcWrite(ledChannel, i);
         esp_task_wdt_reset();
-        delay(10);
+        delay(5);
       }
     } else {
       digitalWrite(ledPin,HIGH);
