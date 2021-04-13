@@ -64,8 +64,10 @@ float readDb() {
   unsigned int peakToPeak = 0;   // Nível pico a pico
   unsigned int signalMax = 0;  //Valor análogico mínimo
   unsigned int signalMin = 1024;  //Valor analógico máximo
+  double voltsTotal = 0;
 
-// Coleta dados por aproximadamente 50ms
+  for(int i = 0; i < 10; i ++){
+  // Coleta dados por aproximadamente 50ms
   while (millis() - startMillis < sampleWindow) {
     sample = analogRead(dbMeterPin); //Faz a leitura analógica do MAX9814
     if (sample < 1024) {
@@ -78,12 +80,16 @@ float readDb() {
   }
   peakToPeak = signalMax - signalMin; // Máximo - Mínimo = Amplitude pico a pico
   double volts = (peakToPeak * 3.0) / 1024; // Converte para um valor de tensao aproximado
+  voltsTotal += volts;
+  }
+
+  voltsTotal = voltsTotal/10;
   Serial.println("(OK)");
-  if (volts <= 1000) { //Filtra possíveis valores residuais 
-    float value = mapfloat(volts, 0.00, 3.00, 37.00, 82.00);
+  if (voltsTotal <= 1000) { //Filtra possíveis valores residuais 
+    float value = mapfloat(voltsTotal, 0.00, 3.00, 37.00, 82.00);
     return value; //Retorna o valor convertido para dB
   } else {
-    return 37; //Caso seja residual, retorna o menor valor possível
+    return 82; 
   }
 
 }
@@ -182,6 +188,9 @@ void mqttpublish() {
   init_WiFi();  //Inicializa o WiFi
   Serial.println("Wifi conectado com sucesso!");
 
+  /*Obtem o horario atual atraves de NTP para envio de alerta.*/
+  getCurrentTime();
+
   if (valorCO2 > 1000) {
     highCO2 = 1;
     Serial.println(
@@ -195,8 +204,7 @@ void mqttpublish() {
     highCO2 = 0;
   }
   
-  /*Obtem o horario atual atraves de NTP para envio de alerta.*/
-  getCurrentTime();
+
 
   /*Faz a configuração para o OTA.*/
   configureOta();
