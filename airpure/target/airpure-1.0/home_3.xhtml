@@ -45,6 +45,7 @@
 
 
     </h:head>
+
     <h:body onload="#{autenticacao.verificacao()}" ></h:body>
     <h:body class="hold-transition skin-blue sidebar-mini" >
 
@@ -128,42 +129,79 @@
                     <p:fieldset legend="Últimos registros" style="width:100%; border-width: 3px;">
 
                         <p:dataScroller value="#{requestdata1.returnLastSample()}" var="process" rendered="true">
-                            <h:panelGrid columns="7" style="width: 100%;">
+                            <h:panelGrid columns="7" style="width: 100%; " >
 
-                                <h:panelGrid columns="2" style="background-color: #0073b7; border-radius: 10px; width: 100%;"> 
-                                    <h:outputLabel value="TVOC:" style="color: white;"/>
-                                    <h:outputText value="#{process.tvoc} ppb" style="font-weight: bold; color: white; "/>
+                                <h:panelGrid columns="1" style="background-color: #0073b7; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                    <h:outputLabel value="TVOC:" style="color: white; font-size: 18px;"/>
+                                    <h:outputText value="#{process.tvoc} ppb" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                 </h:panelGrid>
-                                <h:panelGrid columns="2" style="background-color: #0073b7; border-radius: 10px; width: 100%;" > 
-                                    <h:outputLabel value="eCO2:" style="color: white;"/>
-                                    <h:outputText value="#{process.eco2} ppm" style="font-weight: bold; color: white;"/>
+                                <h:panelGrid columns="1" style="background-color: #0073b7; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                    <h:outputLabel value="TVOC:" style="color: white; font-size: 18px;"/>
+                                    <h:outputText value="#{process.tvoc} ppb" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                 </h:panelGrid>
-                                <h:panelGrid columns="2" style="background-color: #0073b7; border-radius: 10px; width: 100%;"> 
-                                    <h:outputLabel value="Co2:" style="color: white;"/>
-                                    <h:outputText value="#{process.co2} ppm" style="font-weight: bold; color: white;"/>
+                                <h:panelGrid columns="1" style="background-color: #0073b7; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                    <h:outputLabel value="TVOC:" style="color: white; font-size: 18px;"/>
+                                    <h:outputText value="#{process.tvoc} ppb" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                 </h:panelGrid>
-                                <h:panelGrid columns="2" style="background-color: #0073b7; border-radius: 10px; width: 100%;"> 
-                                    <h:outputLabel value="Umidade:" style="color: white;"/>
-                                    <h:outputText value="#{process.umidade}%" style="font-weight: bold; color: white;"/>
+                                <h:panelGrid columns="1" style="background-color: #0073b7; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                    <h:outputLabel value="TVOC:" style="color: white; font-size: 18px;"/>
+                                    <h:outputText value="#{process.tvoc} ppb" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                 </h:panelGrid>
-                                <h:panelGrid columns="2" style="background-color: #0073b7; border-radius: 10px; width: 100%;"> 
-                                    <h:outputLabel value="Temperatura:" style="color: white;"/>
-                                    <h:outputText value="#{process.temperatura} ºC" style="font-weight: bold; color: white;"/>
+                                <h:panelGrid columns="1" style="background-color: #0073b7; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                    <h:outputLabel value="TVOC:" style="color: white; font-size: 18px;"/>
+                                    <h:outputText value="#{process.tvoc} ppb" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                 </h:panelGrid>
-                                <h:panelGrid columns="2" style="background-color: #0073b7; border-radius: 10px; width: 100%;"> 
-                                    <h:outputLabel value="Nível de Ruído:" style="color: white;"/>
-                                    <h:outputText value="#{process.db} dB" style="font-weight: bold; color: white;"/>
+                                <h:panelGrid columns="1" style="background-color: #0073b7; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                    <h:outputLabel value="TVOC:" style="color: white; font-size: 18px;"/>
+                                    <h:outputText value="#{process.tvoc} ppb" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                 </h:panelGrid>
-                                <h:panelGrid columns="2" style="background-color: #0073b7; border-radius: 10px; width: 100%;"> 
-                                    <h:outputLabel value="Luminosidade:" style="color: white;"/>
-                                    <h:outputText value="#{process.lux} Lux" style="font-weight: bold; color: white;"/>
+                                <h:panelGrid columns="1" style="background-color: #0073b7; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                    <h:outputLabel value="TVOC:" style="color: white; font-size: 18px;"/>
+                                    <h:outputText value="#{process.tvoc} ppb" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                 </h:panelGrid>
-
 
 
 
                             </h:panelGrid>
                         </p:dataScroller>
+
+
+                        <h:panelGrid columns="2" style="margin: auto;">
+
+                            <p:outputPanel style="width:100%;">
+                                <hf:chart type="line" value="#{chartView1.registro1}" var="point"
+                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Valores">
+                                    <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                                  gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                </hf:chart> 
+                            </p:outputPanel>
+                            <p:outputPanel style="width:100%;">
+                                <hf:chart type="line" value="#{chartView1.registro1}" var="point"
+                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Valores">
+                                    <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                                  gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                </hf:chart> 
+                            </p:outputPanel>
+                            <p:outputPanel style="width:100%;">
+                                <hf:chart type="line" value="#{chartView1.registro1}" var="point"
+                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Valores">
+                                    <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                                  gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                </hf:chart> 
+                            </p:outputPanel>
+                            <p:outputPanel style="width:100%;">
+                                <hf:chart type="line" value="#{chartView1.registro1}" var="point"
+                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Valores">
+                                    <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                                  gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                </hf:chart> 
+                            </p:outputPanel>
+
+
+
+
+                        </h:panelGrid>
+
 
                         <hf:chart type="line" value="#{chartView1.registro1}" var="point"
                                   point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Valores">
@@ -171,9 +209,27 @@
                                           gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
                         </hf:chart>
 
+                        <h:panelGrid columns="4" style="margin: auto;">
+                            <div id="gaugeArea1"></div>
+                        </h:panelGrid>
+
+                        <h:form>
+                            <h:panelGrid columns="2">
+                                <h:outputLabel value="Nome:" for="nome" />
+                                <h:inputText id="nome" value="#{autenticacao.usuario.nome}" title="Nome" />
+
+                            </h:panelGrid>
+                            <br />
+                            <p:commandButton action="#{autenticacao.doEfetuarLogin()}" value="Cadastrar" onclick="PF('dlg1').show();"/>
+                            <p:messages closable="true"/>
+                        </h:form>
+
+
+
+
 
                         <div style="text-align:center">
-                            <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/udf.png" width="100"/>  
+                            <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/udf.png" width="100"/>   
                         </div>
                         <div style="text-align:center">
                             <h:outputLabel value="Powered by AirPure | #{main.SVNRevision}" style="font-size: 10px;"/>
@@ -194,11 +250,32 @@
 
         <!-- REQUIRED JS SCRIPTS -->
 
+        <script src="https://unpkg.com/gauge-chart@0.5.1/dist/bundle.js"></script>
+        <script>
+            // Element inside which you want to see the chart.
+            let element1 = document.querySelector('#gaugeArea1')
 
+            let options1 = {
+                arcColors: ['rgb(44, 151, 222)', 'lightgray'],
+                arcDelimiters: [80],
+                rangeLabel: ['0%', '100%'],
+                centralLabel: '70%',
+            }
+
+
+
+            // Drawing and updating the chart.  
+            GaugeChart
+                    .gaugeChart(element1, 400, options1)
+                    .updateNeedle(70)
+
+        </script>
 
 
         <script type="text/javascript" src="#{request.contextPath}/resources/bootstrap/js/bootstrap.min.js"></script> <!-- Correio -->
         <script type="text/javascript" src="#{request.contextPath}/resources/dist/js/app.min.js"></script> <!-- Correio -->
+
+
 
 
 
