@@ -60,7 +60,7 @@ public class ChartView1 {
             int idProjetoRelacionado = (int) session.getAttribute("projetoEnvolvido");
             Main.db = null;
             BD.ConectarBD();
-            String sql = "SELECT * FROM amostragens WHERE id_dispositivos IN (SELECT id FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado + ") ORDER BY id DESC LIMIT 1;";
+            String sql = "SELECT * FROM amostragens WHERE id_dispositivos IN (SELECT id FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado + ") ORDER BY id ASC;";
 
             try {
                 Main.sql = Main.db.createStatement();
