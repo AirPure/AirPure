@@ -23,7 +23,7 @@ Confira nosso repositório no GitHub: https://github.com/AirPure/AirPure
 #define outputPin 25 //Contador de pessoas
 #define btn01 32  //Contador de pessoas
 #define btn02 12 //Contador de pessoas
-#define V_FIRMWARE 6  //Versão do Firmware
+#define V_FIRMWARE 7  //Versão do Firmware
 #define PORTA_TRIGGER1   13
 #define PORTA_ECHO1      14
 #define PORTA_TRIGGER2   4
