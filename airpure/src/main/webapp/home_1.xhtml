@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <title>Dashboard - Nome do Sistema</title>
+        <!-- Bootstrap core CSS -->
+
+        <link rel="stylesheet" type="text/css"
+              href="#{request.contextPath}/resources/bootstrap/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css"
+              href="#{request.contextPath}/resources/dist/css/AdminLTE.min.css" />
+        <link rel="stylesheet" type="text/css"
+              href="#{request.contextPath}/resources/dist/css/skins/skin-blue.min.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"/>
+        <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"/>
+
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/logo1.png']}"/>
+        <SCRIPT type="text/javascript">
+            function redirect() {
+                $("#fieldset_colors").load(" #fieldset_colors > *");
+                PF('dlg1').hide();
+            }
+
+        </SCRIPT>
+        <style>
+            .dot {
+                height: 25px;
+                width: 25px;
+                border-radius: 50%;
+                display: inline-block;
+            }
+            html {
+                background-color: #222D32;
+            }
+
+        </style>
+
+
+
+
+
+    </h:head>
+    <h:body onload="#{autenticacao.verificacao()}" ></h:body>
+    <h:body class="hold-transition skin-blue sidebar-mini" >
+
+
+
+
+        <!-- Main Header -->
+        <header class="main-header">
+
+            <!-- Logo -->
+            <a href="homePage.xhtml" class="logo">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/logo1.png" width="30"/> 
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg"><b>Elisa96</b></span>
+            </a>
+
+            <!-- Header Navbar -->
+            <nav class="navbar navbar-static-top" role="navigation">
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                </a>
+                <h:form>
+                    <div class="pull-right">
+                        <p:commandButton styleClass="btn btn-danger btn-block" value="Sair" action="#{autenticacao.logOut()}" update="@form"/>
+                    </div>
+                </h:form>
+
+            </nav>
+
+        </header>
+        <!-- Left side column. contains the logo and sidebar -->
+        <aside class="main-sidebar" style="height: 100%!Important;">
+
+            <!-- sidebar: style can be found in sidebar.less -->
+            <section class="sidebar">
+
+                <!-- /.search form -->
+
+                <!-- Sidebar Menu -->
+                <ul class="sidebar-menu">
+                    <li class="header">Tópico 1</li>
+                    <!-- Optionally, you can add icons to the links -->
+
+                    <li>
+
+                        <li class="active"><a href="/airpure/sistema/"><i class="fa fa-link"></i> <span>Opção 1</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/"><i class="fa fa-link"></i> <span>Opção 2</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/"><i class="fa fa-link"></i> <span>Opção 3</span></a></li>
+
+                    </li>
+
+
+                </ul>
+            </section>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper" style="overflow: scroll; background-size: 100%; background: url('resources/images/wp4094533.jpg') repeat !important;">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1 style="color: white;">
+                    Dashboard
+                    <small style="color: white;">Nome do projeto</small>
+                </h1>
+            </section>
+
+            <section class="content">
+
+
+                <p:dialog header="Aguarde um momento..." widgetVar="dlg1" modal="true" resizable="false" draggable="false" closable="false">
+                    <div style="text-align: center">
+                        <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/ajaxloadingbar.gif" width="100"/>
+                    </div>
+                </p:dialog>
+
+
+
+                <h:panelGroup id="fieldset_colors">
+                    <p:fieldset legend="Últimos registros" style="width:100%; border-width: 3px;">
+
+                        <p:dataScroller value="#{requestdata1.returnLastSample()}" var="process" rendered="true">
+                            <h:panelGrid columns="4" style="width: 100%;">
+                                <p:outputPanel style="width: 50%;">
+                                    <h:panelGrid columns="2" style="background-color: #0073b7; border-radius: 10px;"> 
+                                        <h:outputLabel value="TVOC:" style="color: white;"/>
+                                        <h:outputText value="#{process.tvoc}" style="font-weight: bold; color: white;"/>
+                                    </h:panelGrid>
+                                </p:outputPanel>
+
+
+                            </h:panelGrid>
+                        </p:dataScroller>
+
+
+                        <div style="text-align:center">
+                            <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/logo.png" width="100"/>  
+                        </div>
+                        <div style="text-align:center">
+                            <h:outputLabel value="Powered by AirPure | #{main.SVNRevision}" style="font-size: 10px;"/>
+                        </div>
+                    </p:fieldset>
+                </h:panelGroup>
+
+
+
+            </section><!-- /.content -->
+
+
+        </div><!-- /.content-wrapper -->
+        <!-- Add the sidebar's background. This div must be placed
+             immediately after the control sidebar -->
+        <div class="control-sidebar-bg"></div>
+
+
+        <!-- REQUIRED JS SCRIPTS -->
+
+
+
+
+        <script type="text/javascript" src="#{request.contextPath}/resources/bootstrap/js/bootstrap.min.js"></script> <!-- Correio -->
+        <script type="text/javascript" src="#{request.contextPath}/resources/dist/js/app.min.js"></script> <!-- Correio -->
+
+
+
+    </h:body>
+
+</html>

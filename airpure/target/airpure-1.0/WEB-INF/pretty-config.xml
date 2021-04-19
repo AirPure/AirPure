@@ -1,0 +1,31 @@
+<pretty-config xmlns="http://ocpsoft.org/schema/rewrite-config-prettyfaces" 
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+               xsi:schemaLocation="http://ocpsoft.org/schema/rewrite-config-prettyfaces
+                      http://ocpsoft.org/xml/ns/prettysistema/rewrite-config-prettyfaces.xsd">
+
+    <url-mapping id="autenticacao">
+        <pattern value="/sistema/autenticacao" />
+        <view-id value="/sistema/autenticacao.xhtml" />
+    </url-mapping>
+        
+    <url-mapping id="saso">
+        <pattern value="/sistema/saso" />
+        <view-id value="/sistema/home_1.xhtml" />
+    </url-mapping>
+    
+    <url-mapping id="sipai">
+        <pattern value="/sistema/sipai" />
+        <view-id value="/sistema/home_2.xhtml" />
+    </url-mapping>
+    
+    <url-mapping id="simpec">
+        <pattern value="/sistema/simpec" />
+        <view-id value="/sistema/home_3.xhtml" />
+    </url-mapping>
+    
+    <url-mapping id="home">
+        <pattern value="/sistema/home" />
+        <view-id value="/sistema/menuProjetos.xhtml" />
+    </url-mapping>
+
+</pretty-config>
