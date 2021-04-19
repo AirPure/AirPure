@@ -6,10 +6,10 @@
 import sys
 import socket
 
-TCP_IP = '127.0.0.1'
-TCP_PORT = 7007
+TCP_IP = 'server01.matsoftwares.com.br'
+TCP_PORT = 1883
 BUFFER_SIZE = 20
-MESSAGE = "INSERT 34 87 1470 0.5 917"
+MESSAGE = "INSERT 34 87 1470 0.5 917 1 2 1"
 
 if len(sys.argv) >= 2:
     TCP_IP = sys.argv[1]

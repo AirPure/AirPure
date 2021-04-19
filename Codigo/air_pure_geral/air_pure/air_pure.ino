@@ -23,7 +23,7 @@ if(isContadorPessoas){
   Serial.println("Contador de pessoas DESATIVADO.");
 }
 
-isSendingAirServer = NVS.getString("airserver").toInt();
+isSendingAirServer = !NVS.getString("airserver").toInt();
 if(isSendingAirServer){
   Serial.println("Envio ao AirServer ATIVADO.");
 } else {
@@ -165,12 +165,16 @@ estado = WORKING;
   delayTimes(3); //Delay para permitir que os dados sejam enviados antes de entrar no modo sleep.
 
   if(isSendingAirServer){
-    if (!client.connect((NVS.getString("hostAirServer")).c_str(), 7007)) {
+    //if (!client.connect((NVS.getString("hostAirServer")).c_str(), 1883)) {
+    if (!client.connect("server01.matsoftwares.com.br", 1883)) {
       Serial.println("Conexao socket falhou!");
     }
         
-    client.print("INSERT " + String(temp, 2) + " " + String(umid, 2) + " " + String(eco2,2) + " " + String(voc, 2) + " " + String(valorCO2) + " " + String(AIRPURE_ID));
+    client.print("INSERT " + String(temp, 2) + " " + String(umid, 2) + " " + String(eco2,2) + " " + String(voc, 2) + " " + String(valorCO2) + " " + String(dbLevel) + " " + String(lux) + " " +  String(AIRPURE_ID));
     client.stop();
+    Serial.println("INSERT " + String(temp, 2) + " " + String(umid, 2) + " " + String(eco2,2) + " " + String(voc, 2) + " " + String(valorCO2) + " " + String(dbLevel) + " " + String(lux) + " " +  String(AIRPURE_ID));
+    
+    Serial.println("Conexao socket enviou os dados!");
   }
 
   lookForUpdates(); //Procura pela ultima versao disponivel do software. Se estiver desatualizado, inicia o upgrade.

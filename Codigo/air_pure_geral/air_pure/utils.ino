@@ -71,6 +71,8 @@ void getCurrentTime(){
 
 /*Função geral para delay*/
 void init_WiFi(){
+
+  estado = WIFI;
   //WiFiManager
   WiFi.disconnect(true);
   delay(1000);
@@ -93,6 +95,7 @@ void init_WiFi(){
       ESP.restart();
     }
   }
+  estado = WORKING;
 }
 
 

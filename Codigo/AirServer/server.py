@@ -1,10 +1,12 @@
 import sys
 import threading
+import psycopg2
 import socket
+import datetime
 from sklearn.neighbors import KNeighborsClassifier
 
 TCP_IP = ''
-TCP_PORT = 7007     #Porta que sera aberta para a conexao websocket
+TCP_PORT = 1883     #Porta que sera aberta para a conexao websocket
 BUFFER_SIZE = 64    #Tamanho do buffer que podera ser recebido
 
 # Faz a classificacao de pacotes vindos do AirPure
@@ -41,11 +43,11 @@ def classificatePackage(conn, addr):
                     # Junta num vetor todos os valores presentes no arquivo na seguinte configuracao [[TEMPERATURA,UMIDADE,ECO2,TVOC,CO2],[TEMPERATURA,UMIDADE,ECO2,TVOC,CO2],....]
                     columns = line.split()
                     int_list = [float(i) for i in columns]
-                    data_all.append([int_list[0],int_list[1],int_list[2],int_list[3],int_list[4]])
+                    data_all.append([int_list[0],int_list[1],int_list[2],int_list[3],int_list[4],int_list[5],int_list[6]])
 
                 f.close()
 
-                # Abre o arquivo contendo os resultados previamente definidos para as amostras e também os que foram 'predictados' pelo algoritmo
+                # Abre o arquivo contendo os resultados previamente definidos para as amostras e tambem os que foram 'predictados' pelo algoritmo
                 f = open('result_airpure.txt', 'r')
                 result = []
                 for line in f:
@@ -56,7 +58,7 @@ def classificatePackage(conn, addr):
 
                 # Executa o algoritmo de classificao
                 neigh.fit(data_all, result)
-                prediction = neigh.predict([[comando[1], comando[2], comando[3],comando[4],comando[5]]])
+                prediction = neigh.predict([[comando[1], comando[2], comando[3],comando[4],comando[5],comando[6],comando[7]]])
 
                 # Abre o arquivo de resultados e escreve o resultado do predict
                 f2 = open('result_airpure.txt', 'a')
@@ -65,10 +67,37 @@ def classificatePackage(conn, addr):
 
                 # Abre o arquivo de amostras e escreve a amostra que acabou de receber
                 f2 = open('data_airpure.txt', 'a')
-                f2.write("\n" + comando[1] + " " + comando[2] + " " + comando[3] + " " + comando[4] + " " + comando[5] + " " + comando[6])
+                f2.write("\n" + comando[1] + " " + comando[2] + " " + comando[3] + " " + comando[4] + " " + comando[5] + " " + comando[6] + " " + comando[7])
                 f2.close()
 
-                print("\n[SERVIDOR ", addr, "] Classifição dos dados executada com sucesso.")
+                print("\n[SERVIDOR ", addr, "] Classificao dos dados executada com sucesso.")
+
+                try:
+                    connection = psycopg2.connect(user="postgres",
+                                                  password="10052019",
+                                                  host="server01.matsoftwares.com.br",
+                                                  port="5432",
+                                                  database="airpure")
+                    cursor = connection.cursor()
+
+                    postgres_insert_query = """ INSERT INTO amostragens (temperatura,umidade,eco2,tvoc,co2,db,lux,id_dispositivos,iaq,data) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+                    record_to_insert = (comando[1],comando[2],comando[3],comando[4],comando[5],comando[6],comando[7],comando[8],str(prediction[0]),datetime.datetime.now())
+                    cursor.execute(postgres_insert_query, record_to_insert)
+
+                    connection.commit()
+                    count = cursor.rowcount
+                    print(count, "Registro inserido com sucesso!")
+
+                except (Exception, psycopg2.Error) as error:
+                    print("Falhou ao inserir o registro!", error)
+
+                finally:
+                    # closing database connection.
+                    if connection:
+                        cursor.close()
+                        connection.close()
+                        print("Conexao ao banco esta fechada.")
+
 
             else:
                 resposta = 'ERRO'
