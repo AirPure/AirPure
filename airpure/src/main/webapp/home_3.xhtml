@@ -60,7 +60,7 @@
                 <!-- mini logo for sidebar mini 50x50 pixels -->
                 <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/logo1.png" width="30"/> 
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg"><b>Elisa96</b></span>
+                <span class="logo-lg"><b>AirPure</b></span>
             </a>
 
             <!-- Header Navbar -->
@@ -68,6 +68,7 @@
                 <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                     <span class="sr-only">Toggle navigation</span>
                 </a>
+
                 <h:form>
                     <div class="pull-right">
                         <p:commandButton styleClass="btn btn-danger btn-block" value="Sair" action="#{autenticacao.logOut()}" update="@form"/>
@@ -92,9 +93,7 @@
 
                     <li>
 
-                        <li class="active"><a href="/airpure/sistema/"><i class="fa fa-link"></i> <span>Opção 1</span></a></li>
-                        <li class="active"><a href="/airpure/sistema/"><i class="fa fa-link"></i> <span>Opção 2</span></a></li>
-                        <li class="active"><a href="/airpure/sistema/"><i class="fa fa-link"></i> <span>Opção 3</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/filtro"><i class="fa fa-link"></i> <span>Filtros</span></a></li>
 
                     </li>
 
@@ -126,7 +125,7 @@
 
 
                 <h:panelGroup id="fieldset_colors">
-                    <p:fieldset legend="Últimos registros" style="width:100%; border-width: 3px;">
+                    <p:fieldset legend="#{requestdata1.ultimoRegistroData()}" style="width:100%; border-width: 3px; color: black; text-align: center;">
 
                         <p:dataScroller value="#{requestdata1.returnLastSample()}" var="process" rendered="true">
                             <h:panelGrid columns="7" style="width: 100%; " >
@@ -136,28 +135,28 @@
                                     <h:outputText value="#{process.tvoc} ppb" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                 </h:panelGrid>
                                 <h:panelGrid columns="1" style="background-color: #0073b7; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
-                                    <h:outputLabel value="TVOC:" style="color: white; font-size: 18px;"/>
-                                    <h:outputText value="#{process.tvoc} ppb" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
+                                    <h:outputLabel value="CO2:" style="color: white; font-size: 18px;"/>
+                                    <h:outputText value="#{process.co2} ppm" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                 </h:panelGrid>
                                 <h:panelGrid columns="1" style="background-color: #0073b7; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
-                                    <h:outputLabel value="TVOC:" style="color: white; font-size: 18px;"/>
-                                    <h:outputText value="#{process.tvoc} ppb" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
+                                    <h:outputLabel value="eCO2:" style="color: white; font-size: 18px;"/>
+                                    <h:outputText value="#{process.eco2} ppm" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                 </h:panelGrid>
                                 <h:panelGrid columns="1" style="background-color: #0073b7; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
-                                    <h:outputLabel value="TVOC:" style="color: white; font-size: 18px;"/>
-                                    <h:outputText value="#{process.tvoc} ppb" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
+                                    <h:outputLabel value="Temperatura:" style="color: white; font-size: 18px;"/>
+                                    <h:outputText value="#{process.temperatura} ºC" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                 </h:panelGrid>
                                 <h:panelGrid columns="1" style="background-color: #0073b7; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
-                                    <h:outputLabel value="TVOC:" style="color: white; font-size: 18px;"/>
-                                    <h:outputText value="#{process.tvoc} ppb" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
+                                    <h:outputLabel value="Umidade:" style="color: white; font-size: 18px;"/>
+                                    <h:outputText value="#{process.umidade}%" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                 </h:panelGrid>
                                 <h:panelGrid columns="1" style="background-color: #0073b7; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
-                                    <h:outputLabel value="TVOC:" style="color: white; font-size: 18px;"/>
-                                    <h:outputText value="#{process.tvoc} ppb" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
+                                    <h:outputLabel value="Ruído:" style="color: white; font-size: 18px;"/>
+                                    <h:outputText value="#{process.db} dB" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                 </h:panelGrid>
                                 <h:panelGrid columns="1" style="background-color: #0073b7; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
-                                    <h:outputLabel value="TVOC:" style="color: white; font-size: 18px;"/>
-                                    <h:outputText value="#{process.tvoc} ppb" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
+                                    <h:outputLabel value="Luminosidade:" style="color: white; font-size: 18px;"/>
+                                    <h:outputText value="#{process.lux} Lux" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                 </h:panelGrid>
 
 
@@ -165,33 +164,99 @@
                             </h:panelGrid>
                         </p:dataScroller>
 
+                        <section class="content-header">
+                            <h1 style="color: black; text-align: center;">
+                                Variação temporal
+                                <small>Intervalo: #{requestdata1.time()}</small>
+                            </h1>
+                        </section>
+
+                        <h:form>  
+                            <p:growl id="messages"/>
+
+                            <p:menubar style="text-align: center;">
+                                <p:submenu label="Filtrar por" icon="pi pi-file">
+                                    <p:menuitem value="Data" onclick="filterByData()"/>
+                                    <p:separator />
+                                    <p:menuitem value="Sem Filtro" onclick="noFilter();PF('dlg1').show();" action="#{requestdata1.noFilterDatatable()}"/>
+                                </p:submenu>
+
+                            </p:menubar>
+
+
+                        </h:form>
+                        <p:panelGrid columns="1" style="min-width: 100%;">
+                            <h:outputLabel id="data" style="display: none">
+                                <h:outputLabel style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
+                                    <p:panelGrid columns="2">
+                                        <h1 style="color:black; display: flex; flex-direction: row; justify-content: center; align-items: center;">
+                                            Intervalo do histórico
+                                            <small style="color:black;">(dd/MM/yyyy)</small>
+                                        </h1>
+
+                                        <h:form style=" display: flex; flex-direction: row; justify-content: center; align-items: center">
+                                            <p:outputLabel value="Inicio: "/>
+                                            <p:inputMask value="#{requestdata1.inicio}" mask="99/99/9999" lang="ptbr" required="true" requiredMessage="Preencha os campos em branco."/>
+
+
+                                            <p:outputLabel value=" Fim: "/>
+                                            <p:inputMask value="#{requestdata1.fim}" mask="99/99/9999" lang="ptbr" required="true" requiredMessage="Preencha os campos em branco."/>
+
+                                            <p:commandButton action="#{requestdata1.datatableFilterData()}" onclick="PF('dlg1').show();" value="Filtrar" update="@all" style="text-align: center;"/> 
+                                        </h:form>
+                                    </p:panelGrid>
+
+                                </h:outputLabel>
+                            </h:outputLabel>
+                        </p:panelGrid>
 
                         <h:panelGrid columns="2" style="margin: auto;">
 
                             <p:outputPanel style="width:100%;">
                                 <hf:chart type="line" value="#{chartView1.registro1}" var="point"
-                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Valores">
+                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de CO2">
                                     <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
                                                   gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
                                 </hf:chart> 
                             </p:outputPanel>
                             <p:outputPanel style="width:100%;">
-                                <hf:chart type="line" value="#{chartView1.registro1}" var="point"
-                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Valores">
+                                <hf:chart type="line" value="#{chartView1.registro2}" var="point"
+                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de eCO2">
                                     <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
                                                   gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
                                 </hf:chart> 
                             </p:outputPanel>
                             <p:outputPanel style="width:100%;">
-                                <hf:chart type="line" value="#{chartView1.registro1}" var="point"
-                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Valores">
+                                <hf:chart type="line" value="#{chartView1.registro3}" var="point"
+                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Temperatura">
                                     <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
                                                   gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
                                 </hf:chart> 
                             </p:outputPanel>
                             <p:outputPanel style="width:100%;">
-                                <hf:chart type="line" value="#{chartView1.registro1}" var="point"
-                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Valores">
+                                <hf:chart type="line" value="#{chartView1.registro4}" var="point"
+                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Umidade">
+                                    <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                                  gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                </hf:chart> 
+                            </p:outputPanel>
+                            <p:outputPanel style="width:100%;">
+                                <hf:chart type="line" value="#{chartView1.registro5}" var="point"
+                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de dB">
+                                    <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                                  gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                </hf:chart> 
+                            </p:outputPanel>
+                            <p:outputPanel style="width:100%;">
+                                <hf:chart type="line" value="#{chartView1.registro6}" var="point"
+                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Lux">
+                                    <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                                  gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                </hf:chart> 
+                            </p:outputPanel>
+                            <p:outputPanel style="width:100%;">
+                                <hf:chart type="line" value="#{chartView1.registro7}" var="point"
+                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de TVOC">
                                     <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
                                                   gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
                                 </hf:chart> 
@@ -202,27 +267,12 @@
 
                         </h:panelGrid>
 
-
-                        <hf:chart type="line" value="#{chartView1.registro1}" var="point"
-                                  point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Valores">
-                            <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
-                                          gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                        </hf:chart>
 
                         <h:panelGrid columns="4" style="margin: auto;">
                             <div id="gaugeArea1"></div>
                         </h:panelGrid>
 
-                        <h:form>
-                            <h:panelGrid columns="2">
-                                <h:outputLabel value="Nome:" for="nome" />
-                                <h:inputText id="nome" value="#{autenticacao.usuario.nome}" title="Nome" />
 
-                            </h:panelGrid>
-                            <br />
-                            <p:commandButton action="#{autenticacao.doEfetuarLogin()}" value="Cadastrar" onclick="PF('dlg1').show();"/>
-                            <p:messages closable="true"/>
-                        </h:form>
 
 
 
@@ -249,7 +299,24 @@
 
 
         <!-- REQUIRED JS SCRIPTS -->
-
+        <!-- REQUIRED JS SCRIPTS -->
+        <SCRIPT type="text/javascript">
+            function redirect() {
+                window.location.href = "graphsDetailed.xhtml";
+            }
+            function filterByData() {
+                document.getElementById("data").style.display = "inline";
+            }
+            function filterById() {
+                document.getElementById("data").style.display = "none";
+            }
+            function filterByNumber() {
+                document.getElementById("data").style.display = "none";
+            }
+            function noFilter() {
+                document.getElementById("data").style.display = "none";
+            }
+        </SCRIPT>
         <script src="https://unpkg.com/gauge-chart@0.5.1/dist/bundle.js"></script>
         <script>
             // Element inside which you want to see the chart.

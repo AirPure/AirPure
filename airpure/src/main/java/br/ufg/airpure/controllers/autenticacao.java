@@ -52,6 +52,16 @@ public class autenticacao implements HttpSessionListener {
         session.setAttribute("login", "usuario");
         session.setAttribute("usuario", 1);
         session.setAttribute("projetoEnvolvido", 1);
+        Date data = new Date(System.currentTimeMillis());
+        Date data2 = new Date(System.currentTimeMillis());
+        data.setDate(data.getDate() + 2);
+        data2.setDate(data2.getDate() - 7);
+        SimpleDateFormat formatarDate = new SimpleDateFormat("yyyy/MM/dd");
+        try {
+            session.setAttribute("endPoint", formatarDate.format(data));
+            session.setAttribute("startPoint", formatarDate.format(data2));
+        } catch (Exception ex) {
+        }
         FacesContext.getCurrentInstance().getExternalContext().redirect("/airpure/sistema/saso");
     }
     // <==========================Função de direciona para o sistema 2.==============================================================================================================================>
@@ -62,6 +72,16 @@ public class autenticacao implements HttpSessionListener {
         session.setAttribute("login", "usuario");
         session.setAttribute("usuario", 2);
         session.setAttribute("projetoEnvolvido", 2);
+        Date data = new Date(System.currentTimeMillis());
+        Date data2 = new Date(System.currentTimeMillis());
+        data.setDate(data.getDate() + 2);
+        data2.setDate(data2.getDate() - 7);
+        SimpleDateFormat formatarDate = new SimpleDateFormat("yyyy/MM/dd");
+        try {
+            session.setAttribute("endPoint", formatarDate.format(data));
+            session.setAttribute("startPoint", formatarDate.format(data2));
+        } catch (Exception ex) {
+        }
         FacesContext.getCurrentInstance().getExternalContext().redirect("/airpure/sistema/sipai");
     }
     // <==========================Função de direciona para o sistema 3.==============================================================================================================================>
@@ -72,6 +92,16 @@ public class autenticacao implements HttpSessionListener {
         session.setAttribute("login", "usuario");
         session.setAttribute("usuario", 3);
         session.setAttribute("projetoEnvolvido", 3);
+        Date data = new Date(System.currentTimeMillis());
+        Date data2 = new Date(System.currentTimeMillis());
+        data.setDate(data.getDate() + 2);
+        data2.setDate(data2.getDate() - 7);
+        SimpleDateFormat formatarDate = new SimpleDateFormat("yyyy/MM/dd");
+        try {
+            session.setAttribute("endPoint", formatarDate.format(data));
+            session.setAttribute("startPoint", formatarDate.format(data2));
+        } catch (Exception ex) {
+        }
         FacesContext.getCurrentInstance().getExternalContext().redirect("/airpure/sistema/simpec");
     }
     // <==========================Função que efetua o login ao usuário. Além de verificar se a conta e senha existem e estão corretos, salva algumas informações em variáveis de sessão.==============================================================================================================================>
@@ -81,7 +111,7 @@ public class autenticacao implements HttpSessionListener {
         projetos projeto = new projetos();
         Date data = new Date(System.currentTimeMillis());
         Date data2 = new Date(System.currentTimeMillis());
-        data.setDate(data.getDate() + 1);
+        data.setDate(data.getDate() + 2);
         data2.setDate(data2.getDate() - 7);
         SimpleDateFormat formatarDate = new SimpleDateFormat("yyyy/MM/dd");
         int idCustomer = 0;
@@ -134,7 +164,7 @@ public class autenticacao implements HttpSessionListener {
             } else {
                 System.out.println("Usuario rejeitado!");
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuário e/ou senha incorreto.", "Usuário e/ou senha incorreto."));
-                FacesContext.getCurrentInstance().getExternalContext().redirect("/airpure/sistema/autenticacao.xhtml");
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/airpure/sistema/autenticacao");
             }
 
         } catch (NullPointerException e) {
@@ -144,7 +174,7 @@ public class autenticacao implements HttpSessionListener {
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
         if (session.getAttribute("login").equals("usuario")) {
             try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("/airpure/sistema/homePage.xhtml");
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/airpure/sistema/saso");
             } catch (IOException ex) {
                 Logger.getLogger(autenticacao.class.getName()).log(Level.SEVERE, null, ex);
             }

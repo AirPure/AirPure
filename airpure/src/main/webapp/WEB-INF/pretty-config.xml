@@ -27,5 +27,11 @@
         <pattern value="/sistema/home" />
         <view-id value="/sistema/menuProjetos.xhtml" />
     </url-mapping>
+    
+    
+    <url-mapping id="filtro">
+        <pattern value="/sistema/filtro" />
+        <view-id value="/sistema/filtro.xhtml" />
+    </url-mapping>
 
 </pretty-config>
