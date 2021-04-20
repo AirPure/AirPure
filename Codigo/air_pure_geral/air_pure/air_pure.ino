@@ -24,10 +24,17 @@ if(isContadorPessoas){
 }
 
 isSendingAirServer = !NVS.getString("airserver").toInt();
+wifiManager = !NVS.getString("wifiManager").toInt();
 if(isSendingAirServer){
   Serial.println("Envio ao AirServer ATIVADO.");
 } else {
   Serial.println("Envio ao AirServer DESATIVADO.");
+}
+
+if(wifiManager){
+  Serial.println("wifiManager ATIVADO.");
+} else {
+  Serial.println("wifiManager DESATIVADO.");
 }
 
 /*Cria task que mantem a atualização do OTA.*/

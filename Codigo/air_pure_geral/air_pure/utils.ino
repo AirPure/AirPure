@@ -71,13 +71,14 @@ void getCurrentTime(){
 
 /*Função geral para delay*/
 void init_WiFi(){
-
+  if(!wifiManager){
   estado = WIFI;
   //WiFiManager
   WiFi.disconnect(true);
   delay(1000);
   WiFi.mode(WIFI_STA);
   delay(1000);
+
 
   WiFiManager wifiManager;
   WiFi.setAutoConnect(true);
@@ -96,6 +97,26 @@ void init_WiFi(){
     }
   }
   estado = WORKING;
+  } else {
+  esp_wifi_sta_wpa2_ent_set_username((uint8_t *)EAP_IDENTITY, strlen(EAP_IDENTITY));
+  esp_wifi_sta_wpa2_ent_set_password((uint8_t *)EAP_PASSWORD, strlen(EAP_PASSWORD));
+  esp_wpa2_config_t config = WPA2_CONFIG_INIT_DEFAULT(); 
+  esp_wifi_sta_wpa2_ent_enable(&config); 
+  WiFi.begin(ssid); 
+  int counter = 0;
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+    counter++;
+    if(counter>=60){ 
+      ESP.restart();
+    }
+  }
+  client2.setCACert(eduroam_root_ca);
+   Serial.println("WiFi conectado.");
+  Serial.println("IP:"); 
+  Serial.println(WiFi.localIP()); 
+  }
 }
 
 
@@ -161,6 +182,20 @@ void vLowSerial(void *pvParameters) {
         } else {
           NVS.setString("airserver", "1");
           Serial.println("Envio ao AirServer DESATIVADO.");
+          ESP.restart();
+        }
+
+
+      }
+
+      if (input.equals("wifiManager")) {
+        if (NVS.getString("wifiManager").toInt()){
+          NVS.setString("wifiManager", "0");
+          Serial.println("wifiManager ATIVADO.");
+          ESP.restart();
+        } else {
+          NVS.setString("wifiManager", "1");
+          Serial.println("wifiManager DESATIVADO.");
           ESP.restart();
         }
 

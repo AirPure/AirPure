@@ -30,6 +30,7 @@ Confira nosso repositório no GitHub: https://github.com/AirPure/AirPure
 #include "globalvar.h"
 #include "globaldef.h"
 #include <Ultrasonic.h>
+#include "esp_wpa2.h"
 
 
 

@@ -30,6 +30,8 @@ Confira nosso repositório no GitHub: https://github.com/AirPure/AirPure
 #define PORTA_ECHO2      5
 #define ON_IDLE 1
 #define WORKING 2
+#define EAP_IDENTITY "antoniopereira@discente.ufg.br" //if connecting from another corporation, use identity@organisation.domain in Eduroam 
+#define EAP_PASSWORD "password" //your Eduroam password
 #define WIFI 3
 #define LOOKING_FOR_WIFI
 #define ledPin 15
