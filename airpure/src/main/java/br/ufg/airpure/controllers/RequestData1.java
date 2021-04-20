@@ -120,6 +120,36 @@ public class RequestData1 {
         return registro1;
     }
 
+    // <===========Método de inserção modelo ao banco de dados.=========================================================================================================================>
+    public void insertDatabase() {
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "INSERT INTO range (tipo,minimo,maximo,norma) VALUES ('TVOC',0,300,'NR-17');";
+
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+
+            Main.sql.executeUpdate(sql);
+            System.out.println(sql);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+    }
+
     // <===========Retorna a data do utlimo registro do projeto. =========================================================================================================================>
     public String ultimoRegistroData() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -148,7 +178,6 @@ public class RequestData1 {
                 dataAux.setHours(dataAux.getHours() - 3);
                 data = new SimpleDateFormat("dd/MM/yyyy").format(dataAux);
                 hora = new SimpleDateFormat("HH:mm:ss").format(dataAux);
-      
 
             }
 
