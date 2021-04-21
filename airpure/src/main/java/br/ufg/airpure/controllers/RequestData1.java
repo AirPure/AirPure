@@ -213,7 +213,7 @@ public class RequestData1 {
         Date data = new Date(System.currentTimeMillis());
         Date data2 = new Date(System.currentTimeMillis());
         data.setDate(data.getDate() + 2);
-        data2.setDate(data2.getDate() - 7);
+        data2.setDate(data2.getDate() - 2);
         SimpleDateFormat formatarDate = new SimpleDateFormat("yyyy/MM/dd");
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();

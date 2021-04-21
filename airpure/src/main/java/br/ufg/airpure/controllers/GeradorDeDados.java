@@ -31,7 +31,7 @@ public class GeradorDeDados {
 	 * E passa para o mecanismo de apuração
 	 * 
 	 */
-	@Schedule(second = "*/1", minute = "*", hour = "*", info="Every 1 seconds", persistent=false) 
+	@Schedule(second = "*/30", minute = "*", hour = "*", info="Every 1 seconds", persistent=false) 
 	public void gera(){
 		System.out.println("Gerando dados para o websocket...");
 		String[][] dados = new String[3][2];
