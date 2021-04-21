@@ -251,7 +251,7 @@ public class RequestData1 {
             inicioAux = aux[2] + "/" + aux[1] + "/" + valor;
 
             aux = fim.split(Pattern.quote("/"));
-            fimAux = aux[2] + "/" + aux[1] + "/" + (aux[0] + 1);
+            fimAux = aux[2] + "/" + aux[1] + "/" + (aux[0]);
 
             FacesContext facesContext = FacesContext.getCurrentInstance();
             HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
