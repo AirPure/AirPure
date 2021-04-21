@@ -2,6 +2,7 @@ package br.ufg.airpure.controllers;
 
 import br.ufg.airpure.entity.tipoDispositivo;
 import br.ufg.airpure.entity.amostragens;
+import br.ufg.airpure.entity.rangeParametros;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -118,6 +119,107 @@ public class RequestData3 {
         }
 
         return registro1;
+    }
+
+    // <============================================================================================================================================================================>
+    //Faz o map de valores.
+    int mapColors(int x, int in_min, int in_max, int out_min, int out_max) {
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    }
+
+    // <===========Método que retorna a cor do quadrado do parametro.=========================================================================================================================>
+    public String returnColorParam(Float value, String param) {
+            String color = "";
+            int minimo = 0;
+            int maximo = 0;
+            Main.db = null;
+            BD.ConectarBD();
+            String sql = "SELECT minimo,maximo FROM range WHERE tipo = '" + param + "';";
+
+            try {
+                Main.sql = Main.db.createStatement();
+            } catch (SQLException e) {
+                e.printStackTrace();
+
+            }
+
+            ResultSet rs = null;
+            try {
+
+                rs = Main.sql.executeQuery(sql);
+                System.out.println(sql);
+                while (rs.next()) {
+                    minimo = rs.getInt("minimo");
+                    maximo = rs.getInt("maximo");
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+
+            }
+            try {
+                Main.db.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+            }
+
+            if (value > minimo && value < maximo) {
+                return "#008000";
+            } else if (value < minimo) {
+                return "#0073b7";
+            } else {
+                return "#ff0000";
+            }
+        
+
+    }
+
+    // <===========Método que retorna o icone do quadrado do parametro.=========================================================================================================================>
+    public String returnImageParam(Float value, String param) {
+        String color = "";
+        int minimo = 0;
+        int maximo = 0;
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "SELECT minimo,maximo FROM range WHERE tipo = '" + param + "';";
+
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+        ResultSet rs = null;
+        try {
+
+            rs = Main.sql.executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                minimo = rs.getInt("minimo");
+                maximo = rs.getInt("maximo");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+        if (value > minimo && value < maximo) {
+            return "/resources/images/ok.png";
+        } else if (value < minimo) {
+            return "/resources/images/ok.png";
+        } else {
+            return "/resources/images/bad.png";
+        }
+
     }
 
     // <===========Método de inserção modelo ao banco de dados.=========================================================================================================================>
