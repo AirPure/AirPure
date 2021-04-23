@@ -2,6 +2,7 @@ package br.ufg.airpure.controllers;
 
 import br.ufg.airpure.entity.tipoDispositivo;
 import br.ufg.airpure.entity.amostragens;
+import br.ufg.airpure.entity.dispositivos;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ import org.primefaces.PrimeFaces;
 public class RequestData2 {
 
     ArrayList<amostragens> registro1;
+    ArrayList<dispositivos> registro_id;
+    
     String inicio;
     String fim;
     static String idOfAirpures;
@@ -120,6 +123,104 @@ public class RequestData2 {
         return registro1;
     }
 
+  
+        // <===========Método que retorna todos os dados do último registro de cada Airpure ligado ao seu projeto.=========================================================================================================================>
+    public ArrayList<dispositivos> returnID() {
+        
+        registro_id = new ArrayList<dispositivos>();
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "SELECT * FROM dispositivos;";
+        
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+        ResultSet rs = null;
+        try {
+
+            rs = Main.sql.executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                dispositivos process = new dispositivos();
+                process.setId(rs.getInt("id"));
+                registro_id.add(process);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+        return registro_id;
+    }
+    
+        // <===========Método que retorna todos os dados do último registro de cada Airpure ligado ao seu projeto.=========================================================================================================================>
+    public ArrayList<amostragens> returnLastSampleBYID(int id_dispositivo) {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+        int idProjetoRelacionado = (int) session.getAttribute("projetoEnvolvido");
+        registro1 = new ArrayList<amostragens>();
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "SELECT * FROM amostragens WHERE id_dispositivos ="+id_dispositivo+" ORDER BY id DESC LIMIT 1;";
+
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+        ResultSet rs = null;
+        try {
+
+            rs = Main.sql.executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                amostragens process = new amostragens();
+                process.setId(rs.getLong("id"));
+                process.setCo2(rs.getFloat("co2"));
+                process.setEco2(rs.getFloat("eco2"));
+                process.setData(rs.getTimestamp("data"));
+                process.setDb(rs.getFloat("db"));
+                process.setLux(rs.getFloat("lux"));
+                process.setTemperatura(rs.getFloat("temperatura"));
+                process.setUmidade(rs.getFloat("umidade"));
+                process.setTvoc(rs.getFloat("tvoc"));
+                process.setV_FIRMWARE(rs.getInt("V_FIRMWARE"));
+                try {
+                    process.getData().setHours(process.getData().getHours() - 3);
+                } catch (NullPointerException E) {
+                    E.printStackTrace();
+                }
+                registro1.add(process);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+        return registro1;
+    }
+    
+    
     // <===========Método de inserção modelo ao banco de dados.=========================================================================================================================>
     public void insertDatabase() {
         Main.db = null;
@@ -194,6 +295,35 @@ public class RequestData2 {
 
         return "Último registro: " + data + " " + hora;
     }
+    
+    public String ultimoRegistroDadosID(int id_dispositivo) {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+        int idProjetoRelacionado = (int) session.getAttribute("projetoEnvolvido");
+        String data = "", hora = "", id = "", local = "";
+        Timestamp dataAux;
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "SELECT data FROM amostragens WHERE id_dispositivos = "+id_dispositivo+" ORDER BY DESC LIMIT 1";
+           
+        try {Main.sql = Main.db.createStatement();} catch (SQLException e) {e.printStackTrace();}
+
+        ResultSet rs = null;
+        try {
+            rs = Main.sql.executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                dataAux = rs.getTimestamp("data");
+                dataAux.setHours(dataAux.getHours() - 3);
+                data = new SimpleDateFormat("dd/MM/yyyy").format(dataAux);
+                hora = new SimpleDateFormat("HH:mm:ss").format(dataAux);
+                local = rs.getString("local");
+            }
+        } catch (SQLException e) {e.printStackTrace();}
+        try { Main.db.close();} catch (SQLException ex) {Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);}
+
+        return "ID: "+id_dispositivo+" \n\n Local: "+local+ " Último envio" + data + " " + hora;
+    }
 
     // <===========Atribui algum parametro a sessao do usuario (URL) =========================================================================================================================>
     public String putItOnSession(int id) throws InterruptedException {
@@ -264,6 +394,55 @@ public class RequestData2 {
         return "505.xhtml";
 
     }
+
+    public String returnColorParam(Float value, String param) {
+               String color = "";
+               int minimo = 0;
+               int maximo = 0;
+               Main.db = null;
+               BD.ConectarBD();
+               String sql = "SELECT minimo,maximo FROM range WHERE tipo = '" + param + "';";
+
+               try {
+                   Main.sql = Main.db.createStatement();
+               } catch (SQLException e) {
+                   e.printStackTrace();
+
+               }
+
+               ResultSet rs = null;
+               try {
+
+                   rs = Main.sql.executeQuery(sql);
+                   System.out.println(sql);
+                   while (rs.next()) {
+                       minimo = rs.getInt("minimo");
+                       maximo = rs.getInt("maximo");
+                   }
+
+               } catch (SQLException e) {
+                   e.printStackTrace();
+
+               }
+               try {
+                   Main.db.close();
+               } catch (SQLException ex) {
+                   Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+               }
+
+               if (value > minimo && value < maximo) {
+                   return "#4CAF50";
+               } else if (value < minimo) {
+                   return "#FF9800";
+               } else {
+                   return "#F44336";
+               }
+
+
+       }
+
+
 
 // <============================================================================================================================================================================>
 }
