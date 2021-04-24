@@ -94,12 +94,13 @@
 
                 <!-- Sidebar Menu -->
                 <ul class="sidebar-menu">
-                    <li class="header">Tópico 1</li>
+                    <li class="header">Menu</li>
                     <!-- Optionally, you can add icons to the links -->
 
                     <li>
 
-                        <li class="active"><a href="/airpure/sistema/filtro"><i class="fa fa-link"></i> <span>Filtros</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/home"><i class="fa fa-home"></i> <span>Home</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/salas"><i class="fa fa-bookmark"></i> <span>Salas</span></a></li>
 
                     </li>
 
@@ -115,7 +116,7 @@
             <section class="content-header">
                 <h1 style="color: white;">
                     Dashboard
-                    <small style="color: white;">Nome do projeto</small>
+                    <small style="color: white;">SIMPEC</small>
                 </h1>
             </section>
 
@@ -140,49 +141,49 @@
                         <p:dataScroller id="fieldset_colors" value="#{requestdata3.returnLastSample()}" var="process" rendered="true">
                             <h:panelGrid columns="7" style="width: 100%; " >
 
-                                <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process.tvoc,'TVOC')}; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process.tvoc,'TVOC')}; border-radius: 10px; width: 200px; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
                                     <h:outputLabel value="TVOC:" style="color: white; font-size: 18px;"/>
                                     <h:panelGrid columns="2" style="margin:auto;"> 
                                         <h:outputText value="#{process.tvoc} ppb" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                         <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process.tvoc,'TVOC')};" width="20"/>       
                                     </h:panelGrid>
                                 </h:panelGrid>
-                                <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process.co2,'CO2')}; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process.co2,'CO2')}; border-radius: 10px; width: 200px; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
                                     <h:outputLabel value="CO2:" style="color: white; font-size: 18px;"/>
                                     <h:panelGrid columns="2" style="margin:auto;"> 
                                         <h:outputText value="#{process.co2} ppm" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                         <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process.co2,'CO2')};" width="20"/>       
                                     </h:panelGrid>  
                                 </h:panelGrid>
-                                <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process.eco2,'eCO2')}; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process.eco2,'eCO2')}; border-radius: 10px; width: 200px; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
                                     <h:outputLabel value="eCO2:" style="color: white; font-size: 18px;"/>
                                     <h:panelGrid columns="2" style="margin:auto;"> 
                                         <h:outputText value="#{process.eco2} ppm" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                         <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process.eco2,'eCO2')};" width="20"/>       
                                     </h:panelGrid> 
                                 </h:panelGrid>
-                                <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process.temperatura,'Temperatura')}; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process.temperatura,'Temperatura')}; border-radius: 10px; width: 200px; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
                                     <h:outputLabel value="Temperatura:" style="color: white; font-size: 18px;"/>
                                     <h:panelGrid columns="2" style="margin:auto;"> 
                                         <h:outputText value="#{process.temperatura} ºC" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                         <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process.temperatura,'Temperatura')};" width="20"/>       
                                     </h:panelGrid> 
                                 </h:panelGrid>
-                                <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process.umidade,'Umidade')}; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process.umidade,'Umidade')}; border-radius: 10px; width: 200px; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
                                     <h:outputLabel value="Umidade:" style="color: white; font-size: 18px;"/>
                                     <h:panelGrid columns="2" style="margin:auto;"> 
                                         <h:outputText value="#{process.umidade}%" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                         <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process.umidade,'Umidade')};" width="20"/>       
                                     </h:panelGrid> 
                                 </h:panelGrid>
-                                <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process.db,'Ruído')}; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process.db,'Ruído')}; border-radius: 10px; width: 200px; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
                                     <h:outputLabel value="Ruído:" style="color: white; font-size: 18px;"/>
                                     <h:panelGrid columns="2" style="margin:auto;"> 
                                         <h:outputText value="#{process.db} dB" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                         <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process.db,'Ruído')};" width="20"/>       
                                     </h:panelGrid> 
                                 </h:panelGrid>
-                                <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process.lux,'Luminosidade')}; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process.lux,'Luminosidade')}; border-radius: 10px; width: 200px; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
                                     <h:outputLabel value="Luminosidade:" style="color: white; font-size: 18px;"/>
                                     <h:panelGrid columns="2" style="margin:auto;"> 
                                         <h:outputText value="#{process.lux} Lux" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
@@ -293,21 +294,7 @@
                                 </hf:chart> 
                             </p:outputPanel>
 
-
-
-
                         </h:panelGrid>
-
-
-                        <h:panelGrid columns="4" style="margin: auto;">
-                            <div id="gaugeArea1"></div>
-                        </h:panelGrid>
-
-
-
-
-
-
 
                         <div style="text-align:center">
                             <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/udf.png" width="100"/>   

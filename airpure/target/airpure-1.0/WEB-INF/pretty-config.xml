@@ -33,5 +33,10 @@
         <pattern value="/sistema/filtro" />
         <view-id value="/sistema/filtro.xhtml" />
     </url-mapping>
+    
+    <url-mapping id="salas">
+        <pattern value="/sistema/salas" />
+        <view-id value="/sistema/salas.xhtml" />
+    </url-mapping>
 
 </pretty-config>

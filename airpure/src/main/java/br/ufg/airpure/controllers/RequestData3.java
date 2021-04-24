@@ -1,7 +1,9 @@
 package br.ufg.airpure.controllers;
 
+import br.ufg.airpure.entity.ambientes;
 import br.ufg.airpure.entity.tipoDispositivo;
 import br.ufg.airpure.entity.amostragens;
+import br.ufg.airpure.entity.dispositivos;
 import br.ufg.airpure.entity.rangeParametros;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,6 +31,9 @@ import org.primefaces.PrimeFaces;
 public class RequestData3 {
 
     ArrayList<amostragens> registro1;
+    ArrayList<ambientes> registro2;
+    ArrayList<amostragens> registro3;
+    ArrayList<amostragens> registro4;
     String inicio;
     String fim;
     static String idOfAirpures;
@@ -120,6 +125,113 @@ public class RequestData3 {
 
         return registro1;
     }
+    // <===========Método que retorna todos os dados do último registro do ID passado como parametro.=========================================================================================================================>
+    public ArrayList<amostragens> returnLastSampleFromId(int id) {
+        registro4 = new ArrayList<amostragens>();
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "SELECT * FROM amostragens WHERE id_dispositivos = " + id + " ORDER BY id DESC LIMIT 1;";
+
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+        ResultSet rs = null;
+        try {
+
+            rs = Main.sql.executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                amostragens process = new amostragens();
+                process.setId(rs.getLong("id"));
+                process.setCo2(rs.getFloat("co2"));
+                process.setEco2(rs.getFloat("eco2"));
+                process.setData(rs.getTimestamp("data"));
+                process.setDb(rs.getFloat("db"));
+                process.setLux(rs.getFloat("lux"));
+                process.setTemperatura(rs.getFloat("temperatura"));
+                process.setUmidade(rs.getFloat("umidade"));
+                process.setTvoc(rs.getFloat("tvoc"));
+                process.setV_FIRMWARE(rs.getInt("V_FIRMWARE"));
+                try {
+                    process.getData().setHours(process.getData().getHours() - 3);
+                } catch (NullPointerException E) {
+                    E.printStackTrace();
+                }
+                registro4.add(process);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+        return registro4;
+    }
+    // <===========Método que retorna todos os dados do último registro de cada Airpure de uma determinada sala.=========================================================================================================================>
+    public ArrayList<amostragens> returnSampleFromRoom(int room) {
+        registro3 = new ArrayList<amostragens>();
+        dispositivos dispositivo = new dispositivos();
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "SELECT * FROM amostragens WHERE id_dispositivos IN (SELECT id FROM dispositivos WHERE id_ambientes = " + room + ") ORDER BY id DESC LIMIT 1;";
+
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+        ResultSet rs = null;
+        try {
+
+            rs = Main.sql.executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                amostragens process = new amostragens();
+                process.setId(rs.getLong("id"));
+                process.setCo2(rs.getFloat("co2"));
+                process.setEco2(rs.getFloat("eco2"));
+                process.setData(rs.getTimestamp("data"));
+                process.setDb(rs.getFloat("db"));
+                process.setLux(rs.getFloat("lux"));
+                process.setTemperatura(rs.getFloat("temperatura"));
+                process.setUmidade(rs.getFloat("umidade"));
+                process.setTvoc(rs.getFloat("tvoc"));
+                process.setV_FIRMWARE(rs.getInt("V_FIRMWARE"));
+                dispositivo.setId(rs.getInt("id_dispositivos"));
+                process.setAirpure(dispositivo);
+                try {
+                    process.getData().setHours(process.getData().getHours() - 3);
+                } catch (NullPointerException E) {
+                    E.printStackTrace();
+                }
+                registro3.add(process);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+        return registro3;
+    }
 
     // <============================================================================================================================================================================>
     //Faz o map de valores.
@@ -129,50 +241,132 @@ public class RequestData3 {
 
     // <===========Método que retorna a cor do quadrado do parametro.=========================================================================================================================>
     public String returnColorParam(Float value, String param) {
-            String color = "";
-            int minimo = 0;
-            int maximo = 0;
-            Main.db = null;
-            BD.ConectarBD();
-            String sql = "SELECT minimo,maximo FROM range WHERE tipo = '" + param + "';";
+        String color = "";
+        int minimo = 0;
+        int maximo = 0;
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "SELECT minimo,maximo FROM range WHERE tipo = '" + param + "';";
 
-            try {
-                Main.sql = Main.db.createStatement();
-            } catch (SQLException e) {
-                e.printStackTrace();
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
 
+        }
+
+        ResultSet rs = null;
+        try {
+
+            rs = Main.sql.executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                minimo = rs.getInt("minimo");
+                maximo = rs.getInt("maximo");
             }
 
-            ResultSet rs = null;
-            try {
+        } catch (SQLException e) {
+            e.printStackTrace();
 
-                rs = Main.sql.executeQuery(sql);
-                System.out.println(sql);
-                while (rs.next()) {
-                    minimo = rs.getInt("minimo");
-                    maximo = rs.getInt("maximo");
-                }
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
 
-            } catch (SQLException e) {
-                e.printStackTrace();
+        }
 
+        if (value > minimo && value < maximo) {
+            return "#4CAF50";
+        } else if (value < minimo) {
+            return "#FF9800";
+        } else {
+            return "#F44336";
+        }
+
+    }
+    // <===========Método que retorna a localizacao do airpure.=========================================================================================================================>
+    public String returnLocation(int id) {
+        String location = "";
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "SELECT localizacao from dispositivos WHERE id = " + id + ";";
+
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+        ResultSet rs = null;
+        try {
+
+            rs = Main.sql.executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                location = rs.getString("localizacao");
             }
-            try {
-                Main.db.close();
-            } catch (SQLException ex) {
-                Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+        return location;
+
+    }
+
+    // <===========Método que retorna todas as salas.=========================================================================================================================>
+    public ArrayList<ambientes> returnAmbientes() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+        int idProjetoRelacionado = (int) session.getAttribute("projetoEnvolvido");
+        registro2 = new ArrayList<ambientes>();
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "SELECT * FROM ambientes WHERE id IN (SELECT id_ambientes FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado + ") ORDER BY id DESC;";
+
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+        ResultSet rs = null;
+        try {
+
+            rs = Main.sql.executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                ambientes process = new ambientes();
+                process.setId(rs.getInt("id"));
+                process.setLocal(rs.getString("local"));
+                process.setPredio(rs.getString("predio"));
+                process.setSala(rs.getString("sala"));
+
+                registro2.add(process);
             }
 
-            if (value > minimo && value < maximo) {
-                return "#008000";
-            } else if (value < minimo) {
-                return "#0073b7";
-            } else {
-                return "#ff0000";
-            }
-        
+        } catch (SQLException e) {
+            e.printStackTrace();
 
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+        return registro2;
     }
 
     // <===========Método que retorna o icone do quadrado do parametro.=========================================================================================================================>
