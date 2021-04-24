@@ -155,7 +155,9 @@
                                                 <h:outputLabel value="ID AirPure: #{process2.airpure.id}" style="color: black; font-size: 18px;"/>
                                                 <h:outputText value="Último Registro: #{process2.data}" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
                                                 <h:outputText value="Aparelho: #{process1.equipamentos}" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
-                                                <p:commandButton action="#{requestdata3.putItOnSessionRoom(process1.sala)}" value="Relatório"/>
+                                                <h:form>
+                                                    <p:commandButton action="#{requestdata3.putItOnSessionRoom(process1.id)}" value="Relatório"/>
+                                                </h:form>
                                             </h:panelGrid>
                                             <h:panelGrid columns="1" style="background-color: white; border-radius: 10px; width: 85%; height: 100px; text-align: left;  margin: 30px; padding: 5px;">                              
 

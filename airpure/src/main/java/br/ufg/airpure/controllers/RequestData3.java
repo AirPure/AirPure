@@ -496,6 +496,53 @@ public class RequestData3 {
 
         return registro2;
     }
+    // <===========Método que retorna a sala que foi selecionada para o relatório.=========================================================================================================================>
+    public ArrayList<ambientes> returnAmbienteById() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+        int idAmbiente = (int) session.getAttribute("relatorio");
+        registro2 = new ArrayList<ambientes>();
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "SELECT *, (SELECT modelo from hvac WHERE id = id_hvac limit 1), (SELECT potencia from hvac WHERE id = id_hvac limit 1) FROM ambientes WHERE id = " + idAmbiente + " ORDER BY id DESC;";
+
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+        ResultSet rs = null;
+        try {
+
+            rs = Main.sql.executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                ambientes process = new ambientes();
+                process.setId(rs.getInt("id"));
+                process.setLocal(rs.getString("local"));
+                process.setPredio(rs.getString("predio"));
+                process.setSala(rs.getString("sala"));
+                process.setEquipamentos(rs.getString("sala"));
+                process.setEquipamentos(rs.getString("modelo") + " | " + rs.getString("potencia") + "btus");
+
+                registro2.add(process);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+        return registro2;
+    }
 
     // <===========Método que retorna todos os dispositivos.=========================================================================================================================>
     public ArrayList<dispositivos> retornaDispositivo() {
@@ -699,7 +746,8 @@ public class RequestData3 {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
-            FacesContext.getCurrentInstance().getExternalContext().redirect("relatorio?smp_id=" + id);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("relatorio?ambiente=" + id);
+            session.setAttribute("relatorio", id);
 
         } catch (Exception ex) {
             System.out.println("Error...");
