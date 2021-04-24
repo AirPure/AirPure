@@ -8,7 +8,9 @@ import java.util.Date;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @ManagedBean
@@ -87,12 +89,17 @@ public class ChartView3 {
             HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
             String startpoint = (String) session.getAttribute("startPoint");
             String endpoint = (String) session.getAttribute("endPoint");
+
+            FacesContext fContext = FacesContext.getCurrentInstance();
+            ExternalContext extContext = fContext.getExternalContext();
+            HttpServletRequest request = (HttpServletRequest) fContext.getExternalContext().getRequest();
+            String parametro = request.getParameter("smp_id");
             Main.db = null;
             BD.ConectarBD();
             int idProjetoRelacionado = (int) session.getAttribute("projetoEnvolvido");
             Main.db = null;
             BD.ConectarBD();
-            String sql = "SELECT * FROM amostragens WHERE id_dispositivos IN (SELECT id FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "' ORDER BY id ASC;";
+            String sql = "SELECT * FROM amostragens WHERE id_dispositivos = " + parametro + " AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "' ORDER BY id ASC;";
 
             try {
                 Main.sql = Main.db.createStatement();

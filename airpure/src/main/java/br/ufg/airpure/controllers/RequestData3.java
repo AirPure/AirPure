@@ -34,6 +34,7 @@ public class RequestData3 {
     ArrayList<ambientes> registro2;
     ArrayList<amostragens> registro3;
     ArrayList<amostragens> registro4;
+    ArrayList<dispositivos> registro5;
     String inicio;
     String fim;
     static String idOfAirpures;
@@ -68,17 +69,12 @@ public class RequestData3 {
     }
 
     // <===========Método que retorna todos os dados do último registro de cada Airpure ligado ao seu projeto.=========================================================================================================================>
-    public ArrayList<amostragens> returnLastSample() {
-        if (registro1 != null) {
-            return registro1;
-        }
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
-        int idProjetoRelacionado = (int) session.getAttribute("projetoEnvolvido");
+    public ArrayList<amostragens> returnLastSample(int id) {
         registro1 = new ArrayList<amostragens>();
         Main.db = null;
         BD.ConectarBD();
-        String sql = "SELECT * FROM amostragens WHERE id_dispositivos IN (SELECT id FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado + ") ORDER BY id DESC LIMIT 1;";
+        //String sql = "SELECT DISTINCT ON (id_dispositivos) id_dispositivos,* FROM amostragens WHERE id_dispositivos IN (SELECT id FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado +") ORDER BY id_dispositivos,id DESC;";
+        String sql = "SELECT * FROM amostragens WHERE id_dispositivos = " + id + " ORDER BY id DESC LIMIT 1;";
 
         try {
             Main.sql = Main.db.createStatement();
@@ -104,6 +100,7 @@ public class RequestData3 {
                 process.setUmidade(rs.getFloat("umidade"));
                 process.setTvoc(rs.getFloat("tvoc"));
                 process.setV_FIRMWARE(rs.getInt("V_FIRMWARE"));
+
                 try {
                     process.getData().setHours(process.getData().getHours() - 3);
                 } catch (NullPointerException E) {
@@ -125,6 +122,66 @@ public class RequestData3 {
 
         return registro1;
     }
+
+    // <===========Método que retorna todos os dados do último registro de cada Airpure ligado ao seu projeto.=========================================================================================================================>
+    public ArrayList<amostragens> returnLastSampleFromSession() {
+        registro1 = new ArrayList<amostragens>();
+        FacesContext fContext = FacesContext.getCurrentInstance();
+        ExternalContext extContext = fContext.getExternalContext();
+        HttpServletRequest request = (HttpServletRequest) fContext.getExternalContext().getRequest();
+        String parametro = request.getParameter("smp_id");
+        Main.db = null;
+        BD.ConectarBD();
+        //String sql = "SELECT DISTINCT ON (id_dispositivos) id_dispositivos,* FROM amostragens WHERE id_dispositivos IN (SELECT id FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado +") ORDER BY id_dispositivos,id DESC;";
+        String sql = "SELECT * FROM amostragens WHERE id_dispositivos = " + parametro + " ORDER BY id DESC LIMIT 1;";
+
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+        ResultSet rs = null;
+        try {
+
+            rs = Main.sql.executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                amostragens process = new amostragens();
+                process.setId(rs.getLong("id"));
+                process.setCo2(rs.getFloat("co2"));
+                process.setEco2(rs.getFloat("eco2"));
+                process.setData(rs.getTimestamp("data"));
+                process.setDb(rs.getFloat("db"));
+                process.setLux(rs.getFloat("lux"));
+                process.setTemperatura(rs.getFloat("temperatura"));
+                process.setUmidade(rs.getFloat("umidade"));
+                process.setTvoc(rs.getFloat("tvoc"));
+                process.setV_FIRMWARE(rs.getInt("V_FIRMWARE"));
+
+                try {
+                    process.getData().setHours(process.getData().getHours() - 3);
+                } catch (NullPointerException E) {
+                    E.printStackTrace();
+                }
+                registro1.add(process);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+        return registro1;
+    }
+
     // <===========Método que retorna todos os dados do último registro do ID passado como parametro.=========================================================================================================================>
     public ArrayList<amostragens> returnLastSampleFromId(int id) {
         registro4 = new ArrayList<amostragens>();
@@ -177,6 +234,7 @@ public class RequestData3 {
 
         return registro4;
     }
+
     // <===========Método que retorna todos os dados do último registro de cada Airpure de uma determinada sala.=========================================================================================================================>
     public ArrayList<amostragens> returnSampleFromRoom(int room) {
         registro3 = new ArrayList<amostragens>();
@@ -285,6 +343,7 @@ public class RequestData3 {
         }
 
     }
+
     // <===========Método que retorna a localizacao do airpure.=========================================================================================================================>
     public String returnLocation(int id) {
         String location = "";
@@ -369,6 +428,48 @@ public class RequestData3 {
         return registro2;
     }
 
+    // <===========Método que retorna todos os dispositivos.=========================================================================================================================>
+    public ArrayList<dispositivos> retornaDispositivo() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+        int idProjetoRelacionado = (int) session.getAttribute("projetoEnvolvido");
+        registro5 = new ArrayList<dispositivos>();
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "SELECT id FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado + " ORDER BY id DESC;";
+
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+        ResultSet rs = null;
+        try {
+
+            rs = Main.sql.executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                dispositivos process = new dispositivos();
+                process.setId(rs.getInt("id"));
+                registro5.add(process);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+        return registro5;
+    }
+
     // <===========Método que retorna o icone do quadrado do parametro.=========================================================================================================================>
     public String returnImageParam(Float value, String param) {
         String color = "";
@@ -451,11 +552,11 @@ public class RequestData3 {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
         int idProjetoRelacionado = (int) session.getAttribute("projetoEnvolvido");
-        String data = "", hora = "";
+        String data = "", hora = "", id = "";
         Timestamp dataAux;
         Main.db = null;
         BD.ConectarBD();
-        String sql = "SELECT data FROM amostragens WHERE id_dispositivos IN (SELECT id FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado + ") ORDER BY id DESC LIMIT 1;";
+        String sql = "SELECT id_dispositivos,data FROM amostragens WHERE id_dispositivos IN (SELECT id FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado + ") ORDER BY id DESC LIMIT 1;";
 
         try {
             Main.sql = Main.db.createStatement();
@@ -471,6 +572,7 @@ public class RequestData3 {
             System.out.println(sql);
             while (rs.next()) {
                 dataAux = rs.getTimestamp("data");
+                id = rs.getString("id_dispositivos");
                 dataAux.setHours(dataAux.getHours() - 3);
                 data = new SimpleDateFormat("dd/MM/yyyy").format(dataAux);
                 hora = new SimpleDateFormat("HH:mm:ss").format(dataAux);
@@ -488,7 +590,7 @@ public class RequestData3 {
 
         }
 
-        return "Último registro: " + data + " " + hora;
+        return "Último registro: " + data + " " + hora + " | ID Dispositivo: " + id;
     }
 
     // <===========Atribui algum parametro a sessao do usuario (URL) =========================================================================================================================>
@@ -496,8 +598,7 @@ public class RequestData3 {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
-            session.setAttribute("register", id);
-            FacesContext.getCurrentInstance().getExternalContext().redirect("homePage.xhtml?smp_id=" + id);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("detalhar?smp_id=" + id);
         } catch (Exception ex) {
             System.out.println("Error...");
         }

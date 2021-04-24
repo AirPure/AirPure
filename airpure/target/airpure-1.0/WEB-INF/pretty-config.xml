@@ -38,5 +38,10 @@
         <pattern value="/sistema/salas" />
         <view-id value="/sistema/salas.xhtml" />
     </url-mapping>
+    
+    <url-mapping id="detalhar">
+        <pattern value="/sistema/detalhar" />
+        <view-id value="/sistema/detalhar.xhtml" />
+    </url-mapping>
 
 </pretty-config>
