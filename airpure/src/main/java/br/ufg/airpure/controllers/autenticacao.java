@@ -102,7 +102,9 @@ public class autenticacao implements HttpSessionListener {
             session.setAttribute("startPoint", formatarDate.format(data2));
         } catch (Exception ex) {
         }
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Oooops...", "Algo deu errado.."));
         FacesContext.getCurrentInstance().getExternalContext().redirect("/airpure/sistema/simpec");
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Oooops...", "Algo deu errado.."));
     }
     // <==========================Função que efetua o login ao usuário. Além de verificar se a conta e senha existem e estão corretos, salva algumas informações em variáveis de sessão.==============================================================================================================================>
 

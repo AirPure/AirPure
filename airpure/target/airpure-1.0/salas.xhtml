@@ -136,7 +136,7 @@
 
 
                     <!--Título-->
-                    <p:fieldset legend="Dados Qualidade do Ar Interno" style="width:100%; border-width: 3px; color: black; text-align: center;">
+                    <p:fieldset legend="Dados Qualidade do Ar Interno - Visualização por Sala" style="width:100%; border-width: 3px; color: black; text-align: center;">
 
                         <p:dataScroller id="fieldset_data1" value="#{requestdata3.returnAmbientes()}" var="process1" rendered="true">   
 
@@ -152,8 +152,10 @@
                                         <h:panelGrid columns="2" style="width: 100%; " >
                                             <h:panelGrid columns="1" style="background-color: white; border-radius: 10px; width: 85%; height: 100px; text-align: left;  margin: 30px; padding: 5px;">                              
                                                 <h:outputLabel value="Sala: #{process1.sala} | #{process1.predio} | #{process1.local}" style="color: black; font-size: 18px;"/>
-                                                <h:outputLabel value="ID do Dispositivo: #{process2.airpure.id}" style="color: black; font-size: 18px;"/>
+                                                <h:outputLabel value="ID AirPure: #{process2.airpure.id}" style="color: black; font-size: 18px;"/>
                                                 <h:outputText value="Último Registro: #{process2.data}" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
+                                                <h:outputText value="Aparelho: #{process1.equipamentos}" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
+                                                <p:commandButton action="#{requestdata3.putItOnSessionRoom(process1.sala)}" value="Relatório"/>
                                             </h:panelGrid>
                                             <h:panelGrid columns="1" style="background-color: white; border-radius: 10px; width: 85%; height: 100px; text-align: left;  margin: 30px; padding: 5px;">                              
 

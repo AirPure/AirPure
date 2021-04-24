@@ -17,6 +17,8 @@ import javax.servlet.http.HttpSession;
 import java.awt.Color;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
@@ -179,6 +181,71 @@ public class RequestData3 {
 
         }
 
+        return registro1;
+    }
+
+    // <===========Método que retorna todos os dados dos registros.=========================================================================================================================>
+    public ArrayList<amostragens> returnAllLastSampleFromSession() {
+
+        registro1 = new ArrayList<amostragens>();
+        try {
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+            int parametro = (int) session.getAttribute("smp_id");
+            String startpoint = (String) session.getAttribute("startPoint");
+            String endpoint = (String) session.getAttribute("endPoint");
+
+            Main.db = null;
+            BD.ConectarBD();
+            //String sql = "SELECT DISTINCT ON (id_dispositivos) id_dispositivos,* FROM amostragens WHERE id_dispositivos IN (SELECT id FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado +") ORDER BY id_dispositivos,id DESC;";
+            String sql = "SELECT * FROM amostragens WHERE id_dispositivos = " + parametro + " AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "' ORDER BY id ASC;";
+
+            try {
+                Main.sql = Main.db.createStatement();
+            } catch (SQLException e) {
+                e.printStackTrace();
+
+            }
+
+            ResultSet rs = null;
+            try {
+
+                rs = Main.sql.executeQuery(sql);
+                System.out.println(sql);
+                while (rs.next()) {
+                    amostragens process = new amostragens();
+                    process.setId(rs.getLong("id"));
+                    process.setCo2(rs.getFloat("co2"));
+                    process.setEco2(rs.getFloat("eco2"));
+                    process.setData(rs.getTimestamp("data"));
+                    process.setDb(rs.getFloat("db"));
+                    process.setLux(rs.getFloat("lux"));
+                    process.setTemperatura(rs.getFloat("temperatura"));
+                    process.setUmidade(rs.getFloat("umidade"));
+                    process.setTvoc(rs.getFloat("tvoc"));
+                    process.setV_FIRMWARE(rs.getInt("V_FIRMWARE"));
+
+                    try {
+                        process.getData().setHours(process.getData().getHours() - 3);
+                    } catch (NullPointerException E) {
+                        E.printStackTrace();
+                    }
+                    registro1.add(process);
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+
+            }
+            try {
+                Main.db.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return registro1;
     }
 
@@ -390,7 +457,7 @@ public class RequestData3 {
         registro2 = new ArrayList<ambientes>();
         Main.db = null;
         BD.ConectarBD();
-        String sql = "SELECT * FROM ambientes WHERE id IN (SELECT id_ambientes FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado + ") ORDER BY id DESC;";
+        String sql = "SELECT *, (SELECT modelo from hvac WHERE id = id_hvac limit 1), (SELECT potencia from hvac WHERE id = id_hvac limit 1) FROM ambientes WHERE id IN (SELECT id_ambientes FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado + ") ORDER BY id DESC;";
 
         try {
             Main.sql = Main.db.createStatement();
@@ -410,6 +477,8 @@ public class RequestData3 {
                 process.setLocal(rs.getString("local"));
                 process.setPredio(rs.getString("predio"));
                 process.setSala(rs.getString("sala"));
+                process.setEquipamentos(rs.getString("sala"));
+                process.setEquipamentos(rs.getString("modelo") + " | " + rs.getString("potencia") + "btus");
 
                 registro2.add(process);
             }
@@ -593,12 +662,45 @@ public class RequestData3 {
         return "Último registro: " + data + " " + hora + " | ID Dispositivo: " + id;
     }
 
-    // <===========Atribui algum parametro a sessao do usuario (URL) =========================================================================================================================>
+    // <===========Retorna a data para o nome do csv. =========================================================================================================================>
+    public String returnNameOfCSV() {
+        SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy"); //você pode usar outras máscaras
+        Date y = new Date();
+        return y.toString();
+    }
+
+    // <===========Retorna se o aparelho esta ligado ou nao. =========================================================================================================================>
+    public String getDaysBetween(Date data) {
+        Date y = new Date();
+        System.out.println("DIFERENÇA " + (y.getTime() - data.getTime()));
+        if((Math.abs(y.getTime() - data.getTime())) < 14600000){
+            return "Ok";
+        } else {
+            return "Desligado";
+        }
+        
+    }
+
+// <===========Atribui algum parametro a sessao do usuario (URL) =========================================================================================================================>
     public String putItOnSession(int id) throws InterruptedException {
         try {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
             FacesContext.getCurrentInstance().getExternalContext().redirect("detalhar?smp_id=" + id);
+            session.setAttribute("smp_id", id);
+        } catch (Exception ex) {
+            System.out.println("Error...");
+        }
+        return "505.xhtml";
+    }
+
+    // <===========Atribui algum parametro a sessao do usuario (URL) =========================================================================================================================>
+    public String putItOnSessionRoom(int id) throws InterruptedException {
+        try {
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("relatorio?smp_id=" + id);
+
         } catch (Exception ex) {
             System.out.println("Error...");
         }

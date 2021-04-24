@@ -8,6 +8,15 @@ public class ambientes implements Serializable {
     private String sala;   //Nome da sala
     private String predio; //Nome do predio
     private String local; //Nome do local
+    private String equipamentos; //Nome dos equipamentos instalados
+
+    public String getEquipamentos() {
+        return equipamentos;
+    }
+
+    public void setEquipamentos(String equipamentos) {
+        this.equipamentos = equipamentos;
+    }
 
     public Integer getId() {
         return id;

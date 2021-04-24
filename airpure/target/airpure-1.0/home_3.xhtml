@@ -21,18 +21,13 @@
 
         <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/logo1.png']}"/>
         <SCRIPT type="text/javascript">
-            var myVar = setInterval(redirect, 80000);
-            var myVar2 = setInterval(redirect2, 360000);
-            function redirect() {
-                $("#fieldset_colors").load(" #fieldset_colors > *");
-                $("#lastRegister").load(" #lastRegister > *");
-            }
+            var myVar2 = setInterval(redirect2, 80000);
             function redirect2() {
                 window.location.reload(1);
             }
-            
-            
-            
+
+
+
         </SCRIPT>
         <style>
             .dot {
@@ -109,7 +104,7 @@
             </section>
             <!-- /.sidebar -->
         </aside>
-
+        <p:growl id="growl" showDetail="true" />
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper" style="overflow: scroll; background-size: 100%; background: url('resources/images/wp4094533.jpg') repeat !important;">
             <!-- Content Header (Page header) -->
@@ -132,7 +127,7 @@
 
 
                 <h:panelGroup>
-                    <p:fieldset legend="Dados de qualidade do ar" style="width:100%; border-width: 3px; color: black; text-align: center;">
+                    <p:fieldset legend="Dados de Qualidade do Ar - Visualização de Dispositivos" style="width:100%; border-width: 3px; color: black; text-align: center;">
 
                         <p:dataScroller id="fieldset_data1" value="#{requestdata3.retornaDispositivo()}" var="process1" rendered="true"> 
 
@@ -141,14 +136,27 @@
                             <h:panelGrid columns="1" style=" width: 95%; height: 100px; text-align: center;  box-shadow: 0px 0px 8px #888888; margin: 10px; padding: 10px;" >  
                                 <p:dataScroller id="fieldset_colors" value="#{requestdata3.returnLastSample(process1.id)}" var="process" rendered="true">
                                     <h:panelGrid columns="2" style="text-align: center; margin: auto;">
-                                        <section class="content-header" id="lastRegister">
-                                            <h1 style="color: black; text-align: center;">
-                                                Última amostragem: #{process.data} | ID Dipositivo: #{process1.id}
-                                            </h1>
-                                        </section>
-
-                                        <p:commandButton action="#{requestdata3.putItOnSession(process1.id)}" value="Detalhar"/>
-
+                                        <h:panelGrid columns="1" style="text-align: center; margin: auto;">
+                                            <section class="content-header" id="lastRegister">
+                                                <h1 style="color: black; text-align: center;">
+                                                    Última amostragem: #{process.data}
+                                                </h1>
+                                            </section>
+                                            <section class="content-header" id="lastRegister">
+                                                <h1 style="color: black; text-align: center;">
+                                                    ID Dipositivo: #{process1.id}
+                                                </h1>
+                                            </section>
+                                            <section class="content-header" id="lastRegister">
+                                                <h1 style="color: black; text-align: center;">
+                                                    Status: #{requestdata3.getDaysBetween(process.data)}
+                                                </h1>
+                                            </section>
+                                            <h:form>
+                                                <p:commandButton action="#{requestdata3.putItOnSession(process1.id)}" value="Detalhar"/>
+                                            </h:form>
+                                        </h:panelGrid>
+                                        <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/foto_.png" style="width: 300px; height: 300px;"/>
                                     </h:panelGrid>
                                     <h:panelGrid columns="7" style="width: 100%; " >
 
@@ -254,21 +262,21 @@
         <script>
             // Element inside which you want to see the chart.
             let element1 = document.querySelector('#gaugeArea1')
-            
+
             let options1 = {
                 arcColors: ['rgb(44, 151, 222)', 'lightgray'],
                 arcDelimiters: [80],
                 rangeLabel: ['0%', '100%'],
                 centralLabel: '70%',
             }
-            
-            
-            
+
+
+
             // Drawing and updating the chart.  
             GaugeChart
                     .gaugeChart(element1, 400, options1)
                     .updateNeedle(70)
-            
+
         </script>
 
 

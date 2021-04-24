@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:hf="http://highfaces.org"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <title>Dashboard - SIMPEC</title>
+        <!-- Bootstrap core CSS -->
+
+        <link rel="stylesheet" type="text/css"
+              href="#{request.contextPath}/resources/bootstrap/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css"
+              href="#{request.contextPath}/resources/dist/css/AdminLTE.min.css" />
+        <link rel="stylesheet" type="text/css"
+              href="#{request.contextPath}/resources/dist/css/skins/skin-blue.min.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"/>
+        <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"/>
+
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/logo1.png']}"/>
+        <style>
+            .dot {
+                height: 25px;
+                width: 25px;
+                border-radius: 50%;
+                display: inline-block;
+            }
+            html {
+                background-color: #222D32;
+            }
+
+        </style>
+
+
+
+
+
+    </h:head>
+
+    <h:body onload="#{autenticacao.verificacao()}" ></h:body>
+    <h:body class="hold-transition skin-blue sidebar-mini" >
+
+
+
+        <!-- Main Header -->
+        <header class="main-header">
+
+            <!-- Logo -->
+            <a href="homePage.xhtml" class="logo">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/logo1.png" width="30"/> 
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg"><b>AirPure</b></span>
+            </a>
+
+            <!-- Header Navbar -->
+            <nav class="navbar navbar-static-top" role="navigation">
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                </a>
+
+                <h:form>
+                    <div class="pull-right">
+                        <p:commandButton styleClass="btn btn-danger btn-block" value="Sair" action="#{autenticacao.logOut()}" update="@form"/>
+                    </div>
+                </h:form>
+
+            </nav>
+
+        </header>
+        <!-- Left side column. contains the logo and sidebar -->
+        <aside class="main-sidebar" style="height: 100%!Important;">
+
+            <!-- sidebar: style can be found in sidebar.less -->
+            <section class="sidebar">
+
+                <!-- /.search form -->
+
+                <!-- Sidebar Menu -->
+                <ul class="sidebar-menu">
+                    <li class="header">Menu</li>
+                    <!-- Optionally, you can add icons to the links -->
+
+                    <li>
+
+                        <li class="active"><a href="/airpure/sistema/simpec"><i class="fa fa-home"></i> <span>Home</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/salas"><i class="fa fa-bookmark"></i> <span>Salas</span></a></li>
+
+                    </li>
+
+
+                </ul>
+            </section>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper" style="overflow: scroll; background-size: 100%; background: url('resources/images/wp4094533.jpg') repeat !important;">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1 style="color: white;">
+                    Dashboard
+                    <small style="color: white;">SIMPEC</small>
+                </h1>
+            </section>
+
+            <section class="content">
+
+
+                <p:dialog header="Aguarde um momento..." widgetVar="dlg1" modal="true" resizable="false" draggable="false" closable="false">
+                    <div style="text-align: center">
+                        <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/ajaxloadingbar.gif" width="100"/>
+                    </div>
+                </p:dialog>
+
+
+
+                <h:panelGroup>
+                    <p:fieldset legend="Dados de qualidade do ar" style="width:100%; border-width: 3px; color: black; text-align: center;">
+                        <p:dataScroller id="fieldset_colors" value="#{requestdata3.returnLastSampleFromSession()}" var="process" rendered="true">
+
+                            <section class="content-header" id="lastRegister">
+                                <h1 style="color: black; text-align: center;">
+                                    Último registro: #{process.data}
+                                </h1>
+                            </section>
+                            <h:panelGrid columns="7" style="width: 100%; " >
+
+                                <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process.tvoc,'TVOC')}; border-radius: 10px; width: 200px; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                    <h:outputLabel value="TVOC:" style="color: white; font-size: 18px;"/>
+                                    <h:panelGrid columns="2" style="margin:auto;"> 
+                                        <h:outputText value="#{process.tvoc} ppb" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
+                                        <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process.tvoc,'TVOC')};" width="20"/>       
+                                    </h:panelGrid>
+                                </h:panelGrid>
+                                <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process.co2,'CO2')}; border-radius: 10px; width: 200px; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                    <h:outputLabel value="CO2:" style="color: white; font-size: 18px;"/>
+                                    <h:panelGrid columns="2" style="margin:auto;"> 
+                                        <h:outputText value="#{process.co2} ppm" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
+                                        <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process.co2,'CO2')};" width="20"/>       
+                                    </h:panelGrid>  
+                                </h:panelGrid>
+                                <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process.eco2,'eCO2')}; border-radius: 10px; width: 200px; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                    <h:outputLabel value="eCO2:" style="color: white; font-size: 18px;"/>
+                                    <h:panelGrid columns="2" style="margin:auto;"> 
+                                        <h:outputText value="#{process.eco2} ppm" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
+                                        <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process.eco2,'eCO2')};" width="20"/>       
+                                    </h:panelGrid> 
+                                </h:panelGrid>
+                                <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process.temperatura,'Temperatura')}; border-radius: 10px; width: 200px; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                    <h:outputLabel value="Temperatura:" style="color: white; font-size: 18px;"/>
+                                    <h:panelGrid columns="2" style="margin:auto;"> 
+                                        <h:outputText value="#{process.temperatura} ºC" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
+                                        <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process.temperatura,'Temperatura')};" width="20"/>       
+                                    </h:panelGrid> 
+                                </h:panelGrid>
+                                <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process.umidade,'Umidade')}; border-radius: 10px; width: 200px; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                    <h:outputLabel value="Umidade:" style="color: white; font-size: 18px;"/>
+                                    <h:panelGrid columns="2" style="margin:auto;"> 
+                                        <h:outputText value="#{process.umidade}%" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
+                                        <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process.umidade,'Umidade')};" width="20"/>       
+                                    </h:panelGrid> 
+                                </h:panelGrid>
+                                <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process.db,'Ruído')}; border-radius: 10px; width: 200px; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                    <h:outputLabel value="Ruído:" style="color: white; font-size: 18px;"/>
+                                    <h:panelGrid columns="2" style="margin:auto;"> 
+                                        <h:outputText value="#{process.db} dB" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
+                                        <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process.db,'Ruído')};" width="20"/>       
+                                    </h:panelGrid> 
+                                </h:panelGrid>
+                                <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process.lux,'Luminosidade')}; border-radius: 10px; width: 200px; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                    <h:outputLabel value="Luminosidade:" style="color: white; font-size: 18px;"/>
+                                    <h:panelGrid columns="2" style="margin:auto;"> 
+                                        <h:outputText value="#{process.lux} Lux" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
+                                        <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process.lux,'Luminosidade')};" width="20"/>       
+                                    </h:panelGrid>  
+                                </h:panelGrid>
+
+
+
+                            </h:panelGrid>
+                        </p:dataScroller>
+
+
+                        <section class="content-header">
+                            <h1 style="color: black; text-align: center;">
+                                Variação temporal
+                                <small>Intervalo: #{requestdata3.time()}</small>
+                            </h1>
+                        </section>
+
+                        <h:form>  
+                            <p:growl id="messages"/>
+
+                            <p:menubar style="text-align: center;">
+                                <p:submenu label="Filtrar por" icon="pi pi-file">
+                                    <p:menuitem value="Data" onclick="filterByData()"/>
+                                    <p:separator />
+                                    <p:menuitem value="Sem Filtro" onclick="noFilter();PF('dlg1').show();" action="#{requestdata3.noFilterDatatable()}"/>
+                                </p:submenu>
+
+                            </p:menubar>
+
+
+                        </h:form>
+                        <p:panelGrid columns="1" style="min-width: 100%;">
+                            <h:outputLabel id="data" style="display: none">
+                                <h:outputLabel style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
+                                    <p:panelGrid columns="2">
+                                        <h1 style="color:black; display: flex; flex-direction: row; justify-content: center; align-items: center;">
+                                            Intervalo do histórico
+                                            <small style="color:black;">(dd/MM/yyyy)</small>
+                                        </h1>
+
+                                        <h:form style=" display: flex; flex-direction: row; justify-content: center; align-items: center">
+                                            <p:outputLabel value="Inicio: "/>
+                                            <p:inputMask value="#{requestdata3.inicio}" mask="99/99/9999" lang="ptbr" required="true" requiredMessage="Preencha os campos em branco."/>
+
+
+                                            <p:outputLabel value=" Fim: "/>
+                                            <p:inputMask value="#{requestdata3.fim}" mask="99/99/9999" lang="ptbr" required="true" requiredMessage="Preencha os campos em branco."/>
+
+                                            <p:commandButton action="#{requestdata3.datatableFilterData()}" onclick="PF('dlg1').show();" value="Filtrar" update="@all" style="text-align: center;"/> 
+                                        </h:form>
+                                    </p:panelGrid>
+
+                                </h:outputLabel>
+                            </h:outputLabel>
+                        </p:panelGrid>
+
+                        <h:panelGrid columns="2" style="margin: auto;">
+
+                            <p:outputPanel style="width:100%;">
+                                <hf:chart type="line" value="#{chartView3.registro1}" var="point"
+                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de CO2">
+                                    <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                                  gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                </hf:chart> 
+                            </p:outputPanel>
+                            <p:outputPanel style="width:100%;">
+                                <hf:chart type="line" value="#{chartView3.registro2}" var="point"
+                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de eCO2">
+                                    <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                                  gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                </hf:chart> 
+                            </p:outputPanel>
+                            <p:outputPanel style="width:100%;">
+                                <hf:chart type="line" value="#{chartView3.registro3}" var="point"
+                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Temperatura">
+                                    <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                                  gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                </hf:chart> 
+                            </p:outputPanel>
+                            <p:outputPanel style="width:100%;">
+                                <hf:chart type="line" value="#{chartView3.registro4}" var="point"
+                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Umidade">
+                                    <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                                  gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                </hf:chart> 
+                            </p:outputPanel>
+                            <p:outputPanel style="width:100%;">
+                                <hf:chart type="line" value="#{chartView3.registro5}" var="point"
+                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de dB">
+                                    <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                                  gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                </hf:chart> 
+                            </p:outputPanel>
+                            <p:outputPanel style="width:100%;">
+                                <hf:chart type="line" value="#{chartView3.registro6}" var="point"
+                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Lux">
+                                    <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                                  gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                </hf:chart> 
+                            </p:outputPanel>
+
+
+                        </h:panelGrid>
+                        <p:outputPanel style="width:100%;">
+                            <hf:chart type="line" value="#{chartView3.registro7}" var="point"
+                                      point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de TVOC">
+                                <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                              gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                            </hf:chart> 
+                        </p:outputPanel>
+
+                        <div style="text-align:center">
+                            <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/udf.png" width="100"/>   
+                        </div>
+                        <div style="text-align:center">
+                            <h:outputLabel value="Powered by AirPure | #{main.SVNRevision}" style="font-size: 10px;"/>
+                        </div>
+                    </p:fieldset>
+                </h:panelGroup>
+
+
+
+            </section><!-- /.content -->
+
+
+        </div><!-- /.content-wrapper -->
+        <!-- Add the sidebar's background. This div must be placed
+             immediately after the control sidebar -->
+        <div class="control-sidebar-bg"></div>
+
+
+        <!-- REQUIRED JS SCRIPTS -->
+        <!-- REQUIRED JS SCRIPTS -->
+        <SCRIPT type="text/javascript">
+            function redirect() {
+                window.location.href = "graphsDetailed.xhtml";
+            }
+            function filterByData() {
+                document.getElementById("data").style.display = "inline";
+            }
+            function filterById() {
+                document.getElementById("data").style.display = "none";
+            }
+            function filterByNumber() {
+                document.getElementById("data").style.display = "none";
+            }
+            function noFilter() {
+                document.getElementById("data").style.display = "none";
+            }
+        </SCRIPT>
+        <script src="https://unpkg.com/gauge-chart@0.5.1/dist/bundle.js"></script>
+        <script>
+            // Element inside which you want to see the chart.
+            let element1 = document.querySelector('#gaugeArea1')
+
+            let options1 = {
+                arcColors: ['rgb(44, 151, 222)', 'lightgray'],
+                arcDelimiters: [80],
+                rangeLabel: ['0%', '100%'],
+                centralLabel: '70%',
+            }
+
+
+
+            // Drawing and updating the chart.  
+            GaugeChart
+                    .gaugeChart(element1, 400, options1)
+                    .updateNeedle(70)
+
+        </script>
+
+
+        <script type="text/javascript" src="#{request.contextPath}/resources/bootstrap/js/bootstrap.min.js"></script> <!-- Correio -->
+        <script type="text/javascript" src="#{request.contextPath}/resources/dist/js/app.min.js"></script> <!-- Correio -->
+
+
+
+
+
+    </h:body>
+
+</html>

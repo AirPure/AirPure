@@ -41,7 +41,12 @@
     
     <url-mapping id="detalhar">
         <pattern value="/sistema/detalhar" />
-        <view-id value="/sistema/detalhar.xhtml" />
+        <view-id value="/sistema/detalhar_1.xhtml" />
+    </url-mapping>
+    
+    <url-mapping id="relatorio">
+        <pattern value="/sistema/relatorio" />
+        <view-id value="/sistema/relatorio_1.xhtml" />
     </url-mapping>
 
 </pretty-config>
