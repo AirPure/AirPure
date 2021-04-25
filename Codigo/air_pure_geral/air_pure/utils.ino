@@ -71,7 +71,7 @@ void getCurrentTime(){
 
 /*Função geral para delay*/
 void init_WiFi(){
-  if(!wifiManager){
+  if(wifiManager){
   estado = WIFI;
   //WiFiManager
   WiFi.disconnect(true);
@@ -98,6 +98,13 @@ void init_WiFi(){
   }
   estado = WORKING;
   } else {
+  estado = WIFI;
+  //WiFiManager
+  WiFi.disconnect(true);
+  delay(1000);
+  WiFi.mode(WIFI_STA);
+  delay(1000);
+  esp_wifi_sta_wpa2_ent_set_identity((uint8_t *)EAP_ANONYMOUS_IDENTITY, strlen(EAP_ANONYMOUS_IDENTITY));
   esp_wifi_sta_wpa2_ent_set_username((uint8_t *)EAP_IDENTITY, strlen(EAP_IDENTITY));
   esp_wifi_sta_wpa2_ent_set_password((uint8_t *)EAP_PASSWORD, strlen(EAP_PASSWORD));
   esp_wpa2_config_t config = WPA2_CONFIG_INIT_DEFAULT(); 
@@ -135,6 +142,18 @@ void vLowSerial(void *pvParameters) {
   /*Iniciando o watchdog*/
 
   while (true) {
+    if (button1.numberKeyPresses >= 2){
+            if (NVS.getString("wifiManager").toInt()){
+              NVS.setString("wifiManager", "0");
+              Serial.println("wifiManager ATIVADO.");
+              ESP.restart();
+            } else {
+              NVS.setString("wifiManager", "1");
+              Serial.println("wifiManager DESATIVADO.");
+              ESP.restart();
+            }
+    
+    }
 
     if (Serial.available()) {
       input = Serial.readStringUntil('\n');
@@ -211,6 +230,7 @@ void vLowSerial(void *pvParameters) {
         Serial.println("'contaPessoas': Define o dispositivo como contador de pessoas.");
         Serial.println("'airServer': Configura o AirPure para fazer os envios ao servidor AirServer.");
         Serial.println("'setHostAirServer': Configura o host para fazer os envios ao servidor AirServer.");
+        Serial.println("'wifiManager': Configura entre wifiManager e conexao direta ao eduroam.");
         Serial.println(
             "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 

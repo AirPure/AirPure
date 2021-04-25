@@ -5,10 +5,15 @@ Confira nosso repositório no GitHub: https://github.com/AirPure/AirPure
 */
 
 #include "prototypes.h"
-
+void IRAM_ATTR isr() {
+  button1.numberKeyPresses += 1;
+  button1.pressed = true;
+}
 
 /*Setup*/
 void setup() {
+pinMode(0, INPUT_PULLUP);
+attachInterrupt(0, isr, FALLING);
 NVS.begin();  //Inicializa a memoria nao volátil
 Serial.begin(115200); //Iniciar porta serial - USB.
 Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2); //Iniciar porta serial - UART.

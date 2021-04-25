@@ -46,6 +46,13 @@ PubSubClient mqttClient(client);  //ThingSpeak
 PubSubClient mqttClient2(client); //HomeAssistant
 secureEsp32FOTA secureEsp32FOTA("esp32-fota-https", V_FIRMWARE);
 Adafruit_CCS811 ccs; //Objeto sensor de TVOC. //Instância do CCS811
+struct Button {
+  const uint8_t PIN;
+  uint32_t numberKeyPresses;
+  bool pressed;
+};
+
+Button button1 = {18, 0, false};
 
 
 TaskHandle_t task_low_serial;
