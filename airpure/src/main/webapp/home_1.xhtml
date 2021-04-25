@@ -7,7 +7,7 @@
       xmlns:p="http://primefaces.org/ui">
 
     <h:head>
-        <title>Dashboard - Nome do Sistema</title>
+        <title>Dashboard SASO</title>
         <!-- Bootstrap core CSS -->
 
         <link rel="stylesheet" type="text/css"
@@ -34,6 +34,7 @@
             
 
         </SCRIPT>
+        
         <style>
             .dot {
                 height: 25px;
@@ -44,7 +45,13 @@
             html {
                 background-color: #222D32;
             }
-
+            
+            .ui-fieldset-legend{
+                font-size: 20px !important;
+                font-weight: bold !important;
+                color: black !important;
+            }
+            
         </style>
 
 
@@ -94,13 +101,18 @@
 
                 <!-- Sidebar Menu -->
                 <ul class="sidebar-menu">
-                    <li class="header">Tópico 1</li>
-                    <!-- Optionally, you can add icons to the links -->
-
                     <li>
-
-                        <li class="active"><a href="/airpure/sistema/filtro"><i class="fa fa-link"></i> <span>Filtros</span></a></li>
-
+                        <li class="active"><a href="/airpure/sistema/dados"><span>Home</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/dados"><span>Dispositvos</span></a></li>
+                        <li class="header">Dados</li>
+                        <li class="header">Relatórios</li>
+                        <li class="active"><a href="/airpure/sistema/dados"><span>Dados</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/localizacao"><span>Localização</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/localizacao"><span>Notificações</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/localizacao"><span>Análise</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/localizacao"><span>Relatório</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/localizacao"><span>Consulta</span></a></li>
+                        <!--Em consultas ter botão gerar relatório então tira o relatório-->
                     </li>
 
 
@@ -114,9 +126,11 @@
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <h1 style="color: white;">
-                    Dashboard
-                    <small style="color: white;">Nome do projeto</small>
+                    Dashboard SASO
+                    <!-- <small style="color: white;">SASO</small> -->
                 </h1>
+                
+                
             </section>
 
             <section class="content">
@@ -131,11 +145,10 @@
 
 
                 <h:panelGroup>
-                    <p:fieldset legend="Dados de qualidade do ar" style="width:100%; border-width: 3px; color: black; text-align: center;">
+                    <p:fieldset legend="Dados de Monitoramento do Dispositivo" style="width:100%; border-width: 3px; color: black; text-align: center;">
                             <section class="content-header" id="lastRegister">
-                                <h1 style="color: black; text-align: center;">
-                                    #{requestdata1.ultimoRegistroData()}
-                                </h1>
+                                <h1>Dados da Qualidade do Ar </h1>
+                                <small>#{requestdata1.ultimoRegistroData()}</small>
                             </section>
                             <p:dataScroller id="fieldset_colors" value="#{requestdata1.returnLastSample()}" var="process" rendered="true">
                                 <h:panelGrid columns="7" style="width: 100%; " >
@@ -176,97 +189,57 @@
 
                             <section class="content-header">
                                 <h1 style="color: black; text-align: center;">
-                                    Variação temporal
-                                    <small>Intervalo: #{requestdata1.time()}</small>
+                                    Variação dos Dados no Decorrer do Dia
                                 </h1>
                             </section>
-
-                            <h:form>  
-                                <p:growl id="messages"/>
-
-                                <p:menubar style="text-align: center;">
-                                    <p:submenu label="Filtrar por" icon="pi pi-file">
-                                        <p:menuitem value="Data" onclick="filterByData()"/>
-                                        <p:separator />
-                                        <p:menuitem value="Sem Filtro" onclick="noFilter();PF('dlg1').show();" action="#{requestdata1.noFilterDatatable()}"/>
-                                    </p:submenu>
-
-                                </p:menubar>
-
-
-                            </h:form>
-                            <p:panelGrid columns="1" style="min-width: 100%;">
-                                <h:outputLabel id="data" style="display: none">
-                                    <h:outputLabel style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
-                                        <p:panelGrid columns="2">
-                                            <h1 style="color:black; display: flex; flex-direction: row; justify-content: center; align-items: center;">
-                                                Intervalo do histórico
-                                                <small style="color:black;">(dd/MM/yyyy)</small>
-                                            </h1>
-
-                                            <h:form style=" display: flex; flex-direction: row; justify-content: center; align-items: center">
-                                                <p:outputLabel value="Inicio: "/>
-                                                <p:inputMask value="#{requestdata1.inicio}" mask="99/99/9999" lang="ptbr" required="true" requiredMessage="Preencha os campos em branco."/>
-
-
-                                                <p:outputLabel value=" Fim: "/>
-                                                <p:inputMask value="#{requestdata1.fim}" mask="99/99/9999" lang="ptbr" required="true" requiredMessage="Preencha os campos em branco."/>
-
-                                                <p:commandButton action="#{requestdata1.datatableFilterData()}" onclick="PF('dlg1').show();" value="Filtrar" update="@all" style="text-align: center;"/> 
-                                            </h:form>
-                                        </p:panelGrid>
-
-                                    </h:outputLabel>
-                                </h:outputLabel>
-                            </p:panelGrid>
 
                             <h:panelGrid columns="2" style="margin: auto;">
 
                                 <p:outputPanel style="width:100%;">
                                     <hf:chart type="line" value="#{chartView1.registro1}" var="point"
-                                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de CO2">
+                                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="CO2">
                                         <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
                                                       gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
                                     </hf:chart> 
                                 </p:outputPanel>
                                 <p:outputPanel style="width:100%;">
                                     <hf:chart type="line" value="#{chartView1.registro2}" var="point"
-                                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de eCO2">
+                                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="eCO2">
                                         <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
                                                       gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
                                     </hf:chart> 
                                 </p:outputPanel>
                                 <p:outputPanel style="width:100%;">
                                     <hf:chart type="line" value="#{chartView1.registro3}" var="point"
-                                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Temperatura">
+                                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Temperatura">
                                         <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
                                                       gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
                                     </hf:chart> 
                                 </p:outputPanel>
                                 <p:outputPanel style="width:100%;">
                                     <hf:chart type="line" value="#{chartView1.registro4}" var="point"
-                                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Umidade">
+                                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Umidade">
                                         <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
                                                       gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
                                     </hf:chart> 
                                 </p:outputPanel>
                                 <p:outputPanel style="width:100%;">
                                     <hf:chart type="line" value="#{chartView1.registro5}" var="point"
-                                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de dB">
+                                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Ruído">
                                         <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
                                                       gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
                                     </hf:chart> 
                                 </p:outputPanel>
                                 <p:outputPanel style="width:100%;">
                                     <hf:chart type="line" value="#{chartView1.registro6}" var="point"
-                                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Lux">
+                                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Luminosidade">
                                         <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
                                                       gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
                                     </hf:chart> 
                                 </p:outputPanel>
                                 <p:outputPanel style="width:100%;">
                                     <hf:chart type="line" value="#{chartView1.registro7}" var="point"
-                                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de TVOC">
+                                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="TVOC">
                                         <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
                                                       gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
                                     </hf:chart> 
@@ -276,8 +249,8 @@
 
 
                             </h:panelGrid>
-
-
+                            
+                            <!--section-->
                             <h:panelGrid columns="4" style="margin: auto;">
                                 <div id="gaugeArea1"></div>
                             </h:panelGrid>

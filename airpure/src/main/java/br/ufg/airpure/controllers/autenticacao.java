@@ -54,8 +54,8 @@ public class autenticacao implements HttpSessionListener {
         session.setAttribute("projetoEnvolvido", 1);
         Date data = new Date(System.currentTimeMillis());
         Date data2 = new Date(System.currentTimeMillis());
-        data.setDate(data.getDate() + 2);
-        data2.setDate(data2.getDate() - 2);
+        data.setDate(data.getDate() + 1);
+        data2.setDate(data2.getDate());
         SimpleDateFormat formatarDate = new SimpleDateFormat("yyyy/MM/dd");
         try {
             session.setAttribute("endPoint", formatarDate.format(data));
