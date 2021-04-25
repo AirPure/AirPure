@@ -26,7 +26,7 @@ float leituraGas() {
     int baixo = (int) resposta[3];
     float CO2 = ((alto * 256) + baixo); //Concentração de CO2 em ppm, referência datasheet.
 
-    if (CO2 >= 65535) {
+    if (CO2 > 10000) {    //Range máximo do sensor e 10000ppm
       CO2 = 400; //Caso o valor bata o fundo de escala (comum no processo de warm-up do sensor), envia o valor base de CO2 em ppm.
     }
 
