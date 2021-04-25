@@ -307,10 +307,18 @@ void vLowLED(void *pvParameters) {
         delay(5);
       }
     } else {
-      digitalWrite(ledPin,HIGH);
-      vTaskDelay(pdMS_TO_TICKS(1000));
-      digitalWrite(ledPin,LOW);
-      vTaskDelay(pdMS_TO_TICKS(1000));
+      for(int i = 0; i< 255; i++){
+        ledcWrite(ledChannel, i);
+        esp_task_wdt_reset();
+        delay(1);
+      }
+      
+      for(int i = 255; i> 0; i--){
+        ledcWrite(ledChannel, i);
+        esp_task_wdt_reset();
+        delay(1);
+      }
+      
     }
   }
 }
