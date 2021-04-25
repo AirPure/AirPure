@@ -4,6 +4,7 @@ import br.ufg.airpure.entity.ambientes;
 import br.ufg.airpure.entity.tipoDispositivo;
 import br.ufg.airpure.entity.amostragens;
 import br.ufg.airpure.entity.dispositivos;
+import br.ufg.airpure.entity.estatistica;
 import br.ufg.airpure.entity.rangeParametros;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -37,6 +38,7 @@ public class RequestData3 {
     ArrayList<amostragens> registro3;
     ArrayList<amostragens> registro4;
     ArrayList<dispositivos> registro5;
+    ArrayList<estatistica> registro6;
     String inicio;
     String fim;
     static String idOfAirpures;
@@ -496,6 +498,157 @@ public class RequestData3 {
 
         return registro2;
     }
+
+    // <===========Método que retorna estatisticas de todos os parametros.=========================================================================================================================>
+    public ArrayList<estatistica> returnStatistics() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+        int idAmbiente = (int) session.getAttribute("relatorio");
+        String startpoint = (String) session.getAttribute("startPoint");
+        String endpoint = (String) session.getAttribute("endPoint");
+        registro6 = new ArrayList<estatistica>();
+        estatistica process = new estatistica();
+        Main.db = null;
+        BD.ConectarBD();
+        String sqlCO2 = "SELECT min(co2) as minCO2, max(co2) as maxCO2, (SELECT ((select sum(co2) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + "  AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) / (select count(*) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + " ) AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) as mediaCO2) FROM amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "';";
+        String sqleCO2 = "SELECT min(eco2) as mineCO2, max(eco2) as maxeCO2, (SELECT ((select sum(eco2) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + "  AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) / (select count(*) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + " ) AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) as mediaeCO2) FROM amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "';";
+        String sqlTVOC = "SELECT min(tvoc) as minTVOC, max(tvoc) as maxTVOC, (SELECT ((select sum(tvoc) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + "  AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) / (select count(*) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + " ) AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) as mediaTVOC) FROM amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "';";
+        String sqlUmidade = "SELECT min(umidade) as minUmidade, max(umidade) as maxUmidade, (SELECT ((select sum(umidade) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + "  AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) / (select count(*) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + " ) AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) as mediaUmidade) FROM amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "';";
+        String sqlTemperatura = "SELECT min(temperatura) as minTemperatura, max(temperatura) as maxTemperatura, (SELECT ((select sum(temperatura) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + "  AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) / (select count(*) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + " ) AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) as mediaTemperatura) FROM amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "';";
+        String sqldb = "SELECT min(db) as mindb, max(db) as maxdb, (SELECT ((select sum(db) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + "  AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) / (select count(*) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + " ) AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) as mediadb) FROM amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "';";
+        String sqllux = "SELECT min(lux) as minlux, max(lux) as maxlux, (SELECT ((select sum(lux) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + "  AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) / (select count(*) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + " ) AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) as medialux) FROM amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "';";
+
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+        ResultSet rs = null;
+        try {
+
+            rs = Main.sql.executeQuery(sqlCO2);
+            System.out.println(sqlCO2);
+            while (rs.next()) {
+                process.setCo2Max(rs.getFloat("maxCO2"));
+                process.setCo2Min(rs.getFloat("minCO2"));
+                process.setCo2Media(rs.getFloat("mediaCO2"));
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+
+            rs = Main.sql.executeQuery(sqlTVOC);
+            System.out.println(sqlTVOC);
+            while (rs.next()) {
+
+                process.setTvocMax(rs.getFloat("maxTVOC"));
+                process.setTvocMin(rs.getFloat("minTVOC"));
+                process.setTvocMedia(rs.getFloat("mediaTVOC"));
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+
+            rs = Main.sql.executeQuery(sqlUmidade);
+            System.out.println(sqlUmidade);
+            while (rs.next()) {
+
+                process.setUmidadeMax(rs.getFloat("maxUmidade"));
+                process.setUmidadeMin(rs.getFloat("minUmidade"));
+                process.setUmidadeMedia(rs.getFloat("mediaUmidade"));
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+
+            rs = Main.sql.executeQuery(sqlTemperatura);
+            System.out.println(sqlTemperatura);
+            while (rs.next()) {
+
+                process.setTemperaturaMax(rs.getFloat("maxTemperatura"));
+                process.setTemperaturaMin(rs.getFloat("minTemperatura"));
+                process.setTemperaturaMedia(rs.getFloat("mediaTemperatura"));
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+
+            rs = Main.sql.executeQuery(sqleCO2);
+            System.out.println(sqleCO2);
+            while (rs.next()) {
+
+                process.setEco2Max(rs.getFloat("maxeCO2"));
+                process.setEco2Min(rs.getFloat("mineCO2"));
+                process.setEco2Media(rs.getFloat("mediaeCO2"));
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+
+            rs = Main.sql.executeQuery(sqldb);
+            System.out.println(sqldb);
+            while (rs.next()) {
+
+                process.setDbMax(rs.getFloat("maxdb"));
+                process.setDbMin(rs.getFloat("mindb"));
+                process.setDbMedia(rs.getFloat("mediadb"));
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+
+            rs = Main.sql.executeQuery(sqllux);
+            System.out.println(sqllux);
+            while (rs.next()) {
+
+                process.setLuxMax(rs.getFloat("maxlux"));
+                process.setLuxMin(rs.getFloat("minlux"));
+                process.setLuxMedia(rs.getFloat("medialux"));
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+        registro6.add(process);
+
+        return registro6;
+    }
+
     // <===========Método que retorna a sala que foi selecionada para o relatório.=========================================================================================================================>
     public ArrayList<ambientes> returnAmbienteById() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -720,12 +873,12 @@ public class RequestData3 {
     public String getDaysBetween(Date data) {
         Date y = new Date();
         System.out.println("DIFERENÇA " + (y.getTime() - data.getTime()));
-        if((Math.abs(y.getTime() - data.getTime())) < 14600000){
+        if ((Math.abs(y.getTime() - data.getTime())) < 14600000) {
             return "Ok";
         } else {
             return "Desligado";
         }
-        
+
     }
 
 // <===========Atribui algum parametro a sessao do usuario (URL) =========================================================================================================================>

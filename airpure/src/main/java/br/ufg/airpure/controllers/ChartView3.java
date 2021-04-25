@@ -94,13 +94,20 @@ public class ChartView3 {
             ExternalContext extContext = fContext.getExternalContext();
             HttpServletRequest request = (HttpServletRequest) fContext.getExternalContext().getRequest();
             String parametro = request.getParameter("smp_id");
+            int idAmbiente = (int) session.getAttribute("relatorio");
+
             Main.db = null;
             BD.ConectarBD();
             int idProjetoRelacionado = (int) session.getAttribute("projetoEnvolvido");
             Main.db = null;
             BD.ConectarBD();
-            String sql = "SELECT * FROM amostragens WHERE id_dispositivos = " + parametro + " AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "' ORDER BY id ASC;";
+            String sql = "";
 
+            if (parametro != null) {
+                sql = "SELECT * FROM amostragens WHERE id_dispositivos = " + parametro + " AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "' ORDER BY id ASC;";
+            } else {
+                sql = "SELECT * FROM amostragens WHERE id_dispositivos IN (select id FROM dispositivos WHERE id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "' ORDER BY id ASC;";
+            }
             try {
                 Main.sql = Main.db.createStatement();
             } catch (SQLException e) {

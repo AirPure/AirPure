@@ -41,7 +41,11 @@
             window.print();
             document.getElementById("teste2").style.display = "inline";
         }
+        function redireciona() {
+            window.history.back();
+        }
     </SCRIPT>
+    <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/logo1.png']}"/>
     <h:head>
         <title>AirPure - Relatório</title>
     </h:head>
@@ -56,7 +60,7 @@
                 <p></p>
                 <p:menubar style="background: #EEEEEE">
                     <f:facet name="options">
-                        <p:commandButton type="button" value="Voltar" icon="pi pi-home">
+                        <p:commandButton type="button" value="Voltar" icon="pi pi-home" onclick="redireciona()">
                         </p:commandButton>
                         <p:commandButton type="button" value="Imprimir" icon="pi pi-home" onclick="myFunction()">
                         </p:commandButton>
@@ -91,7 +95,135 @@
                         </p:outputPanel>
                     </h:panelGrid>
                 </p:dataScroller>
-                <p:outputPanel style="background: #EEEEEE; width:930px; height: 35px;"><h3>II - QUALIDADE DO AR</h3></p:outputPanel>
+
+                <p:outputPanel style="background: #EEEEEE; width:930px; height: 35px;"><h3>II - INFORMAÇÕES DO AMBIENTE - #{requestdata3.time()}</h3></p:outputPanel>
+
+                <p:dataScroller value="#{requestdata3.returnStatistics()}" var="groups" rendered="true">
+                    <h:panelGrid columns="2" style="width:100%">
+                        <p:outputPanel>
+                            <h:panelGrid columns="2" cellpadding="5"> 
+
+                                <h:outputText value="Máximo CO2:" />
+                                <h:outputText value="#{groups.co2Max} ppm" style="font-weight: bold"/>
+
+                                <h:outputText value="Mínimo CO2: " />
+                                <h:outputText value="#{groups.co2Min} ppm" style="font-weight: bold"/>
+
+                                <h:outputText value="Média CO2:" />
+                                <h:outputText value="#{groups.co2Media} ppm" style="font-weight: bold"/>
+
+                                <h:outputText value="Máximo TVOC:" />
+                                <h:outputText value="#{groups.tvocMax} ppb" style="font-weight: bold"/>
+
+                                <h:outputText value="Mínimo TVOC: " />
+                                <h:outputText value="#{groups.tvocMin} ppb" style="font-weight: bold"/>
+
+                                <h:outputText value="Média TVOC: " />
+                                <h:outputText value="#{groups.tvocMedia} ppb" style="font-weight: bold"/>
+
+                                <h:outputText value="Máximo eCO2:" />
+                                <h:outputText value="#{groups.eco2Max} ppm" style="font-weight: bold"/>
+
+                                <h:outputText value="Mínimo eCO2: " />
+                                <h:outputText value="#{groups.eco2Min} ppm" style="font-weight: bold"/>
+
+                                <h:outputText value="Média eCO2: " />
+                                <h:outputText value="#{groups.eco2Media} ppm" style="font-weight: bold"/>
+
+                                <h:outputText value="Máximo umidade:" />
+                                <h:outputText value="#{groups.umidadeMax}%" style="font-weight: bold"/>
+
+                                <h:outputText value="Mínimo umidade: " />
+                                <h:outputText value="#{groups.umidadeMin}%" style="font-weight: bold"/>
+
+                                <h:outputText value="Média umidade: " />
+                                <h:outputText value="#{groups.umidadeMedia}%" style="font-weight: bold"/>
+
+                                <h:outputText value="Máximo temperatura:" />
+                                <h:outputText value="#{groups.temperaturaMax} ºC" style="font-weight: bold"/>
+
+                                <h:outputText value="Mínimo temperatura: " />
+                                <h:outputText value="#{groups.temperaturaMin} ºC" style="font-weight: bold"/>
+
+                                <h:outputText value="Média temperatura: " />
+                                <h:outputText value="#{groups.temperaturaMedia} ºC" style="font-weight: bold"/>
+
+                                <h:outputText value="Máximo luminosidade:" />
+                                <h:outputText value="#{groups.luxMax} Lux" style="font-weight: bold"/>
+
+                                <h:outputText value="Mínimo luminosidade: " />
+                                <h:outputText value="#{groups.luxMin} Lux" style="font-weight: bold"/>
+
+                                <h:outputText value="Média luminosidade: " />
+                                <h:outputText value="#{groups.luxMedia} Lux" style="font-weight: bold"/>
+
+                                <h:outputText value="Máximo ruído:" />
+                                <h:outputText value="#{groups.dbMax} dB" style="font-weight: bold"/>
+
+                                <h:outputText value="Mínimo ruído: " />
+                                <h:outputText value="#{groups.dbMin} dB" style="font-weight: bold"/>
+
+                                <h:outputText value="Média ruído: " />
+                                <h:outputText value="#{groups.dbMedia} dB" style="font-weight: bold"/>
+
+                            </h:panelGrid>
+                        </p:outputPanel>
+                    </h:panelGrid>
+                </p:dataScroller>
+
+                <p:outputPanel style="background: #EEEEEE; width:930px; height: 35px;"><h3>III - VARIAÇÕES GRÁFICAS - #{requestdata3.time()}</h3></p:outputPanel>
+
+                <p:outputPanel style="width:100%;">
+                    <hf:chart type="line" value="#{chartView3.registro1}" var="point"
+                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de CO2">
+                        <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                      gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                    </hf:chart> 
+                </p:outputPanel>
+                <p:outputPanel style="width:100%;">
+                    <hf:chart type="line" value="#{chartView3.registro2}" var="point"
+                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de eCO2">
+                        <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                      gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                    </hf:chart> 
+                </p:outputPanel>
+                <p:outputPanel style="width:100%;">
+                    <hf:chart type="line" value="#{chartView3.registro3}" var="point"
+                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Temperatura">
+                        <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                      gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                    </hf:chart> 
+                </p:outputPanel>
+                <p:outputPanel style="width:100%;">
+                    <hf:chart type="line" value="#{chartView3.registro4}" var="point"
+                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Umidade">
+                        <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                      gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                    </hf:chart> 
+                </p:outputPanel>
+                <p:outputPanel style="width:100%;">
+                    <hf:chart type="line" value="#{chartView3.registro5}" var="point"
+                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de dB">
+                        <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                      gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                    </hf:chart> 
+                </p:outputPanel>
+                <p:outputPanel style="width:100%;">
+                    <hf:chart type="line" value="#{chartView3.registro6}" var="point"
+                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Lux">
+                        <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                      gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                    </hf:chart> 
+                </p:outputPanel>
+
+                <p:outputPanel style="width:100%;">
+                    <hf:chart type="line" value="#{chartView3.registro7}" var="point"
+                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de TVOC">
+                        <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                      gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                    </hf:chart> 
+                </p:outputPanel>
+
 
                 <p:dataScroller value="#{getuserdata.initDadosMaleta()}" var="userdata" rendered="true">
 
