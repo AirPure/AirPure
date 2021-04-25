@@ -48,5 +48,6 @@
         <pattern value="/sistema/relatorio" />
         <view-id value="/sistema/relatorio_1.xhtml" />
     </url-mapping>
+    
 
 </pretty-config>

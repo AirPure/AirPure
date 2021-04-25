@@ -89,25 +89,27 @@ public class ChartView3 {
             HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
             String startpoint = (String) session.getAttribute("startPoint");
             String endpoint = (String) session.getAttribute("endPoint");
+            int idAmbiente = 9999, parametro = 9999; String sql = "";
+            try {
+                idAmbiente = (int) session.getAttribute("relatorio");
+                sql = "SELECT * FROM amostragens WHERE id_dispositivos IN (select id FROM dispositivos WHERE id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "' ORDER BY id ASC;";
 
-            FacesContext fContext = FacesContext.getCurrentInstance();
-            ExternalContext extContext = fContext.getExternalContext();
-            HttpServletRequest request = (HttpServletRequest) fContext.getExternalContext().getRequest();
-            String parametro = request.getParameter("smp_id");
-            int idAmbiente = (int) session.getAttribute("relatorio");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                parametro = (int) session.getAttribute("smp_id");
+                sql = "SELECT * FROM amostragens WHERE id_dispositivos = " + parametro + " AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "' ORDER BY id ASC;";
 
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             Main.db = null;
             BD.ConectarBD();
             int idProjetoRelacionado = (int) session.getAttribute("projetoEnvolvido");
             Main.db = null;
             BD.ConectarBD();
-            String sql = "";
-
-            if (parametro != null) {
-                sql = "SELECT * FROM amostragens WHERE id_dispositivos = " + parametro + " AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "' ORDER BY id ASC;";
-            } else {
-                sql = "SELECT * FROM amostragens WHERE id_dispositivos IN (select id FROM dispositivos WHERE id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "' ORDER BY id ASC;";
-            }
+           
             try {
                 Main.sql = Main.db.createStatement();
             } catch (SQLException e) {

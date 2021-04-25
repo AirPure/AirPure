@@ -479,8 +479,9 @@ public class RequestData3 {
                 process.setLocal(rs.getString("local"));
                 process.setPredio(rs.getString("predio"));
                 process.setSala(rs.getString("sala"));
-                process.setEquipamentos(rs.getString("sala"));
                 process.setEquipamentos(rs.getString("modelo") + " | " + rs.getString("potencia") + "btus");
+                process.setCapacidadeMaxima(rs.getString("capmaxima"));
+                process.setDimensao(rs.getString("dimensao"));
 
                 registro2.add(process);
             }

@@ -259,7 +259,6 @@ void vLowLED(void *pvParameters) {
   while (true) {
     esp_task_wdt_reset();
     if(estado == ON_IDLE){
-      valorCO2 = leituraGas(); //Concentração de CO2 - MH-Z14A.
       value = mapfloat(valorCO2, 390, 1200, 0, 255);
 
       for(int i = 0; i< 255; i++){

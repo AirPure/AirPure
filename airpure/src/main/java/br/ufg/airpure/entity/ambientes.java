@@ -9,6 +9,25 @@ public class ambientes implements Serializable {
     private String predio; //Nome do predio
     private String local; //Nome do local
     private String equipamentos; //Nome dos equipamentos instalados
+    private String dimensao; //Nome dos equipamentos instalados
+    private String capacidadeMaxima; //Nome dos equipamentos instalados
+
+    public String getDimensao() {
+        return dimensao;
+    }
+
+    public void setDimensao(String dimensao) {
+        this.dimensao = dimensao;
+    }
+
+    public String getCapacidadeMaxima() {
+        return capacidadeMaxima;
+    }
+
+    public void setCapacidadeMaxima(String capacidadeMaxima) {
+        this.capacidadeMaxima = capacidadeMaxima;
+    }
+    
 
     public String getEquipamentos() {
         return equipamentos;
