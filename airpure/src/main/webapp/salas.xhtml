@@ -34,6 +34,24 @@
 
 
         </SCRIPT>
+        <!-- REQUIRED JS SCRIPTS -->
+        <SCRIPT type="text/javascript">
+            function redirect() {
+                window.location.href = "graphsDetailed.xhtml";
+            }
+            function filterByData() {
+                document.getElementById("data").style.display = "inline";
+            }
+            function filterById() {
+                document.getElementById("data").style.display = "none";
+            }
+            function filterByNumber() {
+                document.getElementById("data").style.display = "none";
+            }
+            function noFilter() {
+                document.getElementById("data").style.display = "none";
+            }
+        </SCRIPT>
         <style>
             .dot {
                 height: 25px;
@@ -137,6 +155,47 @@
 
                     <!--Título-->
                     <p:fieldset legend="Dados Qualidade do Ar Interno - Visualização por Sala" style="width:100%; border-width: 3px; color: black; text-align: center;">
+                        <section class="content-header">
+                            <h1 style="color: black; text-align: center;">
+                                Variação temporal
+                                <small>Intervalo: #{requestdata3.time()}</small>
+                            </h1>
+                        </section>
+
+                        <h:form>  
+                            <p:menubar style="text-align: center;">
+                                <p:submenu label="Filtrar por" icon="pi pi-file">
+                                    <p:menuitem value="Data" onclick="filterByData()"/>
+                                    <p:separator />
+                                    <p:menuitem value="Sem Filtro" onclick="noFilter();PF('dlg1').show();" action="#{requestdata3.noFilterDatatable()}"/>
+                                </p:submenu>
+
+                            </p:menubar>
+                        </h:form>
+                        <p:panelGrid columns="1" style="min-width: 100%;">
+                            <h:outputLabel id="data" style="display: none">
+                                <h:outputLabel style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
+                                    <p:panelGrid columns="2">
+                                        <h1 style="color:black; display: flex; flex-direction: row; justify-content: center; align-items: center;">
+                                            Intervalo do histórico
+                                            <small style="color:black;">(dd/MM/yyyy)</small>
+                                        </h1>
+
+                                        <h:form style=" display: flex; flex-direction: row; justify-content: center; align-items: center">
+                                            <p:outputLabel value="Inicio: "/>
+                                            <p:inputMask value="#{requestdata3.inicio}" mask="99/99/9999" lang="ptbr" required="true" requiredMessage="Preencha os campos em branco."/>
+
+
+                                            <p:outputLabel value=" Fim: "/>
+                                            <p:inputMask value="#{requestdata3.fim}" mask="99/99/9999" lang="ptbr" required="true" requiredMessage="Preencha os campos em branco."/>
+
+                                            <p:commandButton action="#{requestdata3.datatableFilterData()}" onclick="PF('dlg1').show();" value="Filtrar" update="@all" style="text-align: center;"/> 
+                                        </h:form>
+                                    </p:panelGrid>
+
+                                </h:outputLabel>
+                            </h:outputLabel>
+                        </p:panelGrid>
 
                         <p:dataScroller id="fieldset_data1" value="#{requestdata3.returnAmbientes()}" var="process1" rendered="true">   
 
@@ -145,51 +204,6 @@
 
                                 <!--Dados principais-->
                                 <p:dataScroller id="fieldset_data" value="#{requestdata3.returnSampleFromRoom(process1.id)}"  var="process2" rendered="true"> 
-                                    <section class="content-header">
-                                        <h1 style="color: black; text-align: center;">
-                                            Variação temporal
-                                            <small>Intervalo: #{requestdata3.time()}</small>
-                                        </h1>
-                                    </section>
-
-                                    <h:form>  
-                                        <p:growl id="messages"/>
-
-                                        <p:menubar style="text-align: center;">
-                                            <p:submenu label="Filtrar por" icon="pi pi-file">
-                                                <p:menuitem value="Data" onclick="filterByData()"/>
-                                                <p:separator />
-                                                <p:menuitem value="Sem Filtro" onclick="noFilter();PF('dlg1').show();" action="#{requestdata3.noFilterDatatable()}"/>
-                                            </p:submenu>
-
-                                        </p:menubar>
-
-
-                                    </h:form>
-                                    <p:panelGrid columns="1" style="min-width: 100%;">
-                                        <h:outputLabel id="data" style="display: none">
-                                            <h:outputLabel style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
-                                                <p:panelGrid columns="2">
-                                                    <h1 style="color:black; display: flex; flex-direction: row; justify-content: center; align-items: center;">
-                                                        Intervalo do histórico
-                                                        <small style="color:black;">(dd/MM/yyyy)</small>
-                                                    </h1>
-
-                                                    <h:form style=" display: flex; flex-direction: row; justify-content: center; align-items: center">
-                                                        <p:outputLabel value="Inicio: "/>
-                                                        <p:inputMask value="#{requestdata3.inicio}" mask="99/99/9999" lang="ptbr" required="true" requiredMessage="Preencha os campos em branco."/>
-
-
-                                                        <p:outputLabel value=" Fim: "/>
-                                                        <p:inputMask value="#{requestdata3.fim}" mask="99/99/9999" lang="ptbr" required="true" requiredMessage="Preencha os campos em branco."/>
-
-                                                        <p:commandButton action="#{requestdata3.datatableFilterData()}" onclick="PF('dlg1').show();" value="Filtrar" update="@all" style="text-align: center;"/> 
-                                                    </h:form>
-                                                </p:panelGrid>
-
-                                            </h:outputLabel>
-                                        </h:outputLabel>
-                                    </p:panelGrid>
                                     <!--Divide em 7 colunas-->
                                     <h:panelGrid columns="1" style="width: 100%; " >
 
@@ -201,7 +215,7 @@
                                                 <h:outputText value="Último Registro: #{process2.data}" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
                                                 <h:outputText value="Aparelho: #{process1.equipamentos}" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
                                                 <h:form>
-                                                    <p:commandButton action="#{requestdata3.putItOnSessionRoom(process1.id)}" value="Relatório"/>
+                                                    <p:commandButton action="#{requestdata3.putItOnSessionRoom(process1.id)}" onclick="PF('dlg1').show();" value="Relatório"/>
                                                 </h:form>
                                             </h:panelGrid>
                                             <h:panelGrid columns="1" style="background-color: white; border-radius: 10px; width: 85%; height: 100px; text-align: left;  margin: 30px; padding: 5px;">                              
@@ -299,42 +313,25 @@
 
 
         <!-- REQUIRED JS SCRIPTS -->
-        <!-- REQUIRED JS SCRIPTS -->
-        <SCRIPT type="text/javascript">
-            function redirect() {
-                window.location.href = "graphsDetailed.xhtml";
-            }
-            function filterByData() {
-                document.getElementById("data").style.display = "inline";
-            }
-            function filterById() {
-                document.getElementById("data").style.display = "none";
-            }
-            function filterByNumber() {
-                document.getElementById("data").style.display = "none";
-            }
-            function noFilter() {
-                document.getElementById("data").style.display = "none";
-            }
-        </SCRIPT>
+
         <script src="https://unpkg.com/gauge-chart@0.5.1/dist/bundle.js"></script>
         <script>
-            // Element inside which you want to see the chart.
-            let element1 = document.querySelector('#gaugeArea1')
+                                                        // Element inside which you want to see the chart.
+                                                        let element1 = document.querySelector('#gaugeArea1')
 
-            let options1 = {
-                arcColors: ['rgb(44, 151, 222)', 'lightgray'],
-                arcDelimiters: [80],
-                rangeLabel: ['0%', '100%'],
-                centralLabel: '70%',
-            }
+                                                        let options1 = {
+                                                            arcColors: ['rgb(44, 151, 222)', 'lightgray'],
+                                                            arcDelimiters: [80],
+                                                            rangeLabel: ['0%', '100%'],
+                                                            centralLabel: '70%',
+                                                        }
 
 
 
-            // Drawing and updating the chart.  
-            GaugeChart
-                    .gaugeChart(element1, 300, options1)
-                    .updateNeedle(70)
+                                                        // Drawing and updating the chart.  
+                                                        GaugeChart
+                                                                .gaugeChart(element1, 300, options1)
+                                                                .updateNeedle(70)
 
         </script>
 

@@ -153,7 +153,7 @@
                                                 </h1>
                                             </section>
                                             <h:form>
-                                                <p:commandButton action="#{requestdata3.putItOnSession(process1.id)}" value="Detalhar"/>
+                                                <p:commandButton action="#{requestdata3.putItOnSession(process1.id)}" onclick="PF('dlg1').show();" value="Detalhar"/>
                                             </h:form>
                                         </h:panelGrid>
                                         <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/foto_.png" style="width: 300px; height: 300px;"/>
