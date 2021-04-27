@@ -1,7 +1,7 @@
 package br.ufg.airpure.controllers;
 
 import br.ufg.airpure.entity.tipoDispositivo;
-import br.ufg.airpure.entity.amostragens;
+import br.ufg.airpure.entity.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -31,9 +31,68 @@ public class RequestData1 {
     String inicio;
     String fim;
     static String idOfAirpures;
+    private String dispositivo;
+    private String dispositivoSelectOption;
+    ArrayList<String> dispositivoAirpure;
 
     public String getIdOfAirpures() {
         return idOfAirpures;
+    }
+
+    public String getDispositivoSelectOption() {
+        return dispositivoSelectOption;
+    }
+
+
+
+    public void setDispositivoSelectOption(String dispositivoSelectOption) {
+        this.dispositivoSelectOption = dispositivoSelectOption;
+    }
+
+    public void printText(){
+     System.out.println("Valor do select: " + this.dispositivoSelectOption);
+         
+
+    }
+
+
+    public ArrayList<String> returnDispositivos() {
+
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+        int idProjetoRelacionado = (int) session.getAttribute("projetoEnvolvido");
+        dispositivoAirpure = new ArrayList<String>();
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "SELECT * FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado + " ORDER BY id DESC;";
+
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+        ResultSet rs = null;
+        try {
+
+            rs = Main.sql.executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                dispositivoAirpure.add(rs.getString("nome"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+        return dispositivoAirpure;
     }
 
     public void setIdOfAirpures(String idOfAirpures) {
@@ -265,5 +324,51 @@ public class RequestData1 {
 
     }
 
+// <===========Método que retorna a cor do quadrado do parametro.=========================================================================================================================>
+public String returnColorIndicator(Float value, String param) {
+    String color = "";
+    int minimo = 0;
+    int maximo = 0;
+    Main.db = null;
+    BD.ConectarBD();
+    String sql = "SELECT minimo,maximo FROM range WHERE tipo = '" + param + "';";
+
+    try {
+        Main.sql = Main.db.createStatement();
+    } catch (SQLException e) {
+        e.printStackTrace();
+
+    }
+
+    ResultSet rs = null;
+    try {
+
+        rs = Main.sql.executeQuery(sql);
+        System.out.println(sql);
+        while (rs.next()) {
+            minimo = rs.getInt("minimo");
+            maximo = rs.getInt("maximo");
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+
+    }
+    try {
+        Main.db.close();
+    } catch (SQLException ex) {
+        Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+    }
+
+    if (value >= minimo && value <= maximo) {
+        return "#00ac06";
+    } else if (value > maximo) {
+        return "#ff0000";
+    } else {
+        return "#ffff63";
+    }
+
+}
 // <============================================================================================================================================================================>
 }

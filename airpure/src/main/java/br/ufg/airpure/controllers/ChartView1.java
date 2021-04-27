@@ -22,6 +22,7 @@ public class ChartView1 {
     protected List<chartRecord> registro5;
     protected List<chartRecord> registro6;
     protected List<chartRecord> registro7;
+    protected List<chartRecord> registro8;
 
 //<------------------------------------------------------------Getter's and setter's--------------------------------------------------------------------------->
     public List<chartRecord> getRegistro1() {
@@ -64,6 +65,16 @@ public class ChartView1 {
         this.registro7 = registro7;
     }
 
+    public List<chartRecord> getRegistro8() {
+        return registro8;
+    }
+
+    public void setRegistro8(List<chartRecord> registro8) {
+        this.registro8 = registro8;
+    }
+
+
+
 //A parte do código abaixo é responsável por fazer a recuperação dos dados das membranas do banco de dados, que serão adicionados a arraylists e por sua vez serão usados nos gráficos.
 //<------------------------------------------------------------------------MEMBRANA 1--------------------------------------------------------------->
     public ChartView1() {
@@ -83,6 +94,7 @@ public class ChartView1 {
             registro5 = new ArrayList<>();
             registro6 = new ArrayList<>();
             registro7 = new ArrayList<>();
+            registro8 = new ArrayList<>();
             FacesContext facesContext = FacesContext.getCurrentInstance();
             HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
             String startpoint = (String) session.getAttribute("startPoint");
@@ -119,6 +131,8 @@ public class ChartView1 {
                     registro6.add(new chartRecord((x_value), y_value));
                     y_value = (rs.getDouble("tvoc"));
                     registro7.add(new chartRecord((x_value), y_value));
+                    y_value = (rs.getDouble("iaq"));
+                    registro8.add(new chartRecord((x_value), y_value));
                 }
 
                 rs.close();

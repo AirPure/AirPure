@@ -13,6 +13,26 @@
         <view-id value="/sistema/home_1.xhtml" />
     </url-mapping>
     
+    <url-mapping id="saso/consulta">
+        <pattern value="/sistema/saso/consulta" />
+        <view-id value="/sistema/consultaSASO.xhtml" />
+    </url-mapping>
+    
+    <url-mapping id="saso/dispositivo/dados">
+        <pattern value="/sistema/saso/dispositivo/dados" />
+        <view-id value="/sistema/dadosSASO.xhtml" />
+    </url-mapping>
+    
+    <url-mapping id="saso/dispositivo/localizacao">
+        <pattern value="/sistema/saso/dispositivo/localizacao" />
+        <view-id value="/sistema/localSASO.xhtml" />
+    </url-mapping>
+   
+    <url-mapping id="saso/notificacoes">
+        <pattern value="/sistema/saso/notificacoes" />
+        <view-id value="/sistema/notifiqueSASO.xhtml" />
+    </url-mapping>
+    
     <url-mapping id="sipai">
         <pattern value="/sistema/sipai" />
         <view-id value="/sistema/home_2.xhtml" />
