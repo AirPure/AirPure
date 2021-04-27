@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+         Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="0.9.2" last-position="0,0" last-zoom="1" max-obj-count="12"
+	 default-schema="public" default-owner="postgres">
+<database name="new_database" is-template="false" allow-conns="true">
+</database>
+
+<schema name="public" layer="0" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<sequence name="seq1" cycle="false" start="1" increment="1" min-value="0" max-value="2147483647" cache="1">
+	<schema name="public"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq2" cycle="false" start="1" increment="1" min-value="0" max-value="2147483647" cache="1">
+	<schema name="public"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq3" cycle="false" start="1" increment="1" min-value="0" max-value="2147483647" cache="1">
+	<schema name="public"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq4" cycle="false" start="1" increment="1" min-value="0" max-value="2147483647" cache="1">
+	<schema name="public"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq5" cycle="false" start="1" increment="1" min-value="0" max-value="2147483647" cache="1">
+	<schema name="public"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq6" cycle="false" start="1" increment="1" min-value="0" max-value="2147483647" cache="1">
+	<schema name="public"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq7" cycle="false" start="1" increment="1" min-value="0" max-value="2147483647" cache="1">
+	<schema name="public"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq8" cycle="false" start="1" increment="1" min-value="0" max-value="2147483647" cache="1">
+	<schema name="public"/>
+	<role name="postgres"/>
+</sequence>
+
+<table name="dispositivos" layer="0" collapse-mode="2" max-obj-count="6">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Tabela com os dispositivos AirPure.]]></comment>
+	<position x="902" y="74"/>
+	<column name="id" not-null="true" sequence="public.seq1">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="localizacao">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="nome">
+		<type name="character varying" length="0"/>
+	</column>
+	<constraint name="dispositivos_pk" type="pk-constr" table="public.dispositivos">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="id_ambientes" index="2"/>
+		<object name="id_projeto" index="1"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="ambientes_fk" index="2"/>
+		<object name="projeto_fk" index="1"/>
+	</customidxs>
+</table>
+
+<table name="tipo_dispositivo" layer="0" collapse-mode="2" max-obj-count="8">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Tabela com informações de quais sensores o aparelho possui.]]></comment>
+	<position x="272.412" y="109.412"/>
+	<column name="id" not-null="true" sequence="public.seq2">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="mhz14a">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="ccs811">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="dht22">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="max9814">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="bh1750">
+		<type name="boolean" length="0"/>
+	</column>
+	<constraint name="tipo_dispositivo_pk" type="pk-constr" table="public.tipo_dispositivo">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="projeto" layer="0" collapse-mode="2" max-obj-count="2">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Tabela com os projetos]]></comment>
+	<position x="1453.29" y="93.0588"/>
+	<column name="id" not-null="true" sequence="public.seq3">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="nome">
+		<type name="character varying" length="0"/>
+	</column>
+	<constraint name="projeto_pk" type="pk-constr" table="public.projeto">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="projeto_has_many_dispositivos" type="rel1n" layer="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#496670"
+	 src-table="public.projeto"
+	 dst-table="public.dispositivos"
+	 src-required="false" dst-required="false"/>
+
+<table name="amostragens" layer="0" collapse-mode="2" max-obj-count="20">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Tabela com todas as amostragens]]></comment>
+	<position x="1359.47" y="394.118"/>
+	<column name="id" not-null="true" sequence="public.seq4">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="data">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="tvoc">
+		<type name="float" length="0"/>
+	</column>
+	<column name="eco2">
+		<type name="float" length="0"/>
+	</column>
+	<column name="co2">
+		<type name="float" length="0"/>
+	</column>
+	<column name="lux">
+		<type name="float" length="0"/>
+	</column>
+	<column name="db">
+		<type name="float" length="0"/>
+	</column>
+	<column name="umidade">
+		<type name="float" length="0"/>
+	</column>
+	<column name="temperatura">
+		<type name="float" length="0"/>
+	</column>
+	<column name="iaq">
+		<type name="float" length="0"/>
+	</column>
+	<column name="V_FIRMWARE">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="iaq_tvoc">
+		<type name="float" length="0"/>
+	</column>
+	<column name="iaq_eco2">
+		<type name="float" length="0"/>
+	</column>
+	<column name="iaq_co2">
+		<type name="float" length="0"/>
+	</column>
+	<column name="iaq_temperatura">
+		<type name="float" length="0"/>
+	</column>
+	<column name="iaq_umidade">
+		<type name="float" length="0"/>
+	</column>
+	<constraint name="amostragens_pk" type="pk-constr" table="public.amostragens">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="id_dispositivos" index="10"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="dispositivos_fk" index="1"/>
+	</customidxs>
+</table>
+
+<relationship name="dispositivos_has_many_amostragens" type="rel1n" layer="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#26d304"
+	 src-table="public.dispositivos"
+	 dst-table="public.amostragens"
+	 src-required="false" dst-required="false"/>
+
+<table name="usuario" layer="0" collapse-mode="2" max-obj-count="10">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="1847.53" y="358.471"/>
+	<column name="id" not-null="true" sequence="public.seq5">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="nome">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="organizacao">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="usuario">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="senha">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="email">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="chat_id">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="btoken">
+		<type name="character varying" length="0"/>
+	</column>
+	<constraint name="usuario_pk" type="pk-constr" table="public.usuario">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="id_projeto" index="5"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="projeto_fk" index="1"/>
+	</customidxs>
+</table>
+
+<relationship name="projeto_has_many_usuario" type="rel1n" layer="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#75dd3e"
+	 src-table="public.projeto"
+	 dst-table="public.usuario"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
+
+<table name="range" layer="0" collapse-mode="2" max-obj-count="6">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="814.647" y="478.353"/>
+	<column name="id" not-null="true" sequence="public.seq6">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="tipo">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="minimo">
+		<type name="float" length="0"/>
+	</column>
+	<column name="maximo">
+		<type name="float" length="0"/>
+	</column>
+	<column name="norma">
+		<type name="character varying" length="0"/>
+	</column>
+	<constraint name="range_pk" type="pk-constr" table="public.range">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="ambientes" layer="0" collapse-mode="2" max-obj-count="8">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="425.118" y="398.059"/>
+	<column name="id" not-null="true" sequence="public.seq7">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="sala">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="predio">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="local">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="dimensao">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="capmaxima">
+		<type name="integer" length="0"/>
+	</column>
+	<constraint name="ambientes_pk" type="pk-constr" table="public.ambientes">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="ambientes_has_many_dispositivos" type="rel1n" layer="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#44aade"
+	 src-table="public.ambientes"
+	 dst-table="public.dispositivos"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="dispositivos_has_many_tipo_dispositivo" type="rel1n" layer="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#dd01a0"
+	 src-table="public.dispositivos"
+	 dst-table="public.tipo_dispositivo"
+	 src-required="false" dst-required="false"/>
+
+<sequence name="seq10" cycle="false" start="1" increment="1" min-value="0" max-value="2147483647" cache="1">
+	<schema name="public"/>
+	<role name="postgres"/>
+</sequence>
+
+<table name="hvac" layer="0" collapse-mode="2" max-obj-count="7">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="18.8235" y="495.294"/>
+	<column name="id" not-null="true" sequence="public.seq10">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="modelo">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="potencia">
+		<type name="float" length="0"/>
+	</column>
+	<column name="tipo">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="n_controle">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="n_patrimonio">
+		<type name="integer" length="0"/>
+	</column>
+	<constraint name="hvac_pk" type="pk-constr" table="public.hvac">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="hvac_has_many_ambientes" type="rel1n" layer="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#073d32"
+	 src-table="public.hvac"
+	 dst-table="public.ambientes"
+	 src-required="false" dst-required="false"/>
+
+<sequence name="seq11" cycle="false" start="1" increment="1" min-value="0" max-value="2147483647" cache="1">
+	<schema name="public"/>
+	<role name="postgres"/>
+</sequence>
+
+<table name="manutencao" layer="0" collapse-mode="2" max-obj-count="7">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="299.412" y="823.235"/>
+	<column name="id" not-null="true" sequence="public.seq11">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="data_execucao">
+		<type name="timestamptz" length="0"/>
+	</column>
+	<column name="proxima_execucao">
+		<type name="timestamptz" length="0"/>
+	</column>
+	<column name="servicos">
+		<type name="text" length="0"/>
+	</column>
+	<column name="executor">
+		<type name="character varying" length="0"/>
+	</column>
+	<constraint name="manutencao_pk" type="pk-constr" table="public.manutencao">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="id_hvac" index="4"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="hvac_fk" index="1"/>
+	</customidxs>
+</table>
+
+<relationship name="hvac_has_many_manutencao" type="rel1n" layer="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#09a71c"
+	 src-table="public.hvac"
+	 dst-table="public.manutencao"
+	 src-required="false" dst-required="false"/>
+
+</dbmodel>
