@@ -35,20 +35,41 @@ public class RequestData1 {
     private String dispositivoSelectOption;
     ArrayList<String> dispositivoAirpure;
 
-    public String getIdOfAirpures() {
-        return idOfAirpures;
+    public ArrayList<amostragens> getRegistro1() {
+        return registro1;
+    }
+
+    public void setRegistro1(ArrayList<amostragens> registro1) {
+        this.registro1 = registro1;
+    }
+
+    public String getDispositivo() {
+        return dispositivo;
+    }
+
+    public void setDispositivo(String dispositivo) {
+        this.dispositivo = dispositivo;
     }
 
     public String getDispositivoSelectOption() {
         return dispositivoSelectOption;
     }
 
-
-
     public void setDispositivoSelectOption(String dispositivoSelectOption) {
         this.dispositivoSelectOption = dispositivoSelectOption;
     }
 
+    public ArrayList<String> getDispositivoAirpure() {
+        return dispositivoAirpure;
+    }
+
+    public void setDispositivoAirpure(ArrayList<String> dispositivoAirpure) {
+        this.dispositivoAirpure = dispositivoAirpure;
+    }
+
+
+    
+    
     public void printText(){
      System.out.println("Valor do select: " + this.dispositivoSelectOption);
          
@@ -127,11 +148,11 @@ public class RequestData1 {
         }
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
-        int idProjetoRelacionado = (int) session.getAttribute("projetoEnvolvido");
+        String idProjetoRelacionado = (String) session.getAttribute("filtroAirPure");
         registro1 = new ArrayList<amostragens>();
         Main.db = null;
         BD.ConectarBD();
-        String sql = "SELECT * FROM amostragens WHERE id_dispositivos IN (SELECT id FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado + ") ORDER BY id DESC LIMIT 1;";
+        String sql = "SELECT * FROM amostragens WHERE id_dispositivos IN (SELECT id FROM dispositivos WHERE nome ILIKE '" + idProjetoRelacionado + "') ORDER BY id DESC LIMIT 1;";
 
         try {
             Main.sql = Main.db.createStatement();
@@ -213,12 +234,12 @@ public class RequestData1 {
     public String ultimoRegistroData() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
-        int idProjetoRelacionado = (int) session.getAttribute("projetoEnvolvido");
-        String data = "", hora = "";
+        String idProjetoRelacionado = (String) session.getAttribute("filtroAirPure");
+        String data = "", hora = "", nome = "";
         Timestamp dataAux;
         Main.db = null;
         BD.ConectarBD();
-        String sql = "SELECT data FROM amostragens WHERE id_dispositivos IN (SELECT id FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado + ") ORDER BY id DESC LIMIT 1;";
+        String sql = "SELECT data FROM amostragens WHERE id_dispositivos IN (SELECT id FROM dispositivos WHERE nome ILIKE '" + idProjetoRelacionado + "') ORDER BY id DESC LIMIT 1;";
 
         try {
             Main.sql = Main.db.createStatement();
@@ -251,7 +272,7 @@ public class RequestData1 {
 
         }
 
-        return "Último registro: " + data + " " + hora;
+        return "Último registro: " + data + " " + hora + " | Nome: " + idProjetoRelacionado;
     }
 
     // <===========Atribui algum parametro a sessao do usuario (URL) =========================================================================================================================>

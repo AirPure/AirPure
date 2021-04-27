@@ -188,11 +188,13 @@
                                     <!-- <small style="color: white;">SASO</small> -->
                                 </h1>
                                 <h:form>
-                                    <p:selectOneMenu value="#{requestdata1.getDispositivoSelectOption()}" effect="fold" editable="false">
-                                        <f:selectItem itemLabel="Selecione um" itemValue=""/>
-                                        <f:selectItems value="#{requestdata1.returnDispositivos()}"/>
-                                    </p:selectOneMenu>
-                                    <p:commandButton styleClass="btn btn-danger btn-block" value="Sair" action="#{requestdata1.printText()}" update="@form"/>
+                                    <h:panelGrid columns="2">
+                                        <p:selectOneMenu value="#{autenticacao.usuario.nome}" effect="fold" editable="false">
+                                            <f:selectItem itemLabel="Selecione um" itemValue=""/>
+                                            <f:selectItems value="#{autenticacao.returnDispositivos()}"/>
+                                        </p:selectOneMenu>
+                                        <p:commandButton styleClass="btn btn-success btn-block" value="Filtrar" action="#{autenticacao.printText()}" update="@all"/>
+                                    </h:panelGrid>
                                 </h:form>
                             </h:panelGrid>
 

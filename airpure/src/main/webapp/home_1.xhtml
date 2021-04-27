@@ -30,6 +30,9 @@
             function redirect2() {
                 window.location.reload(1);
             }
+            function someMenu() {
+                document.getElementById("lateralMenu").style.display = "none";
+            }
         </SCRIPT>
 
         <style>
@@ -108,7 +111,7 @@
 
             <!-- Header Navbar -->
             <nav class="navbar navbar-static-top" role="navigation">
-                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button" onclick="someMenu()">
                     <span class="sr-only">Toggle navigation</span>
                 </a>
 
@@ -130,7 +133,7 @@
                 <!-- /.search form -->
 
                 <!-- Sidebar Menu -->
-                <ul class="lateralMenu">
+                <ul class="lateralMenu" id="lateralMenu">
                     <li><a href="#">Home</a></li>
                     <li><a href="/airpure/sistema/saso/consulta">Consulta</a></li>
                     <li><a href="/airpure/sistema/saso/notificacoes">Notificações</a></li>
@@ -161,7 +164,14 @@
                             Dispositvo
                             <!-- <small style="color: white;">SASO</small> -->
                         </h1>
-      
+                        <h:form>
+                            <p:selectOneMenu value="#{autenticacao.usuario.nome}" effect="fold" editable="false">
+                                <f:selectItem itemLabel="Selecione um" itemValue=""/>
+                                <f:selectItems value="#{autenticacao.returnDispositivos()}"/>
+                            </p:selectOneMenu>
+                            <p:commandButton styleClass="btn btn-success btn-block" value="Filtrar" action="#{autenticacao.printText()}" update="@form"/>
+                        </h:form>
+
                     </h:panelGrid>
                 </div>
             </section>

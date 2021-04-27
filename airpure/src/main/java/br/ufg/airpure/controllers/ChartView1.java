@@ -101,10 +101,10 @@ public class ChartView1 {
             String endpoint = (String) session.getAttribute("endPoint");
             Main.db = null;
             BD.ConectarBD();
-            int idProjetoRelacionado = (int) session.getAttribute("projetoEnvolvido");
+            String idProjetoRelacionado = (String) session.getAttribute("filtroAirPure");
             Main.db = null;
             BD.ConectarBD();
-            String sql = "SELECT * FROM amostragens WHERE id_dispositivos IN (SELECT id FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "' ORDER BY id ASC;";
+            String sql = "SELECT * FROM amostragens WHERE id_dispositivos IN (SELECT id FROM dispositivos WHERE nome ILIKE '" + idProjetoRelacionado + "') AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "' ORDER BY id ASC;";
 
             try {
                 Main.sql = Main.db.createStatement();
