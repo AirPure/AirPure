@@ -55,7 +55,7 @@
         <h:form>    
             <div id="teste2">
                 <div style="text-align:center">
-                    <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/udf.png" width="250"/>  
+                    <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/logo2.png" width="250"/>  
                 </div>
                 <p></p>
                 <p:menubar style="background: #EEEEEE">
@@ -73,7 +73,7 @@
             <p></p>
             <p:fieldset style="width:950px; margin: 0px auto;">
                 <p:panelGrid columns="2" style="width:930px; text-align: center;">
-                    <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/udf.png" width="150"/> 
+                    <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/logo2.png" width="150"/> 
                     <h1>RELATÓRIO - AMBIENTE</h1>
                 </p:panelGrid>
                 <p:outputPanel style="background: #EEEEEE; width:930px; height: 35px;"><h3>I - INFORMAÇÕES DO AMBIENTE</h3></p:outputPanel>
@@ -90,6 +90,15 @@
 
                                 <h:outputText value="Câmpus:" />
                                 <h:outputText value="#{groups.local}" style="font-weight: bold"/>
+
+                                <h:outputText value="Equipamento Instalado:" />
+                                <h:outputText value="#{groups.equipamentos}" style="font-weight: bold"/>
+
+                                <h:outputText value="Nº de Controle do Equipamento:" />
+                                <h:outputText value="#{groups.n_Controle}" style="font-weight: bold"/>
+
+                                <h:outputText value="Nº de Patrimônio do Equipamento:" />
+                                <h:outputText value="#{groups.n_Patrimonio}" style="font-weight: bold"/>
 
                             </h:panelGrid>
                         </p:outputPanel>

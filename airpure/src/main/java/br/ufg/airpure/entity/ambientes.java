@@ -11,6 +11,25 @@ public class ambientes implements Serializable {
     private String equipamentos; //Nome dos equipamentos instalados
     private String dimensao; //Nome dos equipamentos instalados
     private String capacidadeMaxima; //Nome dos equipamentos instalados
+    private String n_Patrimonio; //Nome dos equipamentos instalados
+    private String n_Controle; //Nome dos equipamentos instalados
+
+    public String getN_Patrimonio() {
+        return n_Patrimonio;
+    }
+
+    public void setN_Patrimonio(String n_Patrimonio) {
+        this.n_Patrimonio = n_Patrimonio;
+    }
+
+    public String getN_Controle() {
+        return n_Controle;
+    }
+
+    public void setN_Controle(String n_Controle) {
+        this.n_Controle = n_Controle;
+    }
+
 
     public String getDimensao() {
         return dimensao;

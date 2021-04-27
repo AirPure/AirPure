@@ -658,7 +658,7 @@ public class RequestData3 {
         registro2 = new ArrayList<ambientes>();
         Main.db = null;
         BD.ConectarBD();
-        String sql = "SELECT *, (SELECT modelo from hvac WHERE id = id_hvac limit 1), (SELECT potencia from hvac WHERE id = id_hvac limit 1) FROM ambientes WHERE id = " + idAmbiente + " ORDER BY id DESC;";
+        String sql = "SELECT *, (SELECT modelo from hvac WHERE id = id_hvac limit 1),(SELECT n_controle from hvac WHERE id = id_hvac limit 1),(SELECT n_patrimonio from hvac WHERE id = id_hvac limit 1), (SELECT potencia from hvac WHERE id = id_hvac limit 1) FROM ambientes WHERE id = " + idAmbiente + " ORDER BY id DESC;";
 
         try {
             Main.sql = Main.db.createStatement();
@@ -678,7 +678,8 @@ public class RequestData3 {
                 process.setLocal(rs.getString("local"));
                 process.setPredio(rs.getString("predio"));
                 process.setSala(rs.getString("sala"));
-                process.setEquipamentos(rs.getString("sala"));
+                process.setN_Controle(rs.getString("n_controle"));
+                process.setN_Patrimonio(rs.getString("n_patrimonio"));
                 process.setEquipamentos(rs.getString("modelo") + " | " + rs.getString("potencia") + "btus");
 
                 registro2.add(process);
