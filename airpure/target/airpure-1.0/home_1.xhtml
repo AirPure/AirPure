@@ -152,26 +152,26 @@
         <div class="content-wrapper" style="overflow: scroll; background-size: 100%; background: url('resources/images/wp4094533.jpg') repeat !important;">
             <!-- Content Header (Page header) -->
             <section class="content-header">
-                <div align="left">
-                    <h1 style="color: white; float: left; font-size: 26px; width: 80%; margin-top: 0">
+                <div align= "left">
+                    <h1 style="color: white; float: left; font-size: 26px; margin-top: 0; width: 40%">
                         Dashboard SASO
                         <!-- <small style="color: white;">SASO</small> -->
                     </h1>
                 </div>
-                <div align="right">
+                <div align = "right">
                     <h:panelGrid columns="2">
-                        <h1 style="color: white; float: left; font-size: 26px; margin-top: 0">
-                            Dispositvo
+                        <h1 style="color: white; float: left; font-size: 26px; margin-top: 0; padding-right: 5px">
+                            Dispositivo    
                             <!-- <small style="color: white;">SASO</small> -->
                         </h1>
                         <h:form>
-                            <p:selectOneMenu value="#{autenticacao.usuario.nome}" effect="fold" editable="false">
-                                <f:selectItem itemLabel="Selecione um" itemValue=""/>
-                                <f:selectItems value="#{autenticacao.returnDispositivos()}"/>
-                            </p:selectOneMenu>
-                            <p:commandButton styleClass="btn btn-success btn-block" value="Filtrar" action="#{autenticacao.printText()}" update="@form"/>
+                            <h:panelGrid columns="2" style= "margin-top: 0!Important; padding: 0">
+                                <p:selectOneMenu value="#{autenticacao.usuario.nome}" effect="fold" editable="false">
+                                    <f:selectItems value="#{autenticacao.returnDispositivos()}"/>
+                                </p:selectOneMenu>
+                                <p:commandButton styleClass="btn btn-success btn-block" value="Filtrar" action="#{autenticacao.printText()}" update="@form"/>
+                            </h:panelGrid>
                         </h:form>
-
                     </h:panelGrid>
                 </div>
             </section>
