@@ -304,7 +304,7 @@ public class RequestData2 {
         Timestamp dataAux;
         Main.db = null;
         BD.ConectarBD();
-        String sql = "SELECT data FROM amostragens WHERE id_dispositivos = "+id_dispositivo+" ORDER BY DESC LIMIT 1";
+        String sql = "SELECT data, (SELECT sala FROM ambientes WHERE id IN (select id_ambientes FROM dispositivos WHERE id = " + id_dispositivo + ")) FROM amostragens WHERE id_dispositivos = "+id_dispositivo+" ORDER BY id DESC LIMIT 1";
            
         try {Main.sql = Main.db.createStatement();} catch (SQLException e) {e.printStackTrace();}
 
@@ -314,15 +314,15 @@ public class RequestData2 {
             System.out.println(sql);
             while (rs.next()) {
                 dataAux = rs.getTimestamp("data");
+                local = rs.getString("sala");
                 dataAux.setHours(dataAux.getHours() - 3);
                 data = new SimpleDateFormat("dd/MM/yyyy").format(dataAux);
                 hora = new SimpleDateFormat("HH:mm:ss").format(dataAux);
-                local = rs.getString("local");
             }
         } catch (SQLException e) {e.printStackTrace();}
         try { Main.db.close();} catch (SQLException ex) {Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);}
 
-        return "ID: "+id_dispositivo+" \n\n Local: "+local+ " Último envio" + data + " " + hora;
+        return "ID: "+id_dispositivo+" \n\n Local: "+local+ " | Último envio: " + data + " " + hora;
     }
 
     // <===========Atribui algum parametro a sessao do usuario (URL) =========================================================================================================================>
