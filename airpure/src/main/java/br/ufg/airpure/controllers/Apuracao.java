@@ -1,5 +1,14 @@
 package br.ufg.airpure.controllers;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -39,9 +48,12 @@ public class Apuracao {
         return ultimosDados;
     }
 
-    public void novoStatus(String[][] dados) {
+    public void novoStatus(String[][] dados) throws MalformedURLException, IOException {
 
+// Do what you want with response
 
+// Do what you want with response
+// Do what you want with response
         System.out.println("Recebendo os ultimos dados");
 
         this.ultimosDados = dados;
