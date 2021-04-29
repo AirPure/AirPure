@@ -10,25 +10,88 @@ public class estatistica implements Serializable {
     private Float tvocMedia; //Valor lido de TVOC
     private Float tvocMin; //Valor lido de TVOC
     private Float tvocMax; //Valor lido de TVOC
+    private Float tvocDesvPad; //Valor lido de TVOC
     private Float eco2Media; //Valor lido de ECO2
     private Float eco2Min; //Valor lido de ECO2
     private Float eco2Max; //Valor lido de ECO2
+    private Float eco2DesvPad; //Valor lido de ECO2
     private Float co2Min; //Valor lido de CO2
     private Float co2Max; //Valor lido de CO2
     private Float co2Media; //Valor lido de CO2
+    private Float co2DesvPad; //Valor lido de CO2
     private Float luxMax; //Valor lido de LUX
     private Float luxMin; //Valor lido de LUX
     private Float luxMedia; //Valor lido de LUX
+    private Float luxDesvPad; //Valor lido de LUX
     private Float dbMin; //Valor lido de RUIDO
     private Float dbMax; //Valor lido de RUIDO
     private Float dbMedia; //Valor lido de RUIDO
+    private Float dbDesvPad; //Valor lido de RUIDO
     private Float umidadeMin; //Valor lido de UMIDADE
     private Float umidadeMax; //Valor lido de UMIDADE
     private Float umidadeMedia; //Valor lido de UMIDADE
+    private Float umidadeDesvPad; //Valor lido de UMIDADE
     private Float temperaturaMin; //Valor lido de TEMPERATURA
     private Float temperaturaMax; //Valor lido de TEMPERATURA
     private Float temperaturaMedia; //Valor lido de TEMPERATURA
+    private Float temperaturaDesvPad; //Valor lido de TEMPERATURA
     private dispositivos airpure; //Airpure relacionado
+
+    public Float getTvocDesvPad() {
+        return tvocDesvPad;
+    }
+
+    public void setTvocDesvPad(Float tvocDesvPad) {
+        this.tvocDesvPad = tvocDesvPad;
+    }
+
+    public Float getEco2DesvPad() {
+        return eco2DesvPad;
+    }
+
+    public void setEco2DesvPad(Float eco2DesvPad) {
+        this.eco2DesvPad = eco2DesvPad;
+    }
+
+    public Float getCo2DesvPad() {
+        return co2DesvPad;
+    }
+
+    public void setCo2DesvPad(Float co2DesvPad) {
+        this.co2DesvPad = co2DesvPad;
+    }
+
+    public Float getLuxDesvPad() {
+        return luxDesvPad;
+    }
+
+    public void setLuxDesvPad(Float luxDesvPad) {
+        this.luxDesvPad = luxDesvPad;
+    }
+
+    public Float getDbDesvPad() {
+        return dbDesvPad;
+    }
+
+    public void setDbDesvPad(Float dbDesvPad) {
+        this.dbDesvPad = dbDesvPad;
+    }
+
+    public Float getUmidadeDesvPad() {
+        return umidadeDesvPad;
+    }
+
+    public void setUmidadeDesvPad(Float umidadeDesvPad) {
+        this.umidadeDesvPad = umidadeDesvPad;
+    }
+
+    public Float getTemperaturaDesvPad() {
+        return temperaturaDesvPad;
+    }
+
+    public void setTemperaturaDesvPad(Float temperaturaDesvPad) {
+        this.temperaturaDesvPad = temperaturaDesvPad;
+    }
 
     public Long getId() {
         return id;

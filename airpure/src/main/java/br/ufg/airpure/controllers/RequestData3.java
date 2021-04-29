@@ -511,13 +511,13 @@ public class RequestData3 {
         estatistica process = new estatistica();
         Main.db = null;
         BD.ConectarBD();
-        String sqlCO2 = "SELECT min(co2) as minCO2, max(co2) as maxCO2, (SELECT ((select sum(co2) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + "  AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) / (select count(*) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + " ) AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) as mediaCO2) FROM amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "';";
-        String sqleCO2 = "SELECT min(eco2) as mineCO2, max(eco2) as maxeCO2, (SELECT ((select sum(eco2) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + "  AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) / (select count(*) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + " ) AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) as mediaeCO2) FROM amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "';";
-        String sqlTVOC = "SELECT min(tvoc) as minTVOC, max(tvoc) as maxTVOC, (SELECT ((select sum(tvoc) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + "  AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) / (select count(*) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + " ) AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) as mediaTVOC) FROM amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "';";
-        String sqlUmidade = "SELECT min(umidade) as minUmidade, max(umidade) as maxUmidade, (SELECT ((select sum(umidade) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + "  AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) / (select count(*) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + " ) AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) as mediaUmidade) FROM amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "';";
-        String sqlTemperatura = "SELECT min(temperatura) as minTemperatura, max(temperatura) as maxTemperatura, (SELECT ((select sum(temperatura) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + "  AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) / (select count(*) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + " ) AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) as mediaTemperatura) FROM amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "';";
-        String sqldb = "SELECT min(db) as mindb, max(db) as maxdb, (SELECT ((select sum(db) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + "  AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) / (select count(*) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + " ) AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) as mediadb) FROM amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "';";
-        String sqllux = "SELECT min(lux) as minlux, max(lux) as maxlux, (SELECT ((select sum(lux) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + "  AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) / (select count(*) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + " ) AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) as medialux) FROM amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "';";
+        String sqlCO2 = "SELECT min(co2) as minCO2, max(co2) as maxCO2, stddev(co2) as desvPadco2 , (SELECT ((select sum(co2) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + "  AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) / (select count(*) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + " ) AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) as mediaCO2) FROM amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "';";
+        String sqleCO2 = "SELECT min(eco2) as mineCO2, max(eco2) as maxeCO2, stddev(eco2) as desvPadeco2 , (SELECT ((select sum(eco2) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + "  AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) / (select count(*) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + " ) AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) as mediaeCO2) FROM amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "';";
+        String sqlTVOC = "SELECT min(tvoc) as minTVOC, max(tvoc) as maxTVOC, stddev(tvoc) as desvPadtvoc , (SELECT ((select sum(tvoc) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + "  AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) / (select count(*) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + " ) AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) as mediaTVOC) FROM amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "';";
+        String sqlUmidade = "SELECT min(umidade) as minUmidade, max(umidade) as maxUmidade, stddev(umidade) as desvPadUmidade , (SELECT ((select sum(umidade) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + "  AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) / (select count(*) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + " ) AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) as mediaUmidade) FROM amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "';";
+        String sqlTemperatura = "SELECT min(temperatura) as minTemperatura, max(temperatura) as maxTemperatura, stddev(temperatura) as desvPadTemp ,(SELECT ((select sum(temperatura) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + "  AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) / (select count(*) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + " ) AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) as mediaTemperatura) FROM amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "';";
+        String sqldb = "SELECT min(db) as mindb, max(db) as maxdb, stddev(db) as desvPadDB ,(SELECT ((select sum(db) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + "  AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) / (select count(*) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + " ) AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) as mediadb) FROM amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "';";
+        String sqllux = "SELECT min(lux) as minlux, max(lux) as maxlux, stddev(lux) as desvPadLux , (SELECT ((select sum(lux) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + "  AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) / (select count(*) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + " ) AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) as medialux) FROM amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "';";
 
         try {
             Main.sql = Main.db.createStatement();
@@ -535,6 +535,7 @@ public class RequestData3 {
                 process.setCo2Max(rs.getFloat("maxCO2"));
                 process.setCo2Min(rs.getFloat("minCO2"));
                 process.setCo2Media(rs.getFloat("mediaCO2"));
+                process.setCo2DesvPad(rs.getFloat("desvPadco2"));
 
             }
 
@@ -551,6 +552,7 @@ public class RequestData3 {
                 process.setTvocMax(rs.getFloat("maxTVOC"));
                 process.setTvocMin(rs.getFloat("minTVOC"));
                 process.setTvocMedia(rs.getFloat("mediaTVOC"));
+                process.setTvocDesvPad(rs.getFloat("desvPadtvoc"));
 
             }
 
@@ -567,6 +569,7 @@ public class RequestData3 {
                 process.setUmidadeMax(rs.getFloat("maxUmidade"));
                 process.setUmidadeMin(rs.getFloat("minUmidade"));
                 process.setUmidadeMedia(rs.getFloat("mediaUmidade"));
+                process.setUmidadeDesvPad(rs.getFloat("desvPadUmidade"));
 
             }
 
@@ -583,6 +586,7 @@ public class RequestData3 {
                 process.setTemperaturaMax(rs.getFloat("maxTemperatura"));
                 process.setTemperaturaMin(rs.getFloat("minTemperatura"));
                 process.setTemperaturaMedia(rs.getFloat("mediaTemperatura"));
+                process.setTemperaturaDesvPad(rs.getFloat("desvPadTemp"));
 
             }
 
@@ -599,6 +603,7 @@ public class RequestData3 {
                 process.setEco2Max(rs.getFloat("maxeCO2"));
                 process.setEco2Min(rs.getFloat("mineCO2"));
                 process.setEco2Media(rs.getFloat("mediaeCO2"));
+                process.setEco2DesvPad(rs.getFloat("desvPadeco2"));
 
             }
 
@@ -615,6 +620,7 @@ public class RequestData3 {
                 process.setDbMax(rs.getFloat("maxdb"));
                 process.setDbMin(rs.getFloat("mindb"));
                 process.setDbMedia(rs.getFloat("mediadb"));
+                process.setDbDesvPad(rs.getFloat("desvPadDB"));
 
             }
 
@@ -631,6 +637,7 @@ public class RequestData3 {
                 process.setLuxMax(rs.getFloat("maxlux"));
                 process.setLuxMin(rs.getFloat("minlux"));
                 process.setLuxMedia(rs.getFloat("medialux"));
+                process.setLuxDesvPad(rs.getFloat("desvPadLux"));
 
             }
 
