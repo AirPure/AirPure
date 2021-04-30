@@ -49,6 +49,9 @@ public class GeradorDeDados {
     public void gera() throws MalformedURLException, IOException, AddressException, MessagingException {
         System.out.println("Gerando dados para o websocket...");
 /*
+        
+        SELECT DISTINCT ON(id_dispositivos) id_dispositivos,* FROM amostragens INNER JOIN usuario ON id_projeto IN (select id_projeto from dispositivos where id = id_dispositivos) ORDER BY id_dispositivos,amostragens.id DESC 
+        
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.socketFactory.port", "465");
