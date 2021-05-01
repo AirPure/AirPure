@@ -69,5 +69,11 @@
         <view-id value="/sistema/relatorio_1.xhtml" />
     </url-mapping>
     
+    
+    <url-mapping id="cadastroDispositivo">
+        <pattern value="/sistema/cadastroDispositivo" />
+        <view-id value="/sistema/cadastro_airpure.xhtml" />
+    </url-mapping>
+    
 
 </pretty-config>

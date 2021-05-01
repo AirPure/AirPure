@@ -21,6 +21,15 @@ public class autenticacao implements HttpSessionListener {
 
     // <==============Getters and Setters====================================================================================================================================>
     private Users usuario = new Users();
+    private dispositivos airpure = new dispositivos();
+
+    public dispositivos getAirpure() {
+        return airpure;
+    }
+
+    public void setAirpure(dispositivos airpure) {
+        this.airpure = airpure;
+    }
 
     public Users getUsuario() {
         return usuario;
@@ -108,8 +117,41 @@ public class autenticacao implements HttpSessionListener {
         FacesContext.getCurrentInstance().getExternalContext().redirect("/airpure/sistema/simpec");
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Oooops...", "Algo deu errado.."));
     }
-    // <==========================Função que efetua o login ao usuário. Além de verificar se a conta e senha existem e estão corretos, salva algumas informações em variáveis de sessão.==============================================================================================================================>
+    // <===========Método de inserção modelo ao banco de dados.=========================================================================================================================>
 
+    public void insertAirpure() throws IOException {
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "INSERT INTO dispositivos (nome,id_projeto,id_ambientes) VALUES ('" + airpure.getNome() + "'," + airpure.getId_projeto() + "," + airpure.getId_ambiente() + ");";
+
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+
+            Main.sql.executeUpdate(sql);
+            System.out.println(sql);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+        FacesContext.getCurrentInstance().getExternalContext().redirect("/airpure/sistema/home");
+
+    }
+
+    // <==========================Função que efetua o login ao usuário. Além de verificar se a conta e senha existem e estão corretos, salva algumas informações em variáveis de sessão.==============================================================================================================================>
     public void doEfetuarLogin() throws IOException {
         Users usuario2 = new Users();
         projetos projeto = new projetos();

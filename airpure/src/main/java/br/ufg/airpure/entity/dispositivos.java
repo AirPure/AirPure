@@ -8,6 +8,24 @@ public class dispositivos implements Serializable {
     private projetos projeto;   //Nome do projeto
     private ambientes ambiente; //Nome do ambiente
     private String nome; //Nome do ambiente
+    private Integer id_projeto; //Nome do ambiente
+    private Integer id_ambiente; //Nome do ambiente
+
+    public Integer getId_projeto() {
+        return id_projeto;
+    }
+
+    public void setId_projeto(Integer id_projeto) {
+        this.id_projeto = id_projeto;
+    }
+
+    public Integer getId_ambiente() {
+        return id_ambiente;
+    }
+
+    public void setId_ambiente(Integer id_ambiente) {
+        this.id_ambiente = id_ambiente;
+    }
 
     public Integer getId() {
         return id;
