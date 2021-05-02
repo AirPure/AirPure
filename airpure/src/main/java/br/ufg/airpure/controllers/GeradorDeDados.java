@@ -51,10 +51,10 @@ public class GeradorDeDados {
      * E passa para o mecanismo de apuração
      *
      */
-    @Schedule(hour = "8", minute = "0", second = "0", persistent = false)
+    @Schedule(hour = "11", minute = "0", second = "0", persistent = false)
     public void gera() throws MalformedURLException, IOException, AddressException, MessagingException, InterruptedException {
         System.out.println("Iniciando verificação para notificações.");
-/*
+        /*
         LocalTime now = LocalTime.now();
         System.out.println(now.getHour());
         if (!(now.getHour() > 8 && now.getHour() < 17)){
@@ -64,11 +64,11 @@ public class GeradorDeDados {
 
         Main.db = null;
         BD.ConectarBD();
+        String sql = "";
+        String msg = "";
+        String msgTelegram = "";
         //String sql = "SELECT DISTINCT ON (id_dispositivos) id_dispositivos,* FROM amostragens WHERE id_dispositivos IN (SELECT id FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado +") ORDER BY id_dispositivos,id DESC;";
-        String sql = "SELECT DISTINCT ON(id_dispositivos) id_dispositivos,* FROM amostragens INNER JOIN usuario ON id_projeto IN (select id_projeto from dispositivos where id = id_dispositivos) ORDER BY id_dispositivos,amostragens.id DESC";
-        String msg = "\n\nVoce está recebendo este aviso porque solicitou um acompanhamento em tempo real.\n\n Foram detectadas alteracoes de parametros fora dos limites pre-definidos.\n\n";
-        String msgTelegram = "Variacao detectada: ";
-        int isNecessary = 0;
+        sql = "SELECT avg(eCO2) FROM amostragens INNER JOIN usuario ON id_projeto IN (select id_projeto from dispositivos where id = id_dispositivos) INNER JOIN ambientes ON ambientes.id IN (select id_ambientes FROM dispositivos WHERE id_projeto = usuario.id_projeto) group by id_dispositivos ORDER BY id_dispositivos DESC";   int isNecessary = 0;
         try {
             Main.sql = Main.db.createStatement();
         } catch (SQLException e) {
@@ -85,10 +85,14 @@ public class GeradorDeDados {
                 isNecessary = 0;
                 Users process = new Users();
                 amostragens amostra = new amostragens();
+                ambientes ambiente = new ambientes();
                 process.setChatId(rs.getString("chat_id"));
                 process.setBtoken(rs.getString("btoken"));
                 process.setEmail(rs.getString("email"));
                 process.setNome(rs.getString("nome"));
+                ambiente.setSala(rs.getString("sala"));
+                ambiente.setPredio(rs.getString("predio"));
+                ambiente.setLocal(rs.getString("local"));
                 amostra.setCo2(rs.getFloat("co2"));
                 amostra.setEco2(rs.getFloat("eco2"));
                 amostra.setTvoc(rs.getFloat("tvoc"));
@@ -104,6 +108,9 @@ public class GeradorDeDados {
                 process.setMaxTEMPERATURA(rs.getFloat("maxTEMPERATURA"));
                 process.setMaxECO2(rs.getFloat("maxECO2"));
 
+                msg = "\n\nOla! Voce está recebendo este aviso porque solicitou um acompanhamento em tempo real.\n\n Foram detectadas alteracoes de parametros fora dos limites pre-definidos.\n\n";
+                msgTelegram = "Variacao detectada - Local: " + ambiente.getLocal() + " | Predio: " + ambiente.getPredio() + " | Sala: " + ambiente.getSala() + "\n";
+
                 if (amostra.getEco2() > process.getMaxECO2()) {
                     msg += "ECO2 - Variacao lida: " + amostra.getEco2() + " ppm | Variacao maxima permitida: " + process.getMaxECO2() + " ppm \n";
                     msgTelegram += "ECO2: " + amostra.getEco2() + " ppm - ";
@@ -111,7 +118,7 @@ public class GeradorDeDados {
                 }
                 if (amostra.getCo2() > process.getMaxCO2()) {
                     msg += "CO2 - Variacao lida: " + amostra.getCo2() + " ppm | Variacao maxima permitida: " + process.getMaxCO2() + " ppm \n";
-                     msgTelegram += "CO2: " + amostra.getCo2() + " ppm - ";
+                    msgTelegram += "CO2: " + amostra.getCo2() + " ppm - ";
                     isNecessary = 1;
                 }
                 if (amostra.getTvoc() > process.getMaxTVOC()) {
@@ -121,7 +128,7 @@ public class GeradorDeDados {
                 }
                 if (amostra.getTemperatura() > process.getMaxTEMPERATURA()) {
                     msg += "Temperatura - Variacao lida: " + amostra.getTemperatura() + " ºC | Variacao maxima permitida: " + process.getMaxTEMPERATURA() + " ºC \n";
-                    msgTelegram += "Temperatura: " + amostra.getTemperatura()+ " Graus - ";
+                    msgTelegram += "Temperatura: " + amostra.getTemperatura() + " Graus - ";
                     isNecessary = 1;
                 }
                 if (amostra.getUmidade() > process.getMaxUMIDADE()) {
@@ -178,6 +185,150 @@ public class GeradorDeDados {
                         }
                     }
 
+                    Thread.sleep(1000);
+
+                    if (process.getBtoken() != null) {
+                        System.out.println("Entrei no telegram.");
+                        String urlString = "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s";
+                        String apiToken = process.getBtoken();
+                        String chatId = process.getChatId();
+                        //String apiToken = "1403262308:AAF1zrbdz0-rEyXTdJUdT20MhA0eBpCT_TQ";
+                        //String chatId = "1248387297";
+                        String text = msg;
+
+                        urlString = String.format(urlString, apiToken, chatId, msgTelegram);
+
+                        URL url = new URL(urlString);
+
+                        System.out.println("MINHA URL DE CONEXAO: " + urlString);
+                        URLConnection conn = url.openConnection();
+
+                        StringBuilder sb = new StringBuilder();
+                        InputStream is = new BufferedInputStream(conn.getInputStream());
+                        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                        String inputLine = "";
+                        while ((inputLine = br.readLine()) != null) {
+                            sb.append(inputLine);
+                        }
+                        String response = sb.toString();
+                    }
+                    Thread.sleep(1000);
+                }
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+        System.out.println("Finalizando notificações.");
+    }
+    
+    
+    @Schedule(hour = "*", minute = "*/30", persistent = false)
+    public void aviso() throws MalformedURLException, IOException, AddressException, MessagingException, InterruptedException {
+        System.out.println("Iniciando verificação para notificações.");
+        /*
+        LocalTime now = LocalTime.now();
+        System.out.println(now.getHour());
+        if (!(now.getHour() > 8 && now.getHour() < 17)){
+            System.out.println("Horario nao propicio para envio de alertas.");
+            return;
+        }*/
+
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "";
+        String msg = "";
+        String msgTelegram = "";
+        //String sql = "SELECT DISTINCT ON (id_dispositivos) id_dispositivos,* FROM amostragens WHERE id_dispositivos IN (SELECT id FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado +") ORDER BY id_dispositivos,id DESC;";
+        sql = "SELECT DISTINCT ON(id_dispositivos) id_dispositivos,* FROM amostragens INNER JOIN usuario ON id_projeto IN (select id_projeto from dispositivos where id = id_dispositivos) INNER JOIN ambientes ON ambientes.id IN (select id_ambientes FROM dispositivos WHERE id_projeto = usuario.id_projeto) ORDER BY id_dispositivos,amostragens.id DESC";
+        int isNecessary = 0;
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+        ResultSet rs = null;
+        try {
+
+            rs = Main.sql.executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                isNecessary = 0;
+                Users process = new Users();
+                amostragens amostra = new amostragens();
+                ambientes ambiente = new ambientes();
+                process.setChatId(rs.getString("chat_id"));
+                process.setBtoken(rs.getString("btoken"));
+                process.setEmail(rs.getString("email"));
+                process.setNome(rs.getString("nome"));
+                ambiente.setSala(rs.getString("sala"));
+                ambiente.setPredio(rs.getString("predio"));
+                ambiente.setLocal(rs.getString("local"));
+                amostra.setCo2(rs.getFloat("co2"));
+                amostra.setEco2(rs.getFloat("eco2"));
+                amostra.setTvoc(rs.getFloat("tvoc"));
+                amostra.setLux(rs.getFloat("lux"));
+                amostra.setDb(rs.getFloat("db"));
+                amostra.setTemperatura(rs.getFloat("temperatura"));
+                amostra.setUmidade(rs.getFloat("umidade"));
+                process.setMaxCO2(rs.getFloat("maxCO2"));
+                process.setMaxUMIDADE(rs.getFloat("maxUMIDADE"));
+                process.setMaxTVOC(rs.getFloat("maxTVOC"));
+                process.setMaxRUIDO(rs.getFloat("maxRUIDO"));
+                process.setMaxLUMINOSIDADE(rs.getFloat("maxLUMINOSIDADE"));
+                process.setMaxTEMPERATURA(rs.getFloat("maxTEMPERATURA"));
+                process.setMaxECO2(rs.getFloat("maxECO2"));
+
+                msg = "\n\nOla! Voce está recebendo este aviso porque solicitou um acompanhamento em tempo real.\n\n Foram detectadas alteracoes de parametros fora dos limites pre-definidos.\n\n - Local: " + ambiente.getLocal() + " - Predio: " + ambiente.getPredio() + " - Sala: " + ambiente.getSala() + " \n";
+                msgTelegram = "Variacao detectada - Local: " + ambiente.getLocal() + " - Predio: " + ambiente.getPredio() + " - Sala: " + ambiente.getSala() + " - ";
+
+                if (amostra.getEco2() > process.getMaxECO2()) {
+                    msg += "ECO2 - Variacao lida: " + amostra.getEco2() + " ppm | Variacao maxima permitida: " + process.getMaxECO2() + " ppm \n";
+                    msgTelegram += "ECO2: " + amostra.getEco2() + " ppm - ";
+                    isNecessary = 1;
+                }
+                if (amostra.getCo2() > process.getMaxCO2()) {
+                    msg += "CO2 - Variacao lida: " + amostra.getCo2() + " ppm | Variacao maxima permitida: " + process.getMaxCO2() + " ppm \n";
+                    msgTelegram += "CO2: " + amostra.getCo2() + " ppm - ";
+                    isNecessary = 1;
+                }
+                if (amostra.getTvoc() > process.getMaxTVOC()) {
+                    msg += "TVOC - Variacao lida: " + amostra.getTvoc() + " ppb | Variacao maxima permitida: " + process.getMaxTVOC() + " ppb \n";
+                    msgTelegram += "TVOC: " + amostra.getTvoc() + " ppb - ";
+                    isNecessary = 1;
+                }
+                if (amostra.getTemperatura() > process.getMaxTEMPERATURA()) {
+                    msg += "Temperatura - Variacao lida: " + amostra.getTemperatura() + " ºC | Variacao maxima permitida: " + process.getMaxTEMPERATURA() + " ºC \n";
+                    msgTelegram += "Temperatura: " + amostra.getTemperatura() + " Graus - ";
+                    isNecessary = 1;
+                }
+                if (amostra.getUmidade() > process.getMaxUMIDADE()) {
+                    msg += "Umidade - Variacao lida: " + amostra.getUmidade() + " % | Variacao maxima permitida: " + process.getMaxUMIDADE() + " % \n";
+                    msgTelegram += "Umidade: " + amostra.getUmidade() + " (Relativa) - ";
+                    isNecessary = 1;
+                }
+                if (amostra.getDb() > process.getMaxRUIDO()) {
+                    msg += "Ruído - Variacao lida: " + amostra.getDb() + " dB | Variacao maxima permitida: " + process.getMaxRUIDO() + " dB \n";
+                    msgTelegram += "Ruido: " + amostra.getDb() + " Db - ";
+                    isNecessary = 1;
+                }
+                if (amostra.getLux() > process.getMaxLUMINOSIDADE()) {
+                    msg += "Luminosidade - Variacao lida: " + amostra.getLux() + " lux | Variacao maxima permitida: " + process.getMaxLUMINOSIDADE() + " lux \n";
+                    msgTelegram += "Luminosidade: " + amostra.getLux() + " lux";
+                    isNecessary = 1;
+                }
+
+                if (isNecessary == 1) {
                     Thread.sleep(1000);
 
                     if (process.getBtoken() != null) {
