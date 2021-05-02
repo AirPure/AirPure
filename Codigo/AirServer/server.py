@@ -4,10 +4,50 @@ import psycopg2
 import socket
 import datetime
 from sklearn.neighbors import KNeighborsClassifier
+def 
 
 TCP_IP = ''
 TCP_PORT = 1883     #Porta que sera aberta para a conexao websocket
 BUFFER_SIZE = 64    #Tamanho do buffer que podera ser recebido
+
+
+ 
+def estatisticaIp(parametro,value_lido){
+        
+        int size_vetores = 7;
+        int indice = 0;
+        char vetorCondicao[] = {'A' ,'B'  ,'C' ,'D' ,'E' ,'F' };
+        float vetorIlo[]      = {0  , 51  ,101 ,151 ,251 ,351 };
+        float vetorIhi[]      = {50 , 100 ,150 ,250 ,350 ,500 };
+        float vetorBPloCO2[]  = {0  , 501 ,1001,1501,2001,3001};
+        float vetorBPhiCO2[]  = {500, 1000,1500,2000,3000,5000};
+        
+        #Atribui parâmetros especificos
+        switch(parametro){
+            case "CO2":
+                #verifica a classificação
+                for(int i = 0; i<size_vetores;i++){
+                    if(value_lido <= vetorBPhiCO2[i]){indice = i;}
+                }
+                #atribui os valores respectivos
+                BPlo = vetorBPloCO2[indice];	
+                BPhi = vetorBPhiCO2[indice];
+            break;
+        }
+        #Atribui parâmetros gerais
+        condicao = vetorCondicao[indice];
+        Ihi = vetorIhi[indice];	
+        Ilo = vetorIlo[indice];
+        Cp = value_lido;
+        
+        #Faz o cálculo
+        Ip = (((Ihi-Ilo)/(BPhi-BPlo))*(Cp-BPlo))+ Ilo;
+        
+        return Ip;
+        
+        
+  }
+
 
 # Faz a classificacao de pacotes vindos do AirPure
 def classificatePackage(conn, addr):
@@ -71,6 +111,9 @@ def classificatePackage(conn, addr):
                 f2.close()
 
                 print("\n[SERVIDOR ", addr, "] Classificao dos dados executada com sucesso.")
+
+                #alteraçoes melyssa
+                estatisticaIp(parametro,value_lido)
 
                 try:
                     connection = psycopg2.connect(user="postgres",
