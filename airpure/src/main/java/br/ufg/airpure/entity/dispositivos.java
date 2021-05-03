@@ -8,9 +8,19 @@ public class dispositivos implements Serializable {
     private projetos projeto;   //Nome do projeto
     private ambientes ambiente; //Nome do ambiente
     private String nome; //Nome do ambiente
+    private String localizacao; //Nome do ambiente
     private Integer id_projeto; //Nome do ambiente
     private Integer id_ambiente; //Nome do ambiente
 
+    public String getLocalizacao() {
+        return localizacao;
+    }
+
+    public void setLocalizacao(String localizacao) {
+        this.localizacao = localizacao;
+    }
+    
+    
     public Integer getId_projeto() {
         return id_projeto;
     }
