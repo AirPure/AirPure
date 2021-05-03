@@ -70,5 +70,11 @@
         <view-id value="/sistema/cadastro_airpure.xhtml" />
     </url-mapping>
     
+    
+    <url-mapping id="cadastroManutencao">
+        <pattern value="/sistema/cadastroManutencao" />
+        <view-id value="/sistema/cadastro_manutencao.xhtml" />
+    </url-mapping>
+    
 
 </pretty-config>

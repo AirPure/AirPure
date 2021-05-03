@@ -22,7 +22,17 @@ public class autenticacao implements HttpSessionListener {
     // <==============Getters and Setters====================================================================================================================================>
     private Users usuario = new Users();
     private dispositivos airpure = new dispositivos();
+    private manutencao work = new manutencao();
 
+    public manutencao getWork() {
+        return work;
+    }
+
+    public void setWork(manutencao work) {
+        this.work = work;
+    }
+
+    
     public dispositivos getAirpure() {
         return airpure;
     }
@@ -123,6 +133,38 @@ public class autenticacao implements HttpSessionListener {
         Main.db = null;
         BD.ConectarBD();
         String sql = "INSERT INTO dispositivos (nome,id_projeto,id_ambientes) VALUES ('" + airpure.getNome() + "'," + airpure.getId_projeto() + "," + airpure.getId_ambiente() + ");";
+
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+
+            Main.sql.executeUpdate(sql);
+            System.out.println(sql);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+        FacesContext.getCurrentInstance().getExternalContext().redirect("/airpure/sistema/home");
+
+    }
+
+    public void insertManutencao() throws IOException {
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "INSERT INTO manutencao (data_execucao,proxima_execucao,servicos,executor) VALUES ('" + work.getData_execucao()+ "','" + work.getProxima_execucao() + "','" + work.getServicos()+ "','" + work.getExecutor()+ "');";
 
         try {
             Main.sql = Main.db.createStatement();
@@ -264,6 +306,44 @@ public class autenticacao implements HttpSessionListener {
 
         }
         return dispositivoAirpure;
+    }
+    public ArrayList<String> returnHVAC() {
+
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+        int idProjetoRelacionado = (int) session.getAttribute("projetoEnvolvido");
+        ArrayList<String> dispositivoHVAC = new ArrayList<String>();
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "SELECT * FROM hvac WHERE id IN(SELECT id_hvac FROM ambientes WHERE id IN (select id_ambientes FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado + "))  ORDER BY id DESC;";
+
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+        ResultSet rs = null;
+        try {
+
+            rs = Main.sql.executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                dispositivoHVAC.add(rs.getString("modelo"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+        return dispositivoHVAC;
     }
 
     public void printText() throws IOException {

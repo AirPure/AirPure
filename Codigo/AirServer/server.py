@@ -5,9 +5,59 @@ import socket
 import datetime
 from sklearn.neighbors import KNeighborsClassifier
 
+
 TCP_IP = ''
 TCP_PORT = 1883     #Porta que sera aberta para a conexao websocket
 BUFFER_SIZE = 64    #Tamanho do buffer que podera ser recebido
+
+
+ 
+def estatisticaIp(parametro,value_lido):
+        
+        size_vetores = 7
+        indice = 0
+        vetorCondicao = ['A', 'B', 'C', 'D', 'E', 'F']
+        vetorIlo= [0, 51, 101, 151, 251, 351]
+        vetorIhi= [50, 100, 150, 250, 350, 500]
+        vetorBPloCO2= [0, 501, 1001, 1501, 2001, 3001]
+        vetorBPhiCO2 = [500, 1000, 1500, 2000, 3000, 5000]
+        
+        #Atribui parâmetros especificos
+
+        if parametro == 'CO2':
+            if(value_lido < vetorBPhiCO2[0]):
+                indice = 0
+            elif (value_lido < vetorBPhiCO2[1]):
+                indice = 1
+            elif (value_lido < vetorBPhiCO2[2]):
+                indice = 2
+            elif (value_lido < vetorBPhiCO2[3]):
+                indice = 3
+            elif (value_lido < vetorBPhiCO2[4]):
+                indice = 4
+            elif (value_lido < vetorBPhiCO2[5]):
+                indice = 5
+            elif (value_lido < vetorBPhiCO2[6]):
+                indice = 6
+
+        # atribui os valores respectivos
+        BPlo = vetorBPloCO2[indice]
+        BPhi = vetorBPhiCO2[indice]
+
+        #Atribui parâmetros gerais
+        condicao = vetorCondicao[indice]
+        Ihi = vetorIhi[indice]
+        Ilo = vetorIlo[indice]
+        Cp = value_lido
+        
+        #Faz o cálculo
+        Ip = (((Ihi-Ilo)/(BPhi-BPlo))*(Cp-BPlo))+ Ilo
+        
+        return Ip;
+        
+        
+
+
 
 # Faz a classificacao de pacotes vindos do AirPure
 def classificatePackage(conn, addr):
@@ -33,6 +83,7 @@ def classificatePackage(conn, addr):
             operacao = comando[0]
             # Se foi uma operacao de INSERT
             if operacao == 'INSERT':
+                print(comando);
                 # Definicao do algoritimo a ser utilizado
                 neigh = KNeighborsClassifier(n_neighbors=3)
                 # Abre o arquivo contendo todos os dados recebidos
@@ -72,6 +123,9 @@ def classificatePackage(conn, addr):
 
                 print("\n[SERVIDOR ", addr, "] Classificao dos dados executada com sucesso.")
 
+                valor = float(comando[5])
+                iaqCO2 = estatisticaIp("CO2",valor)
+
                 try:
                     connection = psycopg2.connect(user="postgres",
                                                   password="10052019",
@@ -80,8 +134,8 @@ def classificatePackage(conn, addr):
                                                   database="airpure")
                     cursor = connection.cursor()
 
-                    postgres_insert_query = """ INSERT INTO amostragens (temperatura,umidade,eco2,tvoc,co2,db,lux,id_dispositivos,iaq,data) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
-                    record_to_insert = (comando[1],comando[2],comando[3],comando[4],comando[5],comando[6],comando[7],comando[8],str(prediction[0]),datetime.datetime.now())
+                    postgres_insert_query = """ INSERT INTO amostragens (temperatura,umidade,eco2,tvoc,co2,db,lux,id_dispositivos,iaq,data,iaq_co2) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+                    record_to_insert = (comando[1],comando[2],comando[3],comando[4],comando[5],comando[6],comando[7],comando[8],str(prediction[0]),datetime.datetime.now(),str(iaqCO2))
                     cursor.execute(postgres_insert_query, record_to_insert)
 
                     connection.commit()
