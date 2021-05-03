@@ -51,11 +51,12 @@
                 border-radius: 50%;
                 display: inline-block;
             }
-
+          
             html {
                 background-color: #1e282c!Important;
             }
-
+         
+            
             .skin-blue .sidebar-menu>li.header{
                 background-color: #1e282c!Important;
             }
@@ -65,6 +66,7 @@
                 font-weight: bold !important;
                 color: black !important;
             }
+            
             .skin-blue .wrapper, .skin-blue .main-sidebar, .skin-blue .left-side{
                 background-color: #1e282c;
             }
@@ -87,7 +89,7 @@
             .lateralMenu a:hover {
                 background-color: #253237;
             }
-
+            
             .lateralMenu li:hover .subMenu {
                 display: block;
                 max-height: 200px;
@@ -96,10 +98,10 @@
             .subMenu a:hover{
                 background-color: #2e3e45;
             }
+            
             .subMenu {
                 overflow: hidden;
                 max-height: 0;
-                background-color: #253237;
                 -webkit-transition: all 0.5s ease-out;
             }
         </style>
@@ -125,7 +127,7 @@
                 </a>
 
                 <h:form>
-                    <div class="pull-right" style=" padding: 5px">
+                    <div class="pull-right" style="padding: 5px">
                         <p:commandButton styleClass="btn btn-danger btn-block" value="Sair" action="#{autenticacao.logOut()}" update="@form"/>
                     </div>
                 </h:form>
@@ -144,11 +146,10 @@
                 <!-- Sidebar Menu -->
                 <ul class="lateralMenu" id="lateralMenu">
                     <li><a href="#">Home</a></li>
-                    <li><a href="/airpure/sistema/saso/consulta">Consulta</a></li>
                     <li><a href="/airpure/sistema/saso/notificacoes">Notificações</a></li>
                     <li><a href="">Dispositivo</a>
                         <ul class="subMenu">
-                            <li><a href="/airpure/sistema/saso/dispositivo/dados">Dados</a></li>
+                            <li><a href="/airpure/sistema/saso/consulta">Consulta aos Dados</a></li>
                             <li><a href="/airpure/sistema/saso/dispositivo/localizacao">Localização</a></li>
                         </ul>
                     </li>
@@ -158,7 +159,7 @@
         </aside>
 
         <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper" style="overflow: scroll; background-size: 100%; background: url('resources/images/wp4094533.jpg') repeat !important;">
+        <div class="content-wrapper" style="overflow: scroll; background-size: 100%; background: linear-gradient(#293644,#51728c)!important">
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <div align= "left">

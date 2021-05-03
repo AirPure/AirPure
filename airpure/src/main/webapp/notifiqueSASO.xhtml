@@ -23,15 +23,25 @@
         <SCRIPT type="text/javascript">
             var myVar = setInterval(redirect, 60000);
             var myVar2 = setInterval(redirect2, 360000);
+            
             function redirect() {
                 $("#fieldset_colors").load(" #fieldset_colors > *");
                 $("#lastRegister").load(" #lastRegister > *");
             }
+            
             function redirect2() {
                 window.location.reload(1);
             }
             
-            
+            function someMenu() {
+                var status = document.getElementById("lateralMenu").style.display;
+             
+                if (status == "none"){
+                    document.getElementById("lateralMenu").style.display = "block";
+                } else {
+                    document.getElementById("lateralMenu").style.display = "none";
+                }
+            }
 
         </SCRIPT>
         
@@ -115,12 +125,12 @@
 
             <!-- Header Navbar -->
             <nav class="navbar navbar-static-top" role="navigation">
-                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button" onclick = "someMenu()">
                     <span class="sr-only">Toggle navigation</span>
                 </a>
 
                 <h:form>
-                    <div class="pull-right">
+                    <div class="pull-right" style= "padding: 5px">
                         <p:commandButton styleClass="btn btn-danger btn-block" value="Sair" action="#{autenticacao.logOut()}" update="@form"/>
                     </div>
                 </h:form>
@@ -137,15 +147,14 @@
                 <!-- /.search form -->
 
                 <!-- Sidebar Menu -->
-                 <ul class="lateralMenu">
+                 <ul class="lateralMenu" id="lateralMenu">
                     <li><a href="/airpure/sistema/saso">Home</a></li>
-                    <li><a href="/airpure/sistema/saso/consulta">Consulta</a></li>
                     <li><a href="#">Notificações</a></li>
                     <li><a href="">Dispositivo</a>
-                      <ul class="subMenu">
-                        <li><a href="/airpure/sistema/saso/dispositivo/dados">Dados</a></li>
-                        <li><a href="/airpure/sistema/saso/dispositivo/localizacao">Localização</a></li>
-                      </ul>
+                        <ul class="subMenu">
+                            <li><a href="/airpure/sistema/saso/consulta">Consulta aos Dados</a></li>
+                            <li><a href="/airpure/sistema/saso/dispositivo/localizacao">Localização</a></li>
+                        </ul>
                     </li>
                 </ul>
             </section>
@@ -153,7 +162,7 @@
         </aside>
 
         <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper" style="overflow: scroll; background-size: 100%; background: url('/airpure/sistema/resources/images/wp4094533.jpg') repeat !important;">
+        <div class="content-wrapper" style="overflow: scroll; background-size: 100%; background: linear-gradient(#293644,#51728c)!important">
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <h1 style="color: white;">
@@ -176,7 +185,7 @@
 
 
                 <h:panelGroup>
-                    <p:fieldset legend="Parte ainda não implementada" style="width:100%; border-width: 3px; color: black; text-align: center;">
+                    <p:fieldset legend="Cadastro para Notificações" style="width:100%; border-width: 3px; color: black; text-align: center;">
                         <section class="content-header" id="lastRegister">
                             <h1>I will working on it. In case of doubts, please check Trello for you see when.</h1>
                         </section>

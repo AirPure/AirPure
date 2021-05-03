@@ -18,11 +18,6 @@
         <view-id value="/sistema/consultaSASO.xhtml" />
     </url-mapping>
     
-    <url-mapping id="saso/dispositivo/dados">
-        <pattern value="/sistema/saso/dispositivo/dados" />
-        <view-id value="/sistema/dadosSASO.xhtml" />
-    </url-mapping>
-    
     <url-mapping id="saso/dispositivo/localizacao">
         <pattern value="/sistema/saso/dispositivo/localizacao" />
         <view-id value="/sistema/localSASO.xhtml" />
