@@ -758,7 +758,7 @@ public class RequestData3 {
         registro7 = new ArrayList<manutencao>();
         Main.db = null;
         BD.ConectarBD();
-        String sql = "SELECT * FROM manutencao WHERE id_hvac IN ( select id_hvac from ambientes WHERE id = " + idAmbiente + ") ORDER BY id DESC;";
+        String sql = "SELECT *, (select modelo FROM hvac where id = id_hvac) FROM manutencao WHERE id_hvac IN ( select id_hvac from ambientes WHERE id = " + idAmbiente + ") ORDER BY id DESC;";
 
         try {
             Main.sql = Main.db.createStatement();
@@ -777,6 +777,7 @@ public class RequestData3 {
                 process.setData_execucao(rs.getString("data_execucao"));
                 process.setExecutor(rs.getString("executor"));
                 process.setServicos(rs.getString("servicos"));
+                process.setProxima_execucao(rs.getString("modelo"));
                 registro7.add(process);
             }
 
