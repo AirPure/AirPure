@@ -134,7 +134,7 @@ public class autenticacao implements HttpSessionListener {
         String array[] = new String[3];
         array = airpure.getAmbiente1().split(",");
         String sql = "INSERT INTO dispositivos (nome,id_projeto,id_ambientes) VALUES ('" + airpure.getNome() + "'," + airpure.getId_projeto() + "," + array[0] + ");";
- System.out.println(sql);
+        System.out.println(sql);
         try {
             Main.sql = Main.db.createStatement();
         } catch (SQLException e) {
@@ -260,9 +260,15 @@ public class autenticacao implements HttpSessionListener {
         }
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
-        if (session.getAttribute("login").equals("usuario")) {
+        if (session.getAttribute("login").equals("usuario") && usuario2.getProjeto().getId() == 1) {
             try {
                 FacesContext.getCurrentInstance().getExternalContext().redirect("/airpure/sistema/saso");
+            } catch (IOException ex) {
+                Logger.getLogger(autenticacao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if (session.getAttribute("login").equals("usuario") && usuario2.getProjeto().getId() == 3) {
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/airpure/sistema/simpec");
             } catch (IOException ex) {
                 Logger.getLogger(autenticacao.class.getName()).log(Level.SEVERE, null, ex);
             }
