@@ -24,7 +24,7 @@ def estatisticaIp(parametro,value_lido):
         
         #Atribui parâmetros especificos
 
-        if parametro == "CO2":
+        if parametro == 'CO2':
             if(value_lido < vetorBPhiCO2[0]):
                 indice = 0
             elif (value_lido < vetorBPhiCO2[1]):
@@ -83,6 +83,7 @@ def classificatePackage(conn, addr):
             operacao = comando[0]
             # Se foi uma operacao de INSERT
             if operacao == 'INSERT':
+                print(comando);
                 # Definicao do algoritimo a ser utilizado
                 neigh = KNeighborsClassifier(n_neighbors=3)
                 # Abre o arquivo contendo todos os dados recebidos
@@ -122,7 +123,8 @@ def classificatePackage(conn, addr):
 
                 print("\n[SERVIDOR ", addr, "] Classificao dos dados executada com sucesso.")
 
-                iaqCO2 = estatisticaIp("CO2",int(comando[1]))
+                valor = float(comando[5])
+                iaqCO2 = estatisticaIp("CO2",valor)
 
                 try:
                     connection = psycopg2.connect(user="postgres",
