@@ -32,7 +32,6 @@ public class autenticacao implements HttpSessionListener {
         this.work = work;
     }
 
-    
     public dispositivos getAirpure() {
         return airpure;
     }
@@ -132,8 +131,10 @@ public class autenticacao implements HttpSessionListener {
     public void insertAirpure() throws IOException {
         Main.db = null;
         BD.ConectarBD();
-        String sql = "INSERT INTO dispositivos (nome,id_projeto,id_ambientes) VALUES ('" + airpure.getNome() + "'," + airpure.getId_projeto() + "," + airpure.getId_ambiente() + ");";
-
+        String array[] = new String[3];
+        array = airpure.getAmbiente1().split(",");
+        String sql = "INSERT INTO dispositivos (nome,id_projeto,id_ambientes) VALUES ('" + airpure.getNome() + "'," + airpure.getId_projeto() + "," + array[0] + ");";
+ System.out.println(sql);
         try {
             Main.sql = Main.db.createStatement();
         } catch (SQLException e) {
@@ -164,8 +165,10 @@ public class autenticacao implements HttpSessionListener {
     public void insertManutencao() throws IOException {
         Main.db = null;
         BD.ConectarBD();
-        String sql = "INSERT INTO manutencao (data_execucao,proxima_execucao,servicos,executor) VALUES ('" + work.getData_execucao()+ "','" + work.getProxima_execucao() + "','" + work.getServicos()+ "','" + work.getExecutor()+ "');";
-
+        String array[] = new String[3];
+        array = work.getId_hvac().split(",");
+        String sql = "INSERT INTO manutencao (data_execucao,proxima_execucao,servicos,executor,id_hvac) VALUES ('" + work.getData_execucao() + "','" + work.getProxima_execucao() + "','" + work.getServicos() + "','" + work.getExecutor() + "'," + array[0] + ");";
+        System.out.println(sql);
         try {
             Main.sql = Main.db.createStatement();
         } catch (SQLException e) {
@@ -187,9 +190,6 @@ public class autenticacao implements HttpSessionListener {
             Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
 
         }
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
-        FacesContext.getCurrentInstance().getExternalContext().redirect("/airpure/sistema/home");
 
     }
 
@@ -307,6 +307,7 @@ public class autenticacao implements HttpSessionListener {
         }
         return dispositivoAirpure;
     }
+
     public ArrayList<String> returnHVAC() {
 
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -330,7 +331,7 @@ public class autenticacao implements HttpSessionListener {
             rs = Main.sql.executeQuery(sql);
             System.out.println(sql);
             while (rs.next()) {
-                dispositivoHVAC.add(rs.getString("modelo"));
+                dispositivoHVAC.add(rs.getString("id") + "," + rs.getString("modelo"));
             }
 
         } catch (SQLException e) {
@@ -344,6 +345,45 @@ public class autenticacao implements HttpSessionListener {
 
         }
         return dispositivoHVAC;
+    }
+
+    public ArrayList<String> returnAmbientes() {
+
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+        int idProjetoRelacionado = (int) session.getAttribute("projetoEnvolvido");
+        ArrayList<String> ambientes = new ArrayList<String>();
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "SELECT * FROM ambientes WHERE id IN(SELECT id_ambientes FROM dispositivos WHERE id_projeto IN (select id FROM projeto WHERE id = " + idProjetoRelacionado + "))  ORDER BY id DESC;";
+
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+        ResultSet rs = null;
+        try {
+
+            rs = Main.sql.executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                ambientes.add(rs.getString("id") + "," + rs.getString("sala") + " - " + rs.getString("predio") + " - " + rs.getString("local"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+        return ambientes;
     }
 
     public void printText() throws IOException {

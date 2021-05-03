@@ -218,6 +218,7 @@
                                                 <h:outputText value="Aparelho: #{process1.equipamentos}" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
                                                 <h:outputText value="Capacidade Máxima: #{process1.capacidadeMaxima}" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
                                                 <h:outputText value="Dimensão do ambiente: #{process1.dimensao} m²" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
+                                                <h:outputText value="IAQ Atual: #{process2.iaqco2}" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
                                                 <h:form>
                                                     <p:commandButton action="#{requestdata3.putItOnSessionRoom(process1.id)}" onclick="PF('dlg1').show();" value="Relatório"/>
                                                 </h:form>

@@ -94,27 +94,39 @@
                                 <h:outputText value="Equipamento Instalado:" />
                                 <h:outputText value="#{groups.equipamentos}" style="font-weight: bold"/>
 
-                                <h:outputText value="Nº de Controle do Equipamento:" />
+                                <h:outputText value="Nº de Controle do HVAC:" />
                                 <h:outputText value="#{groups.n_Controle}" style="font-weight: bold"/>
 
-                                <h:outputText value="Nº de Patrimônio do Equipamento:" />
+                                <h:outputText value="Nº de Patrimônio do HVAC" />
                                 <h:outputText value="#{groups.n_Patrimonio}" style="font-weight: bold"/>
 
                             </h:panelGrid>
                         </p:outputPanel>
                     </h:panelGrid>
                 </p:dataScroller>
-
-                <p:dataTable value="#{requestdata3.returnDatatoTable()}" var="item" paginator="true" rows="15" >
+                <p:outputPanel style="background: #EEEEEE; width:930px; height: 35px;"><h3>II - MANUTENÇÕES DO HVAC</h3></p:outputPanel>
+                <p:dataTable value="#{requestdata3.retornaManutencoes()}" var="item" paginator="false" rows="15" >
                     <p:column>
                         <f:facet name="header">
-                            <h:outputText value="Opções"/>
+                            <h:outputText value="Data Execução"/>
                         </f:facet>
-                        <p:commandButton action="#{requestdata.putItOnSession(item.idReg)}" onclick="PF('dlg1').show();" value="Visualizar" update="@form" style="font-size:10px;"/>
+                        <h:outputText value="#{item.data_execucao}" style="font-weight: bold"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Executor"/>
+                        </f:facet>
+                        <h:outputText value="#{item.executor}" style="font-weight: bold"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Serviços"/>
+                        </f:facet>
+                        <h:outputText value="#{item.servicos}" style="font-weight: bold"/>
                     </p:column>
                 </p:dataTable>
 
-                <p:outputPanel style="background: #EEEEEE; width:930px; height: 35px;"><h3>II - INFORMAÇÕES DO AMBIENTE - #{requestdata3.time()}</h3></p:outputPanel>
+                <p:outputPanel style="background: #EEEEEE; width:930px; height: 35px;"><h3>III - INFORMAÇÕES DO AMBIENTE - #{requestdata3.time()}</h3></p:outputPanel>
 
                 <p:dataScroller value="#{requestdata3.returnStatistics()}" var="groups" rendered="true">
                     <h:panelGrid columns="2" style="width:100%">
@@ -217,7 +229,7 @@
                     </h:panelGrid>
                 </p:dataScroller>
 
-                <p:outputPanel style="background: #EEEEEE; width:930px; height: 35px;"><h3>III - VARIAÇÕES GRÁFICAS - #{requestdata3.time()}</h3></p:outputPanel>
+                <p:outputPanel style="background: #EEEEEE; width:930px; height: 35px;"><h3>IV - VARIAÇÕES GRÁFICAS - #{requestdata3.time()}</h3></p:outputPanel>
 
                 <p:outputPanel style="width:100%;">
                     <hf:chart type="line" value="#{chartView3.registro1}" var="point"

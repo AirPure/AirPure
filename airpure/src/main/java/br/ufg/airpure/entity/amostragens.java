@@ -11,6 +11,7 @@ public class amostragens implements Serializable {
     private Float tvoc; //Valor lido de TVOC
     private Float eco2; //Valor lido de ECO2
     private Float co2; //Valor lido de CO2
+    private Float iaqco2; //Valor lido de CO2
     private Float lux; //Valor lido de LUX
     private Float db; //Valor lido de RUIDO
     private Float umidade; //Valor lido de UMIDADE
@@ -19,6 +20,15 @@ public class amostragens implements Serializable {
     private int V_FIRMWARE; //Valor referente a versao do firmware
     private dispositivos airpure; //Airpure relacionado
 
+    public Float getIaqco2() {
+        return iaqco2;
+    }
+
+    public void setIaqco2(Float iaqco2) {
+        this.iaqco2 = iaqco2;
+    }
+
+    
     public dispositivos getAirpure() {
         return airpure;
     }
