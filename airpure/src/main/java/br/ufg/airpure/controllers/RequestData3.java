@@ -454,6 +454,66 @@ public class RequestData3 {
 
     }
 
+    public String returnAvgIAQCO2() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+        int idAmbiente = (int) session.getAttribute("relatorio");
+        String startpoint = (String) session.getAttribute("startPoint");
+        String endpoint = (String) session.getAttribute("endPoint");
+
+        float media = 0;
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "select avg(iaq_co2) as co2 from amostragens where id_dispositivos IN ( select id from dispositivos where id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "';";
+
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+        ResultSet rs = null;
+        try {
+
+            rs = Main.sql.executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                media = rs.getFloat("co2");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+        String response = "";
+        if (media < 50) {
+            response = "Média IAQ Ambiente: " + media + " | AMBIENTE COM BOA QUALIDADE DO AR INTERNO";
+        } else if (media < 100) {
+            response = "Média IAQ Ambiente: " + media + " | AMBIENTE COM QUALIDADE DO AR INTERNO REGULAR";
+
+        } else if (media < 200) {
+            response = "Média IAQ Ambiente: " + media + " | AMBIENTE COM QUALIDADE DO AR INTERNO INADEQUADA";
+        } else if (media < 300) {
+            response = "Média IAQ Ambiente: " + media + " | AMBIENTE COM MÁ QUALIDADE DO AR INTERNO";
+
+        } else if (media < 400) {
+            response = "Média IAQ Ambiente: " + media + " | AMBIENTE COM QUALIDADE DO AR INTERNO PÉSSIMA";
+
+        } else {
+            response = "Média IAQ Ambiente: " + media + " | AMBIENTE COM QUALIDADE DO AR INTERNO CRÍTICA";
+        }
+
+        return response;
+
+    }
+
     // <===========Método que retorna todas as salas.=========================================================================================================================>
     public ArrayList<ambientes> returnAmbientes() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -687,6 +747,8 @@ public class RequestData3 {
                 process.setId(rs.getInt("id"));
                 process.setLocal(rs.getString("local"));
                 process.setPredio(rs.getString("predio"));
+                process.setCapacidadeMaxima(rs.getString("capmaxima"));
+                process.setDimensao(rs.getString("dimensao"));
                 process.setSala(rs.getString("sala"));
                 process.setN_Controle(rs.getString("n_controle"));
                 process.setN_Patrimonio(rs.getString("n_patrimonio"));
@@ -750,6 +812,7 @@ public class RequestData3 {
 
         return registro5;
     }
+
     // <===========Método que retorna todas as manutencoes.=========================================================================================================================>
     public ArrayList<manutencao> retornaManutencoes() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -777,7 +840,50 @@ public class RequestData3 {
                 process.setData_execucao(rs.getString("data_execucao"));
                 process.setExecutor(rs.getString("executor"));
                 process.setServicos(rs.getString("servicos"));
+                process.setTipo(rs.getString("tipo"));
                 process.setProxima_execucao(rs.getString("modelo"));
+                registro7.add(process);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+        return registro7;
+    }
+    
+    public ArrayList<manutencao> retornaProximasManutencoes() {
+
+        registro7 = new ArrayList<manutencao>();
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "select * from manutencao INNER JOIN hvac ON hvac.id = manutencao.id_hvac INNER JOIN ambientes ON ambientes.id_hvac = hvac.id WHERE proxima_execucao > CURRENT_DATE;";
+
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+        ResultSet rs = null;
+        try {
+
+            rs = Main.sql.executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                manutencao process = new manutencao();
+                process.setProxima_execucao(rs.getString("proxima_execucao"));
+                process.setExecutor(rs.getString("executor"));
+                process.setData_execucao(rs.getString("modelo"));
+                process.setSala(rs.getString("sala") + " | " + rs.getString("predio") + " | " + rs.getString("local"));
                 registro7.add(process);
             }
 

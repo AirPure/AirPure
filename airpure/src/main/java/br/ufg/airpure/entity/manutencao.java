@@ -10,7 +10,29 @@ public class manutencao implements Serializable {
     private String servicos; //Nome do local
     private String id_hvac; //Nome dos equipamentos instalados
     private String executor; //Nome dos equipamentos instalados
+    private String tipo; //Nome dos equipamentos instalados
+    private String Sala; //Nome dos equipamentos instalados
 
+    public String getSala() {
+        return Sala;
+    }
+
+    public void setSala(String Sala) {
+        this.Sala = Sala;
+    }
+
+    
+    
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    
+    
     public Integer getId() {
         return id;
     }

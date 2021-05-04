@@ -167,7 +167,7 @@ public class autenticacao implements HttpSessionListener {
         BD.ConectarBD();
         String array[] = new String[3];
         array = work.getId_hvac().split(",");
-        String sql = "INSERT INTO manutencao (data_execucao,proxima_execucao,servicos,executor,id_hvac) VALUES ('" + work.getData_execucao() + "','" + work.getProxima_execucao() + "','" + work.getServicos() + "','" + work.getExecutor() + "'," + array[0] + ");";
+        String sql = "INSERT INTO manutencao (data_execucao,proxima_execucao,servicos,executor,id_hvac,tipo) VALUES ('" + work.getData_execucao() + "','" + work.getProxima_execucao() + "','" + work.getServicos() + "','" + work.getExecutor() + "'," + array[0] + ",'" + work.getTipo() + "');";
         System.out.println(sql);
         try {
             Main.sql = Main.db.createStatement();

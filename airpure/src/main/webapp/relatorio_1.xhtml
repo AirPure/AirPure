@@ -100,6 +100,12 @@
                                 <h:outputText value="Nº de Patrimônio do HVAC:" />
                                 <h:outputText value="#{groups.n_Patrimonio}" style="font-weight: bold"/>
 
+                                <h:outputText value="Capacidade máxima:" />
+                                <h:outputText value="#{groups.capacidadeMaxima} ocupantes" style="font-weight: bold"/>
+
+                                <h:outputText value="Dimensão do ambiente:" />
+                                <h:outputText value="#{groups.dimensao} m²" style="font-weight: bold"/>
+
                             </h:panelGrid>
                         </p:outputPanel>
                     </h:panelGrid>
@@ -117,6 +123,12 @@
                             <h:outputText value="Executor"/>
                         </f:facet>
                         <h:outputText value="#{item.executor}" style="font-weight: bold"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Tipo"/>
+                        </f:facet>
+                        <h:outputText value="#{item.tipo}" style="font-weight: bold"/>
                     </p:column>
                     <p:column>
                         <f:facet name="header">
@@ -289,26 +301,11 @@
                 </p:outputPanel>
 
 
-                <p:dataScroller value="#{getuserdata.initDadosMaleta()}" var="userdata" rendered="true">
-
-                    <h:panelGrid columns="2" style="width:100%">
-                        <p:outputPanel>
-                            <h:panelGrid columns="2" cellpadding="5"> 
-
-                                <h:outputText value="Qualidade do Ar: " />
-                                <h:outputText value="Ótima" style="font-weight: bold"/>
-
-
-                            </h:panelGrid>
-                        </p:outputPanel>
-                    </h:panelGrid>
-
-                </p:dataScroller> 
                 <h:panelGrid columns="2">
                     <p:outputPanel>
                         <h:panelGrid columns="2" cellpadding="5"> 
                             <h:outputText value="Resultado: " />
-                            <h:outputText value="AMBIENTE ADEQUADO PARA CONVÍVIO" style="font-weight: bold; font-size: 21px;"/>
+                            <h:outputText value="#{requestdata3.returnAvgIAQCO2()}" style="font-weight: bold; font-size: 21px;"/>
 
                         </h:panelGrid>
                     </p:outputPanel>

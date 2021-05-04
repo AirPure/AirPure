@@ -35,7 +35,17 @@
     
     <url-mapping id="simpec">
         <pattern value="/sistema/simpec" />
+        <view-id value="/sistema/salas.xhtml" />
+    </url-mapping>
+    
+    <url-mapping id="dispositivos">
+        <pattern value="/sistema/dispositivos" />
         <view-id value="/sistema/home_3.xhtml" />
+    </url-mapping>
+    
+    <url-mapping id="proximasManutencoes">
+        <pattern value="/sistema/proximasManutencoes" />
+        <view-id value="/sistema/proximasManutencoes.xhtml" />
     </url-mapping>
     
     <url-mapping id="home">
