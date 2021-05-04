@@ -75,7 +75,7 @@ public class RequestData1 {
     //Funções que criei e rezaremos para funcionar
     public void dispositivoSelecionado(){
         //Retornar dispositivo selecionado através do filtro
-        return(this.dispotivoSelectOption);  
+        //return(this.dispotivoSelectOption);  
     }
 
     public void idAmbienteDispositivoSelecionado(){
@@ -111,10 +111,10 @@ public class RequestData1 {
 
         }
 
-        idAmbienteDSelecionado = Integer.parseInt(id);
+       // idAmbienteDSelecionado = Integer.parseInt(id);
     }
 
-    public String retornaAmbiente(){
+    public void retornaAmbiente(){
         //Retorna o local do dispositivo selecionado
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
@@ -138,7 +138,7 @@ public class RequestData1 {
             System.out.println(sql);
             local = rs.getString("local");            
             sala = rs.getString("sala");
-            ppredio = rs.getString("predio");
+         //   ppredio = rs.getString("predio");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -149,9 +149,9 @@ public class RequestData1 {
 
         }
 
-        salaD = String.valueOf(sala);
-        localD = String.valueOf(local); 
-        predioD = String.valueOf(predio);
+      //  salaD = String.valueOf(sala);
+      //  localD = String.valueOf(local); 
+      //  predioD = String.valueOf(predio);
     }
     
     public String retornaSala(){
@@ -159,9 +159,9 @@ public class RequestData1 {
         return(salaD);    
     }
 
-    public String retornaPredio(){
+    public void retornaPredio(){
         //Retorna o prédio do dispositivo selecionado
-        return(pedioD);
+       // return(pedioD);
     }
 
     public String retornaLocal(){

@@ -314,6 +314,47 @@ public class autenticacao implements HttpSessionListener {
         return dispositivoAirpure;
     }
 
+    public String returnLocalizacao() {
+
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+        String idProjetoRelacionado = (String) session.getAttribute("filtroAirPure");
+        String dispositivoLocalizacao = "", local = "", predio = "", sala = "";
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "SELECT * FROM ambientes WHERE id IN ( select id_ambientes from dispositivos where nome ILIKE '" + idProjetoRelacionado + "') ORDER BY id DESC;";
+
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+        ResultSet rs = null;
+        try {
+
+            rs = Main.sql.executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                predio = rs.getString("predio");
+                sala = rs.getString("sala");
+                local = rs.getString("local");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+        return "O dispositivo " + idProjetoRelacionado + " encontra-se no(a) prédio " + predio + ", sala " + sala + ", local " + local;
+    }
+
     public ArrayList<String> returnHVAC() {
 
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -398,6 +439,14 @@ public class autenticacao implements HttpSessionListener {
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
         session.setAttribute("filtroAirPure", usuario.getNome());
         FacesContext.getCurrentInstance().getExternalContext().redirect("saso");
+
+    }
+    
+    public void salvaFiltro() throws IOException {
+        System.out.println("Valor do select: " + usuario.getNome());
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+        session.setAttribute("filtroAirPure", usuario.getNome());
 
     }
 
