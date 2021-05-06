@@ -33,6 +33,14 @@ public class ChartView1 {
         return registro2;
     }
 
+    public List<chartRecord> printTextgetRegistro3() {
+        return registro3;
+    }
+    
+    public void setRegistro3(List<chartRecord> registro3) {
+        this.registro3 = registro3;
+    }
+
     public List<chartRecord> getRegistro3() {
         return registro3;
     }

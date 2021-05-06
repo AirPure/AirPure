@@ -16,7 +16,12 @@
 
             <title>AirPure</title>
         </f:facet>
+        <SCRIPT type="text/javascript">
 
+            function redireciona() {
+                window.location.href = "/airpure/sistema/autenticacao";
+            }
+        </SCRIPT>
         <f:facet name="middle">
             <h:outputStylesheet name="bootstrap/css/bootstrap.css" />
 
@@ -68,7 +73,7 @@
                                              value="Visualização Geral" update="@form"/>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <p:spacer height="10" />
                         <div class="col-xs-12">
@@ -78,6 +83,7 @@
                     </div>
 
 
+
                     <div class="row">
                         <p:spacer height="10" />
                         <div class="col-xs-12">
@@ -85,6 +91,14 @@
                                              value="SIMPEC" update="@form"/>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <p:spacer height="10" />
+                        <div class="col-xs-12">
+                            <p:commandButton styleClass="btn btn-success btn-block" onclick="redireciona();" value="Fazer login" update="@form"/>
+                        </div>
+                    </div>
+
                 </h:form>
 
                 <div style="text-align: center;">

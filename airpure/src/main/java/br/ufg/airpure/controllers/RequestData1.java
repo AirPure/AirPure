@@ -31,9 +31,8 @@ public class RequestData1 {
     String inicio;
     String fim;
     static String idOfAirpures;
-    private String dispositivo, salaD, localD, predioD;
+    private String dispositivo;
     private String dispositivoSelectOption;
-    private Integer idAmbienteDSelecionado;
     ArrayList<String> dispositivoAirpure;
 
     public ArrayList<amostragens> getRegistro1() {
@@ -71,104 +70,7 @@ public class RequestData1 {
     public void printText(){
      System.out.println("Valor do select: " + this.dispositivoSelectOption);
     }
-
-    //Funções que criei e rezaremos para funcionar
-    public void dispositivoSelecionado(){
-        //Retornar dispositivo selecionado através do filtro
-        //return(this.dispotivoSelectOption);  
-    }
-
-    public void idAmbienteDispositivoSelecionado(){
-        //Retorna o id do dispositivo selecionado
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
-        int idProjetoRelacionado = (int) session.getAttribute("projetoEnvolvido");
-        String id;
-        Main.db = null;
-        BD.ConectarBD();
-        String sql = "SELECT id_ambiente FROM dispositivos WHERE nome LIKE = " + dispositivoSelectOption + ";";
-        
-        try {
-            Main.sql = Main.db.createStatement();
-        } catch (SQLException e) {
-            e.printStackTrace();
-
-        }
-
-        ResultSet rs = null;
-        try {
-
-            rs = Main.sql.executeQuery(sql);
-            System.out.println(sql);
-            id = rs.getString("id");            
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
-            Main.db.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
-
-        }
-
-       // idAmbienteDSelecionado = Integer.parseInt(id);
-    }
-
-    public void retornaAmbiente(){
-        //Retorna o local do dispositivo selecionado
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
-        int idProjetoRelacionado = (int) session.getAttribute("projetoEnvolvido");
-        String local, sala, predio;
-        Main.db = null;
-        BD.ConectarBD();
-        String sql = "SELECT * FROM ambiente WHERE id = " + idAmbienteDSelecionado + ";";
-
-        try {
-            Main.sql = Main.db.createStatement();
-        } catch (SQLException e) {
-            e.printStackTrace();
-
-        }
-
-        ResultSet rs = null;
-        try {
-
-            rs = Main.sql.executeQuery(sql);
-            System.out.println(sql);
-            local = rs.getString("local");            
-            sala = rs.getString("sala");
-         //   ppredio = rs.getString("predio");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
-            Main.db.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
-
-        }
-
-      //  salaD = String.valueOf(sala);
-      //  localD = String.valueOf(local); 
-      //  predioD = String.valueOf(predio);
-    }
-    
-    public String retornaSala(){
-        //Retorna a sala do dispositivo selecionado
-        return(salaD);    
-    }
-
-    public void retornaPredio(){
-        //Retorna o prédio do dispositivo selecionado
-       // return(pedioD);
-    }
-
-    public String retornaLocal(){
-        //Retorna a sala do dispositivo selecionado
-        return(localD);    
-    }
-
+   
     public ArrayList<String> returnDispositivos() {
 
         FacesContext facesContext = FacesContext.getCurrentInstance();

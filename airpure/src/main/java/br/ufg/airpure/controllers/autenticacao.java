@@ -352,7 +352,7 @@ public class autenticacao implements HttpSessionListener {
             Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
 
         }
-        return "O dispositivo " + idProjetoRelacionado + " encontra-se no(a) prédio " + predio + ", sala " + sala + ", local " + local;
+        return "O dispositivo " + idProjetoRelacionado + " encontra-se no(a) prédio " + predio + ", sala " + sala + ", local " + local + ".";
     }
 
     public ArrayList<String> returnHVAC() {

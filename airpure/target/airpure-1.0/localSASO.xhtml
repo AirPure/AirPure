@@ -198,13 +198,13 @@
                                             <p:selectOneMenu value="#{autenticacao.usuario.nome}" effect="fold" editable="false">
                                                 <f:selectItems value="#{autenticacao.returnDispositivos()}"/>
                                             </p:selectOneMenu>
-                                            <p:commandButton styleClass="btn btn-success btn-block" value="Filtrar" action="#{autenticacao.printText()}" update="@form"/>
+                                            <p:commandButton styleClass="btn btn-success btn-block" value="Filtrar" action="#{autenticacao.salvaFiltro()}" update="@all"/>
                                         </h:panelGrid>
                                     </h:form>
                                 </h:panelGrid>
                             </div>
-                            <div style= "padding-top: 30px; text-align: justify; font-size: 20px">
-                                <p>O dispositivo (preciso por o nome dele aqui) encontra-se no(a) (predio aqui), (sala aqui), (local aqui).</p>
+                            <div style= "padding-top: 30px; font-size: 20px; align-content: center">
+                                <p>#{autenticacao.returnLocalizacao()}</p>
                             </div>
                         </section>
                            

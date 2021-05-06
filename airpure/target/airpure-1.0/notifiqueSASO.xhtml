@@ -99,12 +99,72 @@
                 max-height: 0;
                 -webkit-transition: all 0.5s ease-out;
             }
+            
+            .divNoti{
+                display: flex;
+                justify-content: center;
+                min-height: 40vh;
+                background: #ffffff;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            
+            .botaoNotifique{
+                padding: 8px 20px;
+                border-radius: 0;
+                overflow: hidden;
+                color: black;
+            }
+            
+            .botaoNotifique:hover{
+                background: transparent;
+                box-shadow: 0 0 20px 10px hsla(204, 70%, 53%, 0.5);
+                color: black;
+            }
+
+            .botaoNotifique:hover::before{
+                transform: translateX(100%);
+            }
+
+            .form-group{
+                --input-default-border-color: white;
+                --input-border-bottom-color: white;
+            }
+            
+            .form-group input{
+                color: black;
+            }
+            
+            .notique{
+                display: flex;
+                flex-direction: column;
+                align-items: left;
+                padding: 50px 40px;
+                color: white;
+                background: #2a3b4c;
+                /*background: rgba(0, 0, 0, 0.8);*/
+                border-radius: 10px;
+                box-shadow: 0 0.4px 0.4px rgba(128, 128, 128, 0.109),
+                0 1px 1px rgba(128, 128, 128, 0.155),
+                0 2.1px 2.1px rgba(128, 128, 128, 0.195),
+                0 4.4px 4.4px rgba(128, 128, 128, 0.241),
+                0 12px 12px rgba(128, 128, 128, 0.35);
+            }
+            
+            .notique h1{
+                margin: 0 0 24px 0;
+                font-size: 20px;
+                text-align: center;
+            }
+            
+            .notique .form-group{
+                margin: 12px 0;
+            }
+
+            .notique .botaoNotifique{
+                width: 100%;
+                margin: 18px 0 9px 0;
+            }
         </style>
-
-
-
-
-
     </h:head>
 
     <h:body onload="#{autenticacao.verificacao()}" ></h:body>
@@ -185,9 +245,42 @@
 
 
                 <h:panelGroup>
-                    <p:fieldset legend="Cadastro para Notificações" style="width:100%; border-width: 3px; color: black; text-align: center;">
+                    <p:fieldset legend="Cadastro para Notificações" style="width:100%; border-width: 3px; color: black; text-align: center; min-height: 100vh">
                         <section class="content-header" id="lastRegister">
-                            <h1>I will working on it. In case of doubts, please check Trello for you see when.</h1>
+                            <p style = "text-align: center; font-size: 20px; margin-top: 0!Important">Digite seu e-mail e selecione os fatores aos qual deseja receber notificações para caso de estes estarem acima do limite.</p>
+                           
+                            <div class="divNoti">
+                                <form class = "notique">
+                                    <h1>Notificar-me</h1>
+                                    <div class="form-group">
+                                        <label for="username">E-mail</label>
+                                        <input type="text" name="email" id="email" placeholder="email@dominio.com" autocomplete="off" class="form-control-material"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="fatores" class="bmd-label-floating">Fatores Ambientais</label>
+                                        <p>
+                                            <input type="checkbox" name="umidade" id="umidade"> Umidade</input>
+                                            <input type="checkbox" name="temperatura" id="temperatura"> Temperatura</input>
+                                            <input type="checkbox" name="iaq" id="iaq"> IAQ</input>
+                                        </p>
+                                        <p>
+                                            <input type="checkbox" name="co2" id="co2"> CO2</input>
+                                            <input type="checkbox" name="tvoc" id="tvoc"> TVOC</input>
+                                            <input type="checkbox" name="eco2" id="eco2"> ECO2</input>
+                                        </p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="dispositivo" class="bmd-label-floating">Dispositivo</label>
+                                        <select class="form-control" id="dispositivo">
+                                            <!--Aqui tenho que chamar as funções para preencher de forma automática-->
+                                            <option>AirPure 1</option>
+                                            <option>AirPure 2</option>
+                                            <option>AirPure 3</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="botaoNotifique">Cadastrar</button>
+                                </form>
+                            </div>   
                         </section>
                            
                     </p:fieldset>
