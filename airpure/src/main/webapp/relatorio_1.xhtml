@@ -112,9 +112,9 @@
                 <p:dataTable value="#{requestdata3.retornaManutencoes()}" var="item" paginator="false" rows="15" >
                     <p:column>
                         <f:facet name="header">
-                            <h:outputText value="Data Execução"><f:convertDateTime pattern="dd/MM/yyyy"/></h:outputText>
+                            <h:outputText value="Data Execução"></h:outputText>
                         </f:facet>
-                        <h:outputText value="#{item.data_execucao}" style="font-weight: bold"/>
+                        <h:outputText value="#{item.data_execucao}" style="font-weight: bold"><f:convertDateTime pattern="dd/MM/yyyy"/></h:outputText>
                     </p:column>
                     <p:column>
                         <f:facet name="header">
