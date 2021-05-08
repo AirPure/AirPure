@@ -23,20 +23,20 @@
         <SCRIPT type="text/javascript">
             var myVar = setInterval(redirect, 60000);
             var myVar2 = setInterval(redirect2, 360000);
-            
+
             function redirect() {
                 $("#fieldset_colors").load(" #fieldset_colors > *");
                 $("#lastRegister").load(" #lastRegister > *");
             }
-            
+
             function redirect2() {
                 window.location.reload(1);
             }
-            
+
             function someMenu() {
                 var status = document.getElementById("lateralMenu").style.display;
-             
-                if (status == "none"){
+
+                if (status == "none") {
                     document.getElementById("lateralMenu").style.display = "block";
                 } else {
                     document.getElementById("lateralMenu").style.display = "none";
@@ -44,7 +44,7 @@
             }
 
         </SCRIPT>
-        
+
         <style>
             .dot {
                 height: 25px;
@@ -52,15 +52,15 @@
                 border-radius: 50%;
                 display: inline-block;
             }
-            
+
             html {
-               background-color: #1e282c!Important;
+                background-color: #1e282c!Important;
             }
-            
+
             .skin-blue .sidebar-menu>li.header{
                 background-color: #1e282c!Important;
             }
-            
+
             .ui-fieldset-legend{
                 font-size: 20px !important;
                 font-weight: bold !important;
@@ -69,7 +69,7 @@
             .skin-blue .wrapper, .skin-blue .main-sidebar, .skin-blue .left-side{
                 background-color: #1e282c;
             }
-            
+
             .lateralMenu, .subMenu{
                 list-style: none;
                 margin-left: 0px;
@@ -77,29 +77,29 @@
                 font-family: Arial, Helvetica, sans-serif;
                 font-size: 18px;
             }
-            
+
             .lateralMenu a {
                 display: block;
                 text-decoration: none;
                 padding: 10px;
                 color: white!Important;
             }
-            
+
             .lateralMenu a:hover {
                 background-color: #253237;
             }
-            
+
             .lateralMenu li:hover .subMenu {
                 display: block;
                 max-height: 200px;
             }
-            
+
             .subMenu {
                 overflow: hidden;
                 max-height: 0;
                 -webkit-transition: all 0.5s ease-out;
             }
-            
+
             .divNoti{
                 display: flex;
                 justify-content: center;
@@ -107,14 +107,14 @@
                 background: #ffffff;
                 font-family: Arial, Helvetica, sans-serif;
             }
-            
+
             .botaoNotifique{
                 padding: 8px 20px;
                 border-radius: 0;
                 overflow: hidden;
                 color: black;
             }
-            
+
             .botaoNotifique:hover{
                 background: transparent;
                 box-shadow: 0 0 20px 10px hsla(204, 70%, 53%, 0.5);
@@ -129,11 +129,11 @@
                 --input-default-border-color: white;
                 --input-border-bottom-color: white;
             }
-            
+
             .form-group input{
                 color: black;
             }
-            
+
             .notique{
                 display: flex;
                 flex-direction: column;
@@ -144,18 +144,18 @@
                 /*background: rgba(0, 0, 0, 0.8);*/
                 border-radius: 10px;
                 box-shadow: 0 0.4px 0.4px rgba(128, 128, 128, 0.109),
-                0 1px 1px rgba(128, 128, 128, 0.155),
-                0 2.1px 2.1px rgba(128, 128, 128, 0.195),
-                0 4.4px 4.4px rgba(128, 128, 128, 0.241),
-                0 12px 12px rgba(128, 128, 128, 0.35);
+                    0 1px 1px rgba(128, 128, 128, 0.155),
+                    0 2.1px 2.1px rgba(128, 128, 128, 0.195),
+                    0 4.4px 4.4px rgba(128, 128, 128, 0.241),
+                    0 12px 12px rgba(128, 128, 128, 0.35);
             }
-            
+
             .notique h1{
                 margin: 0 0 24px 0;
                 font-size: 20px;
                 text-align: center;
             }
-            
+
             .notique .form-group{
                 margin: 12px 0;
             }
@@ -207,7 +207,7 @@
                 <!-- /.search form -->
 
                 <!-- Sidebar Menu -->
-                 <ul class="lateralMenu" id="lateralMenu">
+                <ul class="lateralMenu" id="lateralMenu">
                     <li><a href="/airpure/sistema/saso">Home</a></li>
                     <li><a href="#">Notificações</a></li>
                     <li><a href="">Dispositivo</a>
@@ -229,8 +229,8 @@
                     Dashboard SASO
                     <!-- <small style="color: white;">SASO</small> -->
                 </h1>
-                
-                
+
+
             </section>
 
             <section class="content">
@@ -248,7 +248,7 @@
                     <p:fieldset legend="Cadastro para Notificações" style="width:100%; border-width: 3px; color: black; text-align: center; min-height: 100vh">
                         <section class="content-header" id="lastRegister">
                             <p style = "text-align: center; font-size: 20px; margin-top: 0!Important">Digite seu e-mail e selecione os fatores aos qual deseja receber notificações para caso de estes estarem acima do limite.</p>
-                           
+
                             <div class="divNoti">
                                 <form class = "notique">
                                     <h1>Notificar-me</h1>
@@ -282,7 +282,7 @@
                                 </form>
                             </div>   
                         </section>
-                           
+
                     </p:fieldset>
                 </h:panelGroup>
 

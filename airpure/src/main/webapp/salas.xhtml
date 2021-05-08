@@ -72,7 +72,7 @@
     </h:head>
 
     <h:body onload="#{autenticacao.verificacao()}" ></h:body>
-    <h:body class="hold-transition skin-blue sidebar-mini" >
+    <h:body class="skin-blue sidebar-mini sidebar-collapse" >
 
 
 
@@ -140,6 +140,23 @@
                     Dashboard
                     <small style="color: white;">SIMPEC</small>
                 </h1>
+                <div align = "right">
+                    <h:panelGrid columns="2">
+                        <h1 style="color: white; float: left; font-size: 26px; margin-top: 0; padding-right: 5px">
+                            Ordenar por:    
+                            <!-- <small style="color: white;">SASO</small> -->
+                        </h1>
+                        <h:form>
+                            <h:panelGrid columns="2" style= "margin-top: 0!Important; padding: 0">
+                                <p:selectOneMenu value="#{autenticacao.usuario.nome}" effect="fold" editable="false" style="background-color:white;">
+                                    <f:selectItem itemLabel="Ordem Alfabética" itemValue="1"/>
+                                    <f:selectItem itemLabel="Temperatura" itemValue="2"/>
+                                </p:selectOneMenu>
+                                <p:commandButton styleClass="btn btn-success btn-block" value="Filtrar" action="#{autenticacao.defineOrdenacao()}" update="@form"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </h:panelGrid>
+                </div>
             </section>
 
             <section class="content">
@@ -214,7 +231,7 @@
                                         <!--Dados-->
                                         <h:panelGrid columns="2" style="width: 100%; " >
                                             <h:panelGrid columns="1" style="background-color: white; border-radius: 10px; width: 85%; height: 100px; text-align: left;  margin: 30px; padding: 5px;">                              
-                                                <h:outputLabel value="Localização: Sala #{process1.sala}, do #{process1.predio}, na  #{process1.local}." style="color: black; font-size: 18px;"/>
+                                                <h:outputLabel value="Localização: Sala #{process1.sala}, do(a) #{process1.predio}, na(o)  #{process1.local}." style="color: black; font-size: 18px;"/>
                                                 <h:outputText value="Último Registro: #{process2.dataInString}" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
                                                 <h:outputText value="Modelo de Aparelho de Ar Condicionado: #{process1.equipamentos}" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
                                                 <h:outputText value="Capacidade Máxima: #{process1.capacidadeMaxima} pessoas" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>

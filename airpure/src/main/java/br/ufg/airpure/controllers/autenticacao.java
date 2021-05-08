@@ -71,7 +71,7 @@ public class autenticacao implements HttpSessionListener {
         session.setAttribute("login", "usuario");
         session.setAttribute("usuario", 1);
         session.setAttribute("projetoEnvolvido", 1);
-        session.setAttribute("filtroAirPure", "AirPure 3");;
+        session.setAttribute("filtroAirPure", "AirPure 3");
         Date data = new Date(System.currentTimeMillis());
         Date data2 = new Date(System.currentTimeMillis());
         data.setDate(data.getDate() + 1);
@@ -262,13 +262,33 @@ public class autenticacao implements HttpSessionListener {
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
         if (session.getAttribute("login").equals("usuario") && usuario2.getProjeto().getId() == 1) {
             try {
+
+                session.setAttribute("filtroAirPure", "AirPure 3");;
+                data = new Date(System.currentTimeMillis());
+                data2 = new Date(System.currentTimeMillis());
+                data.setDate(data.getDate() + 1);
+                data2.setDate(data2.getDate());
+                formatarDate = new SimpleDateFormat("yyyy/MM/dd");
+                try {
+                    session.setAttribute("endPoint", formatarDate.format(data));
+                    session.setAttribute("startPoint", formatarDate.format(data2));
+                } catch (Exception ex) {
+                }
+
                 FacesContext.getCurrentInstance().getExternalContext().redirect("/airpure/sistema/saso");
             } catch (IOException ex) {
                 Logger.getLogger(autenticacao.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else if (session.getAttribute("login").equals("usuario") && usuario2.getProjeto().getId() == 3) {
             try {
+                session.setAttribute("tipoOrdenacao", "1");
                 FacesContext.getCurrentInstance().getExternalContext().redirect("/airpure/sistema/simpec");
+            } catch (IOException ex) {
+                Logger.getLogger(autenticacao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if (session.getAttribute("login").equals("usuario") && usuario2.getProjeto().getId() == 2) {
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/airpure/sistema/sipai");
             } catch (IOException ex) {
                 Logger.getLogger(autenticacao.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -378,7 +398,7 @@ public class autenticacao implements HttpSessionListener {
             rs = Main.sql.executeQuery(sql);
             System.out.println(sql);
             while (rs.next()) {
-                dispositivoHVAC.add(rs.getString("id") + "," + rs.getString("modelo") + ","+rs.getString("potencia") + "btus" + "," + rs.getString("n_patrimonio"));
+                dispositivoHVAC.add(rs.getString("id") + "," + rs.getString("modelo") + "," + rs.getString("potencia") + "btus" + "," + rs.getString("n_patrimonio"));
             }
 
         } catch (SQLException e) {
@@ -442,6 +462,14 @@ public class autenticacao implements HttpSessionListener {
 
     }
     
+    public void defineOrdenacao() throws IOException {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+        session.setAttribute("tipoOrdenacao", usuario.getNome());
+        FacesContext.getCurrentInstance().getExternalContext().redirect("simpec");
+
+    }
+
     public void salvaFiltro() throws IOException {
         System.out.println("Valor do select: " + usuario.getNome());
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -456,7 +484,7 @@ public class autenticacao implements HttpSessionListener {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
             session.invalidate();
-            FacesContext.getCurrentInstance().getExternalContext().redirect("home");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("autenticacao");
         } catch (IOException ex) {
             Logger.getLogger(autenticacao.class.getName()).log(Level.SEVERE, null, ex);
         }

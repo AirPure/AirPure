@@ -354,7 +354,7 @@ public class RequestData3 {
                     E.printStackTrace();
                 }
 
-                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                 String strDate = formatter.format(process.getData());
                 process.setDataInString(strDate);
 
@@ -506,20 +506,20 @@ public class RequestData3 {
         }
         String response = "";
         if (media < 50) {
-            response = "Média IAQ Ambiente: " + media + " | AMBIENTE COM BOA QUALIDADE DO AR INTERNO";
+            response = "Média IAQ Ambiente (CO2): " + media + " | AMBIENTE COM BOA QUALIDADE DO AR INTERNO";
         } else if (media < 100) {
-            response = "Média IAQ Ambiente: " + media + " | AMBIENTE COM QUALIDADE DO AR INTERNO REGULAR";
+            response = "Média IAQ Ambiente (CO2): " + media + " | AMBIENTE COM QUALIDADE DO AR INTERNO REGULAR";
 
         } else if (media < 200) {
-            response = "Média IAQ Ambiente: " + media + " | AMBIENTE COM QUALIDADE DO AR INTERNO INADEQUADA";
+            response = "Média IAQ Ambiente (CO2): " + media + " | AMBIENTE COM QUALIDADE DO AR INTERNO INADEQUADA";
         } else if (media < 300) {
-            response = "Média IAQ Ambiente: " + media + " | AMBIENTE COM MÁ QUALIDADE DO AR INTERNO";
+            response = "Média IAQ Ambiente (CO2): " + media + " | AMBIENTE COM MÁ QUALIDADE DO AR INTERNO";
 
         } else if (media < 400) {
-            response = "Média IAQ Ambiente: " + media + " | AMBIENTE COM QUALIDADE DO AR INTERNO PÉSSIMA";
+            response = "Média IAQ Ambiente (CO2): " + media + " | AMBIENTE COM QUALIDADE DO AR INTERNO PÉSSIMA";
 
         } else {
-            response = "Média IAQ Ambiente: " + media + " | AMBIENTE COM QUALIDADE DO AR INTERNO CRÍTICA";
+            response = "Média IAQ Ambiente (CO2): " + media + " | AMBIENTE COM QUALIDADE DO AR INTERNO CRÍTICA";
         }
 
         return response;
@@ -531,11 +531,15 @@ public class RequestData3 {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
         int idProjetoRelacionado = (int) session.getAttribute("projetoEnvolvido");
+        String tipoOrdenacao = (String) session.getAttribute("tipoOrdenacao");
         registro2 = new ArrayList<ambientes>();
         Main.db = null;
+        String sql = "";
         BD.ConectarBD();
-        String sql = "SELECT *, (SELECT modelo from hvac WHERE id = id_hvac limit 1), (SELECT potencia from hvac WHERE id = id_hvac limit 1) FROM ambientes WHERE id IN (SELECT id_ambientes FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado + ") ORDER BY id DESC;";
-
+        if(tipoOrdenacao == "1")
+            sql = "SELECT *, (SELECT modelo from hvac WHERE id = id_hvac limit 1), (SELECT potencia from hvac WHERE id = id_hvac limit 1) FROM ambientes WHERE id IN (SELECT id_ambientes FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado + ") ORDER BY sala DESC;";
+        else
+            sql = "SELECT *, (SELECT modelo from hvac WHERE id = id_hvac limit 1), (SELECT temperatura from amostragens WHERE id_dispositivos IN (SELECT id FROM dispositivos WHERE id_ambientes = ambientes.id) ORDER BY amostragens.id DESC limit 1), (SELECT potencia from hvac WHERE id = id_hvac limit 1) FROM ambientes WHERE id IN (SELECT id_ambientes FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado + ") ORDER BY temperatura ASC;";
         try {
             Main.sql = Main.db.createStatement();
         } catch (SQLException e) {

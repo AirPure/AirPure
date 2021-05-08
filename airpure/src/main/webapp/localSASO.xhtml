@@ -23,20 +23,20 @@
         <SCRIPT type="text/javascript">
             var myVar = setInterval(redirect, 60000);
             var myVar2 = setInterval(redirect2, 360000);
-            
+
             function redirect() {
                 $("#fieldset_colors").load(" #fieldset_colors > *");
                 $("#lastRegister").load(" #lastRegister > *");
             }
-            
+
             function redirect2() {
                 window.location.reload(1);
             }
-            
+
             function someMenu() {
                 var status = document.getElementById("lateralMenu").style.display;
-             
-                if (status == "none"){
+
+                if (status == "none") {
                     document.getElementById("lateralMenu").style.display = "block";
                 } else {
                     document.getElementById("lateralMenu").style.display = "none";
@@ -44,7 +44,7 @@
             }
 
         </SCRIPT>
-        
+
         <style>
             .dot {
                 height: 25px;
@@ -52,15 +52,15 @@
                 border-radius: 50%;
                 display: inline-block;
             }
-            
+
             html {
-               background-color: #1e282c!Important;
+                background-color: #1e282c!Important;
             }
-            
+
             .skin-blue .sidebar-menu>li.header{
                 background-color: #1e282c!Important;
             }
-            
+
             .ui-fieldset-legend{
                 font-size: 20px !important;
                 font-weight: bold !important;
@@ -69,7 +69,7 @@
             .skin-blue .wrapper, .skin-blue .main-sidebar, .skin-blue .left-side{
                 background-color: #1e282c;
             }
-            
+
             .lateralMenu, .subMenu{
                 list-style: none;
                 margin-left: 0px;
@@ -77,23 +77,23 @@
                 font-family: Arial, Helvetica, sans-serif;
                 font-size: 18px;
             }
-            
+
             .lateralMenu a {
                 display: block;
                 text-decoration: none;
                 padding: 10px;
                 color: white!Important;
             }
-            
+
             .lateralMenu a:hover {
                 background-color: #253237;
             }
-            
+
             .lateralMenu li:hover .subMenu {
                 display: block;
                 max-height: 200px;
             }
-            
+
             .subMenu {
                 overflow: hidden;
                 max-height: 0;
@@ -169,8 +169,8 @@
                     Dashboard SASO
                     <!-- <small style="color: white;">SASO</small> -->
                 </h1>
-                
-                
+
+
             </section>
 
             <section class="content">
@@ -207,7 +207,7 @@
                                 <p>#{autenticacao.returnLocalizacao()}</p>
                             </div>
                         </section>
-                           
+
                     </p:fieldset>
                 </h:panelGroup>
 
