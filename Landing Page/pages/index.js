@@ -16,7 +16,7 @@ export default function Index() {
                 AirPure - Uma solução inteligente para o monitoramento de Qualidade do Ar Interno.
               </h2>
               <p className="mt-4 text-lg leading-relaxed text-gray-600">
-                O Sistema AirPure proporcionará maior facilidade no controle de níveis de qualidade do ar.
+                O sistema AirPure possibilita a visualização e analise, em tempo real, de vários fatores que influenciam diretamente na qualidade do ar em um ambiente.
               </p>
               <div className="mt-12">
                 <a
@@ -81,7 +81,7 @@ export default function Index() {
                     Qualidade de ar para todos.
                   </h4>
                   <p className="text-md font-light mt-2 text-white">
-                  Um diferencial presente em poucos ambientes internos hoje em dia é a capacidade de realizar o monitoramento da qualidade do ar. Com a implementação do sistema Air-Pure é possível visualizar e analisar, em tempo real, vários fatores que influenciam diretamente em um ambiente. Os dados são disponibilizados por meio de um Dashboard interativo contendo dados sobre Temperatura, Umidade, Ruído e Iluminação além das concentrações de Dióxido de Carbono e Compostos Orgânicos Voláteis Totais.
+                    Um diferencial presente em poucos ambientes internos é o monitoramento da qualidade do ar. Com a implementação do sistema AirPure é possível visualizar e analisar, em tempo real, por meio de um Dashboard interativo, vários fatores que influenciam diretamente na qualidade do ar um ambiente.
                   </p>
                 </blockquote>
               </div>
@@ -148,9 +148,14 @@ export default function Index() {
           </div>
         </div>
 
-        <div className="container mx-auto overflow-hidden pb-20" id="parametros">
 
-          <div className="flex flex-wrap items-center pt-32">
+        <br></br>
+        <br></br>
+        <br></br>
+
+
+        <div className="container mx-auto">
+          <div className="flex flex-wrap items-center">
             <div className="w-full md:w-6/12 px-4 mr-auto ml-auto mt-32">
               <div className="justify-center flex flex-wrap relative">
                 <div className="my-4 w-full lg:w-6/12 px-4">
@@ -250,22 +255,56 @@ export default function Index() {
               </div>
             </div>
 
-            <div className="w-full md:w-4/12 px-12 md:px-4 ml-auto mr-auto mt-48">
-              <div className="text-gray-600 p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-6 shadow-lg rounded-full bg-white">
-                <i className="fas fa-drafting-compass text-xl"></i>
+
+            <div className="w-full md:w-6/12 px-4">
+
+              <div className="flex flex-wrap">
+                <div className="w-full md:w-6/12 px-4">
+                  <div className="relative flex flex-col mt-4">
+                    <div className="px-4 py-5 flex-auto">
+                      <div className="text-gray-600 p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-white">
+                        <i className="fas fa-sitemap"></i>
+                      </div>
+                      <h6 className="text-xl mb-1 font-semibold">
+                        Parâmetros Analisados
+                      </h6>
+                      <p className="mb-4 text-gray-600">
+                        O sistema AirPure realiza o monitoramento de Temperatura, Umidade, Ruído e Iluminação além das concentrações de Dióxido de Carbono (CO2) e Compostos Orgânicos Voláteis Totais (COVT).
+                      </p>
+                    </div>
+                  </div>
+                  <div className="relative flex flex-col min-w-0">
+                    <div className="px-4 py-5 flex-auto">
+                      <div className="text-gray-600 p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-white">
+                        <i className="fas fa-drafting-compass"></i>
+                      </div>
+                      <h6 className="text-xl mb-1 font-semibold">
+                        Vantagens
+                      </h6>
+                      <p className="mb-4 text-gray-600">
+                        O monitoramento adequado desses fatores permite que medidas de prevenção possam ser tomadas, como por exemplo, a manutenção adequada dos aparelhos condicionadores de ar presentes nos ambientes, permitindo assim uma economia de recursos.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-full md:w-6/12 px-4">
+                  <div className="relative flex flex-col min-w-0 mt-4">
+                    <div className="px-4 py-5 flex-auto">
+                      <div className="text-gray-600 p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-white">
+                        <i className="fas fa-newspaper"></i>
+                      </div>
+                      <h6 className="text-xl mb-1 font-semibold"> Implicações na Saúde</h6>
+                      <p className="mb-4 text-gray-600">
+                        Valores de temperatura e umidade estão diretamente relacionados ao conforto térmico do ambiente. Já concentrações elevadas de CO2 e COVT no ambiente podem causar danos cognitivos e aumento de sintomas neurológicos incapacitantes, como dor de cabeça e fadiga, além de irritação sensorial.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-3xl mb-2 font-semibold leading-normal">
-                Parâmetros analisados
-              </h3>
-              <p className="text-lg font-light leading-relaxed mt-4 mb-4 text-gray-700">
-                 O sistema AirPure realiza o monitoramento de Temperatura, Umidade, Ruído e Iluminação além das concentrações de Dióxido de Carbono (CO2) e Compostos Orgânicos Voláteis Totais (COVT). O monitoramento adequado desses fatores permite que medidas de prevenção possam ser tomadas, como por exemplo, a manutenção adequada dos aparelhos condicionadores de ar presentes nos ambientes, permitindo assim uma economia de recursos.
-                  Valores de temperatura e umidade estão diretamente relacionados ao conforto térmico do ambiente. Já concentrações elevadas de CO2 e COVT no ambiente podem causar danos cognitivos e aumento de sintomas neurológicos incapacitantes, como dor de cabeça e fadiga, além de irritação sensorial. O monitoramento desses fatores possibilita indicar a taxa de renovação do ar do ambiente em questão.
-              </p>
-              
-             
             </div>
           </div>
         </div>
+
 
         <div className="container mx-auto px-4 pb-32 pt-48" id="dashboard">
           <div className="items-center flex flex-wrap">
@@ -278,7 +317,7 @@ export default function Index() {
                   Dashboard intuitiva
                 </h3>
                 <p className="mt-4 text-lg leading-relaxed text-gray-600">
-                  Ao coletar os dados, todos são disponibilizados para os usuários em uma dashboard interativa e intuitiva. 
+                  Ao coletar os dados, todos são disponibilizados para os usuários em uma dashboard interativa e intuitiva.
                 </p>
                 <ul className="list-none mt-6">
                   <li className="py-2">
@@ -365,6 +404,14 @@ export default function Index() {
                       </div>
                     </div>
                   </li>
+                  <div className="mt-12">
+                    <a
+                      href="https://server01.matsoftwares.com.br:2222/airpure"
+                      className="github-star ml-1 text-white font-bold px-6 py-4 rounded outline-none focus:outline-none mr-1 mb-1 bg-gray-800 active:bg-gray-700 uppercase text-sm shadow hover:shadow-lg"
+                    >
+                      Acessar Dashboard
+                </a>
+                  </div>
                 </ul>
               </div>
             </div>
@@ -384,8 +431,8 @@ export default function Index() {
         </div>
 
       </section>
-      
-      <Footer / >
+
+      <Footer />
     </>
   );
 }

@@ -82,7 +82,7 @@ export default function Navbar(props) {
               <a
                 href="https://server01.matsoftwares.com.br:2222/airpure"
                 className="github-star ml-1 text-white font-bold px-6 py-4 rounded outline-none focus:outline-none mr-1 mb-1 bg-gray-800 active:bg-gray-700 uppercase text-sm shadow hover:shadow-lg"
-              ><i className="fas fa-play"></i>
+              >
                       Acessar Dashboard
                 </a>
 
