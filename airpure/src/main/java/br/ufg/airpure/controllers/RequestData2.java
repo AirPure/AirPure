@@ -30,7 +30,7 @@ public class RequestData2 {
 
     ArrayList<amostragens> registro1;
     ArrayList<dispositivos> registro_id;
-    
+
     String inicio;
     String fim;
     static String idOfAirpures;
@@ -123,15 +123,26 @@ public class RequestData2 {
         return registro1;
     }
 
-  
-        // <===========Método que retorna todos os dados do último registro de cada Airpure ligado ao seu projeto.=========================================================================================================================>
+    // <===========Método que retorna todos os dados do último registro de cada Airpure ligado ao seu projeto.=========================================================================================================================>
     public ArrayList<dispositivos> returnID() {
-        
+        String sql = "";
+        try {
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+            String tipoOrdenacao = (String) session.getAttribute("ordenacaoProjeto");
+            if (tipoOrdenacao == null) {
+                sql = "SELECT *, (SELECT iaq_co2 FROM amostragens WHERE id_dispositivos = dispositivos.id ORDER BY amostragens.id DESC LIMIT 1) FROM dispositivos ORDER BY iaq_co2 DESC;";
+            } else {
+                sql = "SELECT *, (SELECT iaq_co2 FROM amostragens WHERE id_dispositivos = dispositivos.id ORDER BY amostragens.id DESC LIMIT 1) FROM dispositivos WHERE id_projeto IN (" + tipoOrdenacao + ") ORDER BY iaq_co2 DESC;";
+            }
+        } catch (Exception e) {
+            sql = "SELECT *, (SELECT iaq_co2 FROM amostragens WHERE id_dispositivos = dispositivos.id ORDER BY amostragens.id DESC LIMIT 1) FROM dispositivos ORDER BY iaq_co2 DESC;";
+            e.printStackTrace();
+        }
         registro_id = new ArrayList<dispositivos>();
         Main.db = null;
         BD.ConectarBD();
-        String sql = "SELECT * FROM dispositivos;";
-        
+
         try {
             Main.sql = Main.db.createStatement();
         } catch (SQLException e) {
@@ -163,8 +174,8 @@ public class RequestData2 {
 
         return registro_id;
     }
-    
-        // <===========Método que retorna todos os dados do último registro de cada Airpure ligado ao seu projeto.=========================================================================================================================>
+
+    // <===========Método que retorna todos os dados do último registro de cada Airpure ligado ao seu projeto.=========================================================================================================================>
     public ArrayList<amostragens> returnLastSampleBYID(int id_dispositivo) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
@@ -172,7 +183,7 @@ public class RequestData2 {
         registro1 = new ArrayList<amostragens>();
         Main.db = null;
         BD.ConectarBD();
-        String sql = "SELECT * FROM amostragens WHERE id_dispositivos ="+id_dispositivo+" ORDER BY id DESC LIMIT 1;";
+        String sql = "SELECT * FROM amostragens WHERE id_dispositivos =" + id_dispositivo + " ORDER BY id DESC LIMIT 1;";
 
         try {
             Main.sql = Main.db.createStatement();
@@ -219,8 +230,7 @@ public class RequestData2 {
 
         return registro1;
     }
-    
-    
+
     // <===========Método de inserção modelo ao banco de dados.=========================================================================================================================>
     public void insertDatabase() {
         Main.db = null;
@@ -295,7 +305,7 @@ public class RequestData2 {
 
         return "Último registro: " + data + " " + hora;
     }
-    
+
     public String ultimoRegistroDadosID(int id_dispositivo) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
@@ -304,9 +314,13 @@ public class RequestData2 {
         Timestamp dataAux;
         Main.db = null;
         BD.ConectarBD();
-        String sql = "SELECT data, (SELECT sala FROM ambientes WHERE id IN (select id_ambientes FROM dispositivos WHERE id = " + id_dispositivo + ")) FROM amostragens WHERE id_dispositivos = "+id_dispositivo+" ORDER BY id DESC LIMIT 1";
-           
-        try {Main.sql = Main.db.createStatement();} catch (SQLException e) {e.printStackTrace();}
+        String sql = "SELECT data, (SELECT sala FROM ambientes WHERE id IN (select id_ambientes FROM dispositivos WHERE id = " + id_dispositivo + ")),(SELECT predio FROM ambientes WHERE id IN (select id_ambientes FROM dispositivos WHERE id = " + id_dispositivo + ")),(SELECT local FROM ambientes WHERE id IN (select id_ambientes FROM dispositivos WHERE id = " + id_dispositivo + ")) FROM amostragens WHERE id_dispositivos = " + id_dispositivo + " ORDER BY id DESC LIMIT 1";
+
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         ResultSet rs = null;
         try {
@@ -314,15 +328,98 @@ public class RequestData2 {
             System.out.println(sql);
             while (rs.next()) {
                 dataAux = rs.getTimestamp("data");
-                local = rs.getString("sala");
+                local = "Sala " + rs.getString("sala") + " - " + rs.getString("predio");
                 dataAux.setHours(dataAux.getHours() - 3);
                 data = new SimpleDateFormat("dd/MM/yyyy").format(dataAux);
                 hora = new SimpleDateFormat("HH:mm:ss").format(dataAux);
             }
-        } catch (SQLException e) {e.printStackTrace();}
-        try { Main.db.close();} catch (SQLException ex) {Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);}
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-        return "ID: "+id_dispositivo+" \n\n Local: "+local+ " | Último envio: " + data + " " + hora;
+        return "Localização: " + local + " | Último registro: " + data + " " + hora;
+    }
+
+    //Faz o map de valores.
+    int mapColors(int x, int in_min, int in_max, int out_min, int out_max) {
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    }
+
+    public Float returnIAQSala(int id_dispositivo) {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+        int idProjetoRelacionado = (int) session.getAttribute("projetoEnvolvido");
+        Float valor = null;
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "SELECT iaq_co2 FROM amostragens WHERE id_dispositivos = " + id_dispositivo + " order by id DESC limit 1; ";
+
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ResultSet rs = null;
+        try {
+            rs = Main.sql.executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                valor = rs.getFloat("iaq_co2");
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return valor;
+    }
+
+    public int returnIAQSalaArco(int id_dispositivo) {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+        int idProjetoRelacionado = (int) session.getAttribute("projetoEnvolvido");
+        int valor = 0;
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "SELECT iaq_co2 FROM amostragens WHERE id_dispositivos = " + id_dispositivo + " order by id DESC limit 1; ";
+
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        ResultSet rs = null;
+        try {
+            rs = Main.sql.executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                valor = rs.getInt("iaq_co2");
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        valor = mapColors(valor, 0, 450, 0, 100);
+
+        return valor;
     }
 
     // <===========Atribui algum parametro a sessao do usuario (URL) =========================================================================================================================>
@@ -396,53 +493,96 @@ public class RequestData2 {
     }
 
     public String returnColorParam(Float value, String param) {
-               String color = "";
-               int minimo = 0;
-               int maximo = 0;
-               Main.db = null;
-               BD.ConectarBD();
-               String sql = "SELECT minimo,maximo FROM range WHERE tipo = '" + param + "';";
+        String color = "";
+        int minimo = 0;
+        int maximo = 0;
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "SELECT minimo,maximo FROM range WHERE tipo = '" + param + "';";
 
-               try {
-                   Main.sql = Main.db.createStatement();
-               } catch (SQLException e) {
-                   e.printStackTrace();
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
 
-               }
+        }
 
-               ResultSet rs = null;
-               try {
+        ResultSet rs = null;
+        try {
 
-                   rs = Main.sql.executeQuery(sql);
-                   System.out.println(sql);
-                   while (rs.next()) {
-                       minimo = rs.getInt("minimo");
-                       maximo = rs.getInt("maximo");
-                   }
+            rs = Main.sql.executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                minimo = rs.getInt("minimo");
+                maximo = rs.getInt("maximo");
+            }
 
-               } catch (SQLException e) {
-                   e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
 
-               }
-               try {
-                   Main.db.close();
-               } catch (SQLException ex) {
-                   Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
 
-               }
+        }
 
-               if (value > minimo && value < maximo) {
-                   return "#4CAF50";
-               } else if (value < minimo) {
-                   return "#FF9800";
-               } else {
-                   return "#F44336";
-               }
+        if (value > minimo && value <= maximo) {
+            return "#4CAF50";
+        } else if (value <= minimo) {
+            return "#FF9800";
+        } else {
+            return "#F44336";
+        }
 
+    }
 
-       }
+    public String returnTexto(Float value, String param) {
+        String color = "";
+        int minimo = 0;
+        int maximo = 0;
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "SELECT minimo,maximo FROM range WHERE tipo = '" + param + "';";
 
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
 
+        }
+
+        ResultSet rs = null;
+        try {
+
+            rs = Main.sql.executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                minimo = rs.getInt("minimo");
+                maximo = rs.getInt("maximo");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+        if (value > minimo && value <= maximo) {
+            return "Bom";
+        } else if (value <= minimo) {
+            return "Inadequado";
+        } else {
+            return "Péssimo";
+        }
+
+    }
 
 // <============================================================================================================================================================================>
 }

@@ -469,6 +469,14 @@ public class autenticacao implements HttpSessionListener {
         FacesContext.getCurrentInstance().getExternalContext().redirect("simpec");
 
     }
+    
+    public void defineOrdenacaoProjeto() throws IOException {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+        session.setAttribute("ordenacaoProjeto", usuario.getNome());
+        FacesContext.getCurrentInstance().getExternalContext().redirect("sipai");
+
+    }
 
     public void salvaFiltro() throws IOException {
         System.out.println("Valor do select: " + usuario.getNome());
