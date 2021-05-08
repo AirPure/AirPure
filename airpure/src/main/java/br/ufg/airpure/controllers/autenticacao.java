@@ -378,7 +378,7 @@ public class autenticacao implements HttpSessionListener {
             rs = Main.sql.executeQuery(sql);
             System.out.println(sql);
             while (rs.next()) {
-                dispositivoHVAC.add(rs.getString("id") + "," + rs.getString("modelo"));
+                dispositivoHVAC.add(rs.getString("id") + "," + rs.getString("modelo") + ","+rs.getString("potencia") + "btus" + "," + rs.getString("n_patrimonio"));
             }
 
         } catch (SQLException e) {

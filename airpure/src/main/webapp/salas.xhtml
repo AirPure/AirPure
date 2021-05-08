@@ -120,11 +120,10 @@
                         <li class="active"><a href="/airpure/sistema/simpec"><i class="fa fa-home"></i> <span>Home</span></a></li>
                         <li class="active"><a href="/airpure/sistema/dispositivos"><i class="fa fa-bookmark"></i> <span>Dispositivos</span></a></li>
                         <li class="header">Cadastro</li>
-                        <li class="active"><a href="/airpure/sistema/cadastroDispositivo"><i class="fa fa-bookmark"></i> <span>Cadastro de Dispositivos</span></a></li>
                         <li class="active"><a href="/airpure/sistema/cadastroManutencao"><i class="fa fa-bookmark"></i> <span>Cadastro de Manutenções</span></a></li>
                         <li class="header">PMOC</li>
                         <li class="active"><a href="https://drive.google.com/file/d/1rRwyxUEk9pFfuDaoRK9A4li_BsfL7UDA/view?usp=sharing"><i class="fa fa-bookmark"></i> <span>Modelo</span></a></li>
-                        <li class="active"><a href="/airpure/sistema/proximasManutencoes"><i class="fa fa-bookmark"></i> <span>Próximas Manutenções</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/proximasManutencoes"><i class="fa fa-bookmark"></i> <span>Próximos Serviços</span></a></li>
                     </li>
 
 
@@ -159,10 +158,10 @@
 
 
                     <!--Título-->
-                    <p:fieldset legend="Dados Qualidade do Ar Interno - Visualização por Sala" style="width:100%; border-width: 3px; color: black; text-align: center;">
+                    <p:fieldset legend="Qualidade do Ar Interno" style="width:100%; border-width: 3px; color: black; text-align: center;">
                         <section class="content-header">
                             <h1 style="color: black; text-align: center;">
-                                Variação temporal
+                                Intervalo de Tempo Monitorado
                                 <small>Intervalo: #{requestdata3.time()}</small>
                             </h1>
                         </section>
@@ -215,15 +214,14 @@
                                         <!--Dados-->
                                         <h:panelGrid columns="2" style="width: 100%; " >
                                             <h:panelGrid columns="1" style="background-color: white; border-radius: 10px; width: 85%; height: 100px; text-align: left;  margin: 30px; padding: 5px;">                              
-                                                <h:outputLabel value="Sala: #{process1.sala} | #{process1.predio} | #{process1.local}" style="color: black; font-size: 18px;"/>
-                                                <h:outputLabel value="ID AirPure: #{process2.airpure.id}" style="color: black; font-size: 18px;"/>
-                                                <h:outputText value="Último Registro: #{process2.data}" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
-                                                <h:outputText value="Aparelho: #{process1.equipamentos}" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
-                                                <h:outputText value="Capacidade Máxima: #{process1.capacidadeMaxima}" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
+                                                <h:outputLabel value="Localização: Sala #{process1.sala}, do #{process1.predio}, na  #{process1.local}." style="color: black; font-size: 18px;"/>
+                                                <h:outputText value="Último Registro: #{process2.dataInString}" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
+                                                <h:outputText value="Modelo de Aparelho de Ar Condicionado: #{process1.equipamentos}" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
+                                                <h:outputText value="Capacidade Máxima: #{process1.capacidadeMaxima} pessoas" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
                                                 <h:outputText value="Dimensão do ambiente: #{process1.dimensao} m²" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
                                                 <h:outputText value="IAQ Atual: #{process2.iaqco2}" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
                                                 <h:form>
-                                                    <p:commandButton action="#{requestdata3.putItOnSessionRoom(process1.id)}" onclick="PF('dlg1').show();" value="Relatório"/>
+                                                    <p:commandButton styleClass="btn btn-success" action="#{requestdata3.putItOnSessionRoom(process1.id)}" onclick="PF('dlg1').show();" value="Relatório"/>
                                                 </h:form>
                                             </h:panelGrid>
                                             <h:panelGrid columns="1" style="background-color: white; border-radius: 10px; width: 85%; height: 100px; text-align: left;  margin: 30px; padding: 5px;">                              

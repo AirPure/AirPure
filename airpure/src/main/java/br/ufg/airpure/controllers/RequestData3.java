@@ -80,7 +80,7 @@ public class RequestData3 {
         Main.db = null;
         BD.ConectarBD();
         //String sql = "SELECT DISTINCT ON (id_dispositivos) id_dispositivos,* FROM amostragens WHERE id_dispositivos IN (SELECT id FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado +") ORDER BY id_dispositivos,id DESC;";
-        String sql = "SELECT * FROM amostragens WHERE id_dispositivos = " + id + " ORDER BY id DESC LIMIT 1;";
+        String sql = "SELECT * FROM amostragens INNER JOIN ambientes ON ambientes.id IN (SELECT id_ambientes FROM dispositivos WHERE dispositivos.id = id_dispositivos) WHERE id_dispositivos = " + id + " ORDER BY amostragens.id DESC LIMIT 1;";
 
         try {
             Main.sql = Main.db.createStatement();
@@ -98,6 +98,7 @@ public class RequestData3 {
                 amostragens process = new amostragens();
                 process.setId(rs.getLong("id"));
                 process.setCo2(rs.getFloat("co2"));
+                process.setIaqco2(rs.getFloat("iaq_co2"));
                 process.setEco2(rs.getFloat("eco2"));
                 process.setData(rs.getTimestamp("data"));
                 process.setDb(rs.getFloat("db"));
@@ -106,12 +107,18 @@ public class RequestData3 {
                 process.setUmidade(rs.getFloat("umidade"));
                 process.setTvoc(rs.getFloat("tvoc"));
                 process.setV_FIRMWARE(rs.getInt("V_FIRMWARE"));
+                process.setLocalizacao(rs.getString("sala") + ", " + rs.getString("predio") + ", " + rs.getString("local"));
 
                 try {
                     process.getData().setHours(process.getData().getHours() - 3);
                 } catch (NullPointerException E) {
                     E.printStackTrace();
                 }
+
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+                String strDate = formatter.format(process.getData());
+                process.setDataInString(strDate);
+
                 registro1.add(process);
             }
 
@@ -346,6 +353,11 @@ public class RequestData3 {
                 } catch (NullPointerException E) {
                     E.printStackTrace();
                 }
+
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+                String strDate = formatter.format(process.getData());
+                process.setDataInString(strDate);
+
                 registro3.add(process);
             }
 
@@ -895,8 +907,8 @@ public class RequestData3 {
                 manutencao process = new manutencao();
                 process.setProxima_execucao(rs.getString("proxima_execucao"));
                 process.setExecutor(rs.getString("executor"));
-                process.setData_execucao(rs.getString("modelo"));
-                process.setSala(rs.getString("sala") + " | " + rs.getString("predio") + " | " + rs.getString("local"));
+                process.setData_execucao(rs.getString("modelo") + " | " + rs.getString("potencia") + " btus | " + rs.getString("tipo") + " | Patrimônio " + rs.getString("n_patrimonio"));
+                process.setSala("Sala " + rs.getString("sala") + ", no " + rs.getString("predio") + " da " + rs.getString("local"));
                 registro7.add(process);
             }
 

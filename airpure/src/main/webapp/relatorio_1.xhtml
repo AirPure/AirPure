@@ -79,28 +79,28 @@
                     <h:panelGrid columns="2" style="width:100%">
                         <p:outputPanel>
                             <h:panelGrid columns="2" cellpadding="5"> 
-                                <h:outputText value="Sala:" />
+                                <h:outputText value="Sala: " />
                                 <h:outputText value="#{groups.sala}" style="font-weight: bold"/>
 
-                                <h:outputText value="Prédio" />
+                                <h:outputText value="Prédio: " />
                                 <h:outputText value="#{groups.predio}" style="font-weight: bold"/>
 
-                                <h:outputText value="Câmpus:" />
+                                <h:outputText value="Câmpus: " />
                                 <h:outputText value="#{groups.local}" style="font-weight: bold"/>
 
-                                <h:outputText value="Capacidade máxima:" />
+                                <h:outputText value="Capacidade máxima: " />
                                 <h:outputText value="#{groups.capacidadeMaxima} ocupantes" style="font-weight: bold"/>
 
-                                <h:outputText value="Dimensão do ambiente:" />
+                                <h:outputText value="Dimensão do ambiente: " />
                                 <h:outputText value="#{groups.dimensao} m²" style="font-weight: bold"/>
 
-                                <h:outputText value="Equipamento Instalado:" />
+                                <h:outputText value="Equipamento Instalado: " />
                                 <h:outputText value="#{groups.equipamentos}" style="font-weight: bold"/>
 
-                                <h:outputText value="Nº de Controle do Equipamento:" />
+                                <h:outputText value="Nº de Controle do Equipamento: " />
                                 <h:outputText value="#{groups.n_Controle}" style="font-weight: bold"/>
 
-                                <h:outputText value="Nº de Patrimônio do Equipamento" />
+                                <h:outputText value="Nº de Patrimônio do Equipamento: " />
                                 <h:outputText value="#{groups.n_Patrimonio}" style="font-weight: bold"/>
 
 
@@ -112,7 +112,7 @@
                 <p:dataTable value="#{requestdata3.retornaManutencoes()}" var="item" paginator="false" rows="15" >
                     <p:column>
                         <f:facet name="header">
-                            <h:outputText value="Data Execução"/>
+                            <h:outputText value="Data Execução"><f:convertDateTime pattern="dd/MM/yyyy"/></h:outputText>
                         </f:facet>
                         <h:outputText value="#{item.data_execucao}" style="font-weight: bold"/>
                     </p:column>

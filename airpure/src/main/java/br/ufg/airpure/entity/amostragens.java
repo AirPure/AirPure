@@ -19,7 +19,28 @@ public class amostragens implements Serializable {
     private Float iaq; //Valor calculado do IAQ
     private int V_FIRMWARE; //Valor referente a versao do firmware
     private dispositivos airpure; //Airpure relacionado
+    private String dataInString; //Airpure relacionado
+    private String localizacao; //Airpure relacionado
 
+    public String getLocalizacao() {
+        return localizacao;
+    }
+
+    public void setLocalizacao(String localizacao) {
+        this.localizacao = localizacao;
+    }
+
+    
+    public String getDataInString() {
+        return dataInString;
+    }
+
+    public void setDataInString(String dataInString) {
+        this.dataInString = dataInString;
+    }
+
+    
+    
     public Float getIaqco2() {
         return iaqco2;
     }
