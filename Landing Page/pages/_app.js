@@ -70,7 +70,7 @@ export default class MyApp extends App {
             name="viewport"
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
           />
-          <title>Ar Puro - UFG</title>
+          <title>AirPure - UFG</title>
         </Head>
         <Layout>
           <Component {...pageProps} />

@@ -13,17 +13,17 @@ export default function Index() {
           <div className="w-full md:w-8/12 lg:w-6/12 xl:w-6/12 px-4">
             <div className="pt-32 sm:pt-0">
               <h2 className="font-semibold text-4xl text-gray-700">
-                Ar Puro - Uma solução inteligente para o monitoramento de Qualidade do Ar Interno.
+                AirPure - Uma solução inteligente para o monitoramento de Qualidade do Ar Interno.
               </h2>
               <p className="mt-4 text-lg leading-relaxed text-gray-600">
-                O sistema Ar Puro proporcionará maior facilidade no controle de níveis de qualidade do ar.
+                O Sistema AirPure proporcionará maior facilidade no controle de níveis de qualidade do ar.
               </p>
               <div className="mt-12">
                 <a
-                  href="#sobre"
+                  href="https://server01.matsoftwares.com.br:2222/airpure"
                   className="github-star ml-1 text-white font-bold px-6 py-4 rounded outline-none focus:outline-none mr-1 mb-1 bg-gray-800 active:bg-gray-700 uppercase text-sm shadow hover:shadow-lg"
                 >
-                  Conheça
+                  Acessar Dashboard
                 </a>
               </div>
             </div>
@@ -56,13 +56,13 @@ export default function Index() {
             ></polygon>
           </svg>
         </div>
-        <div className="container mx-auto" id="sobre">
+        <div className="container mx-auto">
           <div className="flex flex-wrap items-center">
             <div className="w-10/12 md:w-6/12 lg:w-4/12 px-12 md:px-4 mr-auto ml-auto -mt-32">
               <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded-lg bg-gray-800">
-                <img
+                <img id="sobre"
                   alt="..."
-                  src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=700&q=80"
+                  src={require("assets/img/landing2.jpg")}
                   className="w-full align-middle rounded-t-lg"
                 />
                 <blockquote className="relative p-8 mb-4">
@@ -81,7 +81,7 @@ export default function Index() {
                     Qualidade de ar para todos.
                   </h4>
                   <p className="text-md font-light mt-2 text-white">
-                    Nossa proposta com o desenvolvimento deste projeto é possibilitar que todos possam usufruir de um ar de qualidade, possibilitando uma melhor qualidade de vida.
+                  Um diferencial presente em poucos ambientes internos hoje em dia é a capacidade de realizar o monitoramento da qualidade do ar. Com a implementação do sistema Air-Pure é possível visualizar e analisar, em tempo real, vários fatores que influenciam diretamente em um ambiente. Os dados são disponibilizados por meio de um Dashboard interativo contendo dados sobre Temperatura, Umidade, Ruído e Iluminação além das concentrações de Dióxido de Carbono e Compostos Orgânicos Voláteis Totais.
                   </p>
                 </blockquote>
               </div>
@@ -135,10 +135,10 @@ export default function Index() {
                         <i className="fas fa-file-alt"></i>
                       </div>
                       <h6 className="text-xl mb-1 font-semibold">
-                        Documentação Técnica
+                        Regulamentação
                       </h6>
                       <p className="mb-4 text-gray-600">
-                        Todos os parâmetros analisados pelo AirPure são baseados em trabalhos bibliográficos renomados.
+                        Todos os parâmetros analisados pelo AirPure são baseados em normas técnicas e legislações vigentes.
                       </p>
                     </div>
                   </div>
@@ -148,7 +148,7 @@ export default function Index() {
           </div>
         </div>
 
-        <div className="container mx-auto overflow-hidden pb-20">
+        <div className="container mx-auto overflow-hidden pb-20" id="parametros">
 
           <div className="flex flex-wrap items-center pt-32">
             <div className="w-full md:w-6/12 px-4 mr-auto ml-auto mt-32">
@@ -258,7 +258,8 @@ export default function Index() {
                 Parâmetros analisados
               </h3>
               <p className="text-lg font-light leading-relaxed mt-4 mb-4 text-gray-700">
-                Todos os parâmetros escolhidos para análise são baseados em trabalhos acadêmicos. Cada um possui seu impacto, tanto no quesito Saúde Ocupacional quanto Qualidade do Ar.
+                 O sistema AirPure realiza o monitoramento de Temperatura, Umidade, Ruído e Iluminação além das concentrações de Dióxido de Carbono (CO2) e Compostos Orgânicos Voláteis Totais (COVT). O monitoramento adequado desses fatores permite que medidas de prevenção possam ser tomadas, como por exemplo, a manutenção adequada dos aparelhos condicionadores de ar presentes nos ambientes, permitindo assim uma economia de recursos.
+                  Valores de temperatura e umidade estão diretamente relacionados ao conforto térmico do ambiente. Já concentrações elevadas de CO2 e COVT no ambiente podem causar danos cognitivos e aumento de sintomas neurológicos incapacitantes, como dor de cabeça e fadiga, além de irritação sensorial. O monitoramento desses fatores possibilita indicar a taxa de renovação do ar do ambiente em questão.
               </p>
               
              
@@ -266,7 +267,7 @@ export default function Index() {
           </div>
         </div>
 
-        <div className="container mx-auto px-4 pb-32 pt-48">
+        <div className="container mx-auto px-4 pb-32 pt-48" id="dashboard">
           <div className="items-center flex flex-wrap">
             <div className="w-full md:w-5/12 ml-auto px-12 md:px-4">
               <div className="md:pr-12">
@@ -284,12 +285,12 @@ export default function Index() {
                     <div className="flex items-center">
                       <div>
                         <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-gray-600 bg-gray-100 mr-3">
-                          <i className="fas fa-fingerprint"></i>
+                          <i className="fas fa-home"></i>
                         </span>
                       </div>
                       <div>
                         <h4 className="text-gray-600">
-                          Pensada na experiência do usuário.
+                          Cadastro de espaços monitorados.
                         </h4>
                       </div>
                     </div>
@@ -298,12 +299,12 @@ export default function Index() {
                     <div className="flex items-center">
                       <div>
                         <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-gray-600 bg-gray-100 mr-3">
-                          <i className="fab fa-html5"></i>
+                          <i className="fa fa-clock"></i>
                         </span>
                       </div>
                       <div>
                         <h4 className="text-gray-600">
-                          Simples e intuitiva.
+                          Visualização de dados em tempo real.
                         </h4>
                       </div>
                     </div>
@@ -312,12 +313,54 @@ export default function Index() {
                     <div className="flex items-center">
                       <div>
                         <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-gray-600 bg-gray-100 mr-3">
-                          <i className="far fa-paper-plane"></i>
+                          <i className="fa fa-calendar"></i>
                         </span>
                       </div>
                       <div>
                         <h4 className="text-gray-600">
-                          Otimizada para desktop e mobile.
+                          Visualização de gráficos configuráveis por tempo de monitoramento.
+                        </h4>
+                      </div>
+                    </div>
+                  </li>
+                  <li className="py-2">
+                    <div className="flex items-center">
+                      <div>
+                        <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-gray-600 bg-gray-100 mr-3">
+                          <i className="fas fa-calculator"></i>
+                        </span>
+                      </div>
+                      <div>
+                        <h4 className="text-gray-600">
+                          Cálculo do Índice de Qualidade do Ar Interno.
+                        </h4>
+                      </div>
+                    </div>
+                  </li>
+                  <li className="py-2">
+                    <div className="flex items-center">
+                      <div>
+                        <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-gray-600 bg-gray-100 mr-3">
+                          <i className="fas fa-paper-plane"></i>
+                        </span>
+                      </div>
+                      <div>
+                        <h4 className="text-gray-600">
+                          Possibilidade de configuração de alertas via email e redes sociais.
+                        </h4>
+                      </div>
+                    </div>
+                  </li>
+                  <li className="py-2">
+                    <div className="flex items-center">
+                      <div>
+                        <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-gray-600 bg-gray-100 mr-3">
+                          <i className="fas fa-book"></i>
+                        </span>
+                      </div>
+                      <div>
+                        <h4 className="text-gray-600">
+                          Aderência a normas e resoluções brasileiras (NR17, NR9, etc.)
                         </h4>
                       </div>
                     </div>
@@ -326,7 +369,7 @@ export default function Index() {
               </div>
             </div>
 
-            <div className="w-full md:w-6/12 mr-auto px-4 pt-24 md:pt-0">
+            <div className="w-full md:w-6/12 mr-auto px-4 pt-24 md:pt-0" >
               <img
                 alt="..."
                 className="max-w-full rounded-lg shadow-xl"
@@ -341,39 +384,8 @@ export default function Index() {
         </div>
 
       </section>
-
-
-      <section className="py-20 bg-gray-700 overflow-hidden">
-        <div className="container mx-auto pb-64">
-          <div className="flex flex-wrap justify-center">
-            <div className="w-full md:w-5/12 px-12 md:px-4 ml-auto mr-auto md:mt-64">
-              <div className="text-gray-600 p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-6 shadow-lg rounded-full bg-white">
-                <i className="fas fa-code-branch text-xl"></i>
-              </div>
-              <h3 className="text-3xl mb-2 font-semibold leading-normal text-white">
-                Open Source
-              </h3>
-              <p className="text-lg font-light leading-relaxed mt-4 mb-4 text-gray-500">
-                Nosso propósito é possibilitar que todas as pessoas possam ter consciência da importância da qualidade do ar interno. Sendo assim, nosso projeto é Open Source - Código Livre, de forma com que todos possam contribuir.
-              </p>
-              <a
-                href="https://github.com/AirPure/AirPure"
-                target="_blank"
-                className="github-star mt-4 inline-block text-white font-bold px-6 py-4 rounded outline-none focus:outline-none mr-1 mb-1 bg-gray-800 active:bg-gray-700 uppercase text-sm shadow hover:shadow-lg"
-              >
-                Conheça nosso repositório no GitHub
-              </a>
-            </div>
-
-            <div className="w-full md:w-4/12 px-4 mr-auto ml-auto mt-32 relative">
-              <i className="fab fa-github text-gray-800 absolute text-55 -top-150-px -right-100 left-auto opacity-80"></i>
-            </div>
-          </div>
-        </div>
-      </section>
-
       
-      <Footer />
+      <Footer / >
     </>
   );
 }

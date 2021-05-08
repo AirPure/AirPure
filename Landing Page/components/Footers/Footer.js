@@ -31,30 +31,14 @@ export default function Footer() {
                 Assim você poderá acompanhar o desenvolvimento de novas soluções!
               </h5>
               <div className="mt-6 lg:mb-0 mb-6">
+                <a href="https://twitter.com/Airpure2">
                 <button
                   className="bg-white text-blue-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
-                  type="button"
+                  type="button" href="https://twitter.com/Airpure2"
                 >
                   <i className="fab fa-twitter"></i>
                 </button>
-                <button
-                  className="bg-white text-blue-600 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
-                  type="button"
-                >
-                  <i className="fab fa-facebook-square"></i>
-                </button>
-                <button
-                  className="bg-white text-pink-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
-                  type="button"
-                >
-                  <i className="fab fa-dribbble"></i>
-                </button>
-                <button
-                  className="bg-white text-gray-900 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
-                  type="button"
-                >
-                  <i className="fab fa-github"></i>
-                </button>
+                </a>
               </div>
             </div>
             <div className="w-full lg:w-6/12 px-4">
@@ -62,7 +46,7 @@ export default function Footer() {
 
                 <div className="w-full lg:w-4/12 px-4">
                   <span className="block uppercase text-gray-600 text-sm font-semibold mb-2">
-                    Integrantes do Grupo:
+                    Equipe:
                   </span>
                   <ul className="list-unstyled">
                     <li>
@@ -70,15 +54,7 @@ export default function Footer() {
                         className="text-gray-700 hover:text-gray-900 font-semibold block pb-2 text-sm"
                         href=""
                       >
-                        Prof. Dr. Renato Bulcão Neto
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        className="text-gray-700 hover:text-gray-900 font-semibold block pb-2 text-sm"
-                        href=""
-                      >
-                        Prof. Dr. Iwens Sene Júnior
+                        Prof. Dr. Renato Bulcão Neto & Dr. Iwens Sene Júnior
                       </a>
                     </li>
                     <li>
@@ -126,7 +102,7 @@ export default function Footer() {
               </div>
             </div>
           </div>
-          <hr className="my-6 border-gray-400" />
+          <hr className="my-6 border-gray-400" id="contato"/>
           <div className="flex flex-wrap items-center md:justify-between justify-center">
             <div className="w-full md:w-4/12 px-4 mx-auto text-center">
               <div className="text-sm text-gray-600 font-semibold py-1">
@@ -137,7 +113,15 @@ export default function Footer() {
                 >
                   Creative Tim | AirPure
                 </a>
-                .
+                . <br />
+                Contato: airpure.iaq@gmail.com <br />
+
+                <img
+                  alt="..."
+                  className="w-16 mx-auto"
+                  src={require("assets/img/banner-wiki-transparent.png")}
+                />
+                
               </div>
             </div>
           </div>
