@@ -80,7 +80,7 @@ export default function Navbar(props) {
             <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
 
               <a
-                href="https://server01.matsoftwares.com.br:2222/airpure"
+                href="http://airpure.duckdns.org/airpure/"
                 className="github-star ml-1 text-white font-bold px-6 py-4 rounded outline-none focus:outline-none mr-1 mb-1 bg-gray-800 active:bg-gray-700 uppercase text-sm shadow hover:shadow-lg"
               >
                       Acessar Dashboard
