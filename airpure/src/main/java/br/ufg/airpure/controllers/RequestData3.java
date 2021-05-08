@@ -571,7 +571,7 @@ public class RequestData3 {
         String startpoint = (String) session.getAttribute("startPoint");
         String endpoint = (String) session.getAttribute("endPoint");
         registro6 = new ArrayList<estatistica>();
-        estatistica process = new estatistica();
+
         Main.db = null;
         BD.ConectarBD();
         String sqlCO2 = "SELECT min(co2) as minCO2, max(co2) as maxCO2, stddev(co2) as desvPadco2 , (SELECT ((select sum(co2) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + "  AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) / (select count(*) from amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + " ) AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "')) as mediaCO2) FROM amostragens where id_dispositivos IN (select id from dispositivos where id_ambientes = " + idAmbiente + ") AND data BETWEEN '" + startpoint + "' AND '" + endpoint + "';";
@@ -595,10 +595,13 @@ public class RequestData3 {
             rs = Main.sql.executeQuery(sqlCO2);
             System.out.println(sqlCO2);
             while (rs.next()) {
+                estatistica process = new estatistica();
+                process.setParametro("CO2 (ppm)");
                 process.setCo2Max(rs.getFloat("maxCO2"));
                 process.setCo2Min(rs.getFloat("minCO2"));
                 process.setCo2Media(rs.getFloat("mediaCO2"));
                 process.setCo2DesvPad(rs.getFloat("desvPadco2"));
+                registro6.add(process);
 
             }
 
@@ -611,11 +614,13 @@ public class RequestData3 {
             rs = Main.sql.executeQuery(sqlTVOC);
             System.out.println(sqlTVOC);
             while (rs.next()) {
-
-                process.setTvocMax(rs.getFloat("maxTVOC"));
-                process.setTvocMin(rs.getFloat("minTVOC"));
-                process.setTvocMedia(rs.getFloat("mediaTVOC"));
-                process.setTvocDesvPad(rs.getFloat("desvPadtvoc"));
+                estatistica process = new estatistica();
+                process.setParametro("TVOC (ppb)");
+                process.setCo2Max(rs.getFloat("maxTVOC"));
+                process.setCo2Min(rs.getFloat("minTVOC"));
+                process.setCo2Media(rs.getFloat("mediaTVOC"));
+                process.setCo2DesvPad(rs.getFloat("desvPadtvoc"));
+                registro6.add(process);
 
             }
 
@@ -628,11 +633,13 @@ public class RequestData3 {
             rs = Main.sql.executeQuery(sqlUmidade);
             System.out.println(sqlUmidade);
             while (rs.next()) {
-
-                process.setUmidadeMax(rs.getFloat("maxUmidade"));
-                process.setUmidadeMin(rs.getFloat("minUmidade"));
-                process.setUmidadeMedia(rs.getFloat("mediaUmidade"));
-                process.setUmidadeDesvPad(rs.getFloat("desvPadUmidade"));
+                estatistica process = new estatistica();
+                process.setParametro("Umidade (%)");
+                process.setCo2Max(rs.getFloat("maxUmidade"));
+                process.setCo2Min(rs.getFloat("minUmidade"));
+                process.setCo2Media(rs.getFloat("mediaUmidade"));
+                process.setCo2DesvPad(rs.getFloat("desvPadUmidade"));
+                registro6.add(process);
 
             }
 
@@ -645,11 +652,13 @@ public class RequestData3 {
             rs = Main.sql.executeQuery(sqlTemperatura);
             System.out.println(sqlTemperatura);
             while (rs.next()) {
-
-                process.setTemperaturaMax(rs.getFloat("maxTemperatura"));
-                process.setTemperaturaMin(rs.getFloat("minTemperatura"));
-                process.setTemperaturaMedia(rs.getFloat("mediaTemperatura"));
-                process.setTemperaturaDesvPad(rs.getFloat("desvPadTemp"));
+                estatistica process = new estatistica();
+                process.setParametro("Temperatura (ºC)");
+                process.setCo2Max(rs.getFloat("maxTemperatura"));
+                process.setCo2Min(rs.getFloat("minTemperatura"));
+                process.setCo2Media(rs.getFloat("mediaTemperatura"));
+                process.setCo2DesvPad(rs.getFloat("desvPadTemp"));
+                registro6.add(process);
 
             }
 
@@ -662,11 +671,13 @@ public class RequestData3 {
             rs = Main.sql.executeQuery(sqleCO2);
             System.out.println(sqleCO2);
             while (rs.next()) {
-
-                process.setEco2Max(rs.getFloat("maxeCO2"));
-                process.setEco2Min(rs.getFloat("mineCO2"));
-                process.setEco2Media(rs.getFloat("mediaeCO2"));
-                process.setEco2DesvPad(rs.getFloat("desvPadeco2"));
+                estatistica process = new estatistica();
+                process.setParametro("eCO2 (ppm)");
+                process.setCo2Max(rs.getFloat("maxeCO2"));
+                process.setCo2Min(rs.getFloat("mineCO2"));
+                process.setCo2Media(rs.getFloat("mediaeCO2"));
+                process.setCo2DesvPad(rs.getFloat("desvPadeco2"));
+                registro6.add(process);
 
             }
 
@@ -679,11 +690,13 @@ public class RequestData3 {
             rs = Main.sql.executeQuery(sqldb);
             System.out.println(sqldb);
             while (rs.next()) {
-
-                process.setDbMax(rs.getFloat("maxdb"));
-                process.setDbMin(rs.getFloat("mindb"));
-                process.setDbMedia(rs.getFloat("mediadb"));
-                process.setDbDesvPad(rs.getFloat("desvPadDB"));
+                estatistica process = new estatistica();
+                process.setParametro("Ruído (dB)");
+                process.setCo2Max(rs.getFloat("maxdb"));
+                process.setCo2Min(rs.getFloat("mindb"));
+                process.setCo2Media(rs.getFloat("mediadb"));
+                process.setCo2DesvPad(rs.getFloat("desvPadDB"));
+                registro6.add(process);
 
             }
 
@@ -696,11 +709,13 @@ public class RequestData3 {
             rs = Main.sql.executeQuery(sqllux);
             System.out.println(sqllux);
             while (rs.next()) {
-
-                process.setLuxMax(rs.getFloat("maxlux"));
-                process.setLuxMin(rs.getFloat("minlux"));
-                process.setLuxMedia(rs.getFloat("medialux"));
-                process.setLuxDesvPad(rs.getFloat("desvPadLux"));
+                estatistica process = new estatistica();
+                process.setParametro("Luminosidade (Lux)");
+                process.setCo2Max(rs.getFloat("maxlux"));
+                process.setCo2Min(rs.getFloat("minlux"));
+                process.setCo2Media(rs.getFloat("medialux"));
+                process.setCo2DesvPad(rs.getFloat("desvPadLux"));
+                registro6.add(process);
 
             }
 
@@ -714,8 +729,6 @@ public class RequestData3 {
             Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
 
         }
-
-        registro6.add(process);
 
         return registro6;
     }
@@ -858,7 +871,7 @@ public class RequestData3 {
 
         return registro7;
     }
-    
+
     public ArrayList<manutencao> retornaProximasManutencoes() {
 
         registro7 = new ArrayList<manutencao>();

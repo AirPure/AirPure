@@ -7,6 +7,7 @@ public class estatistica implements Serializable {
 
     private Long id;    //PK
     private Timestamp data; //Timestamp do registro
+    private String parametro; //Timestamp do registro
     private Float tvocMedia; //Valor lido de TVOC
     private Float tvocMin; //Valor lido de TVOC
     private Float tvocMax; //Valor lido de TVOC
@@ -36,6 +37,14 @@ public class estatistica implements Serializable {
     private Float temperaturaMedia; //Valor lido de TEMPERATURA
     private Float temperaturaDesvPad; //Valor lido de TEMPERATURA
     private dispositivos airpure; //Airpure relacionado
+
+    public String getParametro() {
+        return parametro;
+    }
+
+    public void setParametro(String parametro) {
+        this.parametro = parametro;
+    }
 
     public Float getTvocDesvPad() {
         return tvocDesvPad;
@@ -284,6 +293,5 @@ public class estatistica implements Serializable {
     public void setAirpure(dispositivos airpure) {
         this.airpure = airpure;
     }
-    
-    
+
 }

@@ -54,9 +54,6 @@
 
         <h:form>    
             <div id="teste2">
-                <div style="text-align:center">
-                    <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/logo2.png" width="250"/>  
-                </div>
                 <p></p>
                 <p:menubar style="background: #EEEEEE">
                     <f:facet name="options">
@@ -74,7 +71,7 @@
             <p:fieldset style="width:950px; margin: 0px auto;">
                 <p:panelGrid columns="2" style="width:930px; text-align: center;">
                     <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/logo2.png" width="150"/> 
-                    <h1>RELATÓRIO - AMBIENTE</h1>
+                    <h1>RELATÓRIO - QUALIDADE DO AR</h1>
                 </p:panelGrid>
                 <p:outputPanel style="background: #EEEEEE; width:930px; height: 35px;"><h3>I - INFORMAÇÕES DO AMBIENTE</h3></p:outputPanel>
 
@@ -91,26 +88,27 @@
                                 <h:outputText value="Câmpus:" />
                                 <h:outputText value="#{groups.local}" style="font-weight: bold"/>
 
-                                <h:outputText value="Equipamento Instalado:" />
-                                <h:outputText value="#{groups.equipamentos}" style="font-weight: bold"/>
-
-                                <h:outputText value="Nº de Controle do HVAC:" />
-                                <h:outputText value="#{groups.n_Controle}" style="font-weight: bold"/>
-
-                                <h:outputText value="Nº de Patrimônio do HVAC:" />
-                                <h:outputText value="#{groups.n_Patrimonio}" style="font-weight: bold"/>
-
                                 <h:outputText value="Capacidade máxima:" />
                                 <h:outputText value="#{groups.capacidadeMaxima} ocupantes" style="font-weight: bold"/>
 
                                 <h:outputText value="Dimensão do ambiente:" />
                                 <h:outputText value="#{groups.dimensao} m²" style="font-weight: bold"/>
 
+                                <h:outputText value="Equipamento Instalado:" />
+                                <h:outputText value="#{groups.equipamentos}" style="font-weight: bold"/>
+
+                                <h:outputText value="Nº de Controle do Equipamento:" />
+                                <h:outputText value="#{groups.n_Controle}" style="font-weight: bold"/>
+
+                                <h:outputText value="Nº de Patrimônio do Equipamento" />
+                                <h:outputText value="#{groups.n_Patrimonio}" style="font-weight: bold"/>
+
+
                             </h:panelGrid>
                         </p:outputPanel>
                     </h:panelGrid>
                 </p:dataScroller>
-                <p:outputPanel style="background: #EEEEEE; width:930px; height: 35px;"><h3>II - MANUTENÇÕES DO HVAC</h3></p:outputPanel>
+                <p:outputPanel style="background: #EEEEEE; width:930px; height: 35px;"><h3>II - MANUTENÇÕES DOS APARELHOS DE AR CONDICIONADO</h3></p:outputPanel>
                 <p:dataTable value="#{requestdata3.retornaManutencoes()}" var="item" paginator="false" rows="15" >
                     <p:column>
                         <f:facet name="header">
@@ -144,108 +142,54 @@
                     </p:column>
                 </p:dataTable>
 
-                <p:outputPanel style="background: #EEEEEE; width:930px; height: 35px;"><h3>III - INFORMAÇÕES DO AMBIENTE - #{requestdata3.time()}</h3></p:outputPanel>
-
-                <p:dataScroller value="#{requestdata3.returnStatistics()}" var="groups" rendered="true">
-                    <h:panelGrid columns="2" style="width:100%">
-                        <p:outputPanel>
-                            <h:panelGrid columns="2" cellpadding="5"> 
+                <p:outputPanel style="background: #EEEEEE; width:930px; height: 35px;"><h3>III - DADOS DA QUALIDADE DO AR - #{requestdata3.time()}</h3></p:outputPanel>
 
 
-                                <h:outputText value="Máximo CO2:" />
-                                <h:outputText value="#{groups.co2Max} ppm" style="font-weight: bold"/>
-
-                                <h:outputText value="Mínimo CO2: " />
-                                <h:outputText value="#{groups.co2Min} ppm" style="font-weight: bold"/>
-
-                                <h:outputText value="Média CO2:" />
-                                <h:outputText value="#{groups.co2Media} ppm" style="font-weight: bold"/>
-
-                                <h:outputText value="Desvio Padrão CO2:" />
-                                <h:outputText value="#{groups.co2DesvPad} ppm" style="font-weight: bold"/>
-
-                                <h:outputText value="Máximo TVOC:" />
-                                <h:outputText value="#{groups.tvocMax} ppb" style="font-weight: bold"/>
-
-                                <h:outputText value="Mínimo TVOC: " />
-                                <h:outputText value="#{groups.tvocMin} ppb" style="font-weight: bold"/>
-
-                                <h:outputText value="Média TVOC: " />
-                                <h:outputText value="#{groups.tvocMedia} ppb" style="font-weight: bold"/>
-
-                                <h:outputText value="Desvio Padrão TVOC: " />
-                                <h:outputText value="#{groups.tvocDesvPad} ppb" style="font-weight: bold"/>
-
-                                <h:outputText value="Máximo eCO2:" />
-                                <h:outputText value="#{groups.eco2Max} ppm" style="font-weight: bold"/>
-
-                                <h:outputText value="Mínimo eCO2: " />
-                                <h:outputText value="#{groups.eco2Min} ppm" style="font-weight: bold"/>
-
-                                <h:outputText value="Média eCO2: " />
-                                <h:outputText value="#{groups.eco2Media} ppm" style="font-weight: bold"/>
-
-                                <h:outputText value="Desvio Padrão eCO2: " />
-                                <h:outputText value="#{groups.eco2DesvPad} ppm" style="font-weight: bold"/>
-
-                                <h:outputText value="Máximo umidade:" />
-                                <h:outputText value="#{groups.umidadeMax}%" style="font-weight: bold"/>
-
-                                <h:outputText value="Mínimo umidade: " />
-                                <h:outputText value="#{groups.umidadeMin}%" style="font-weight: bold"/>
-
-                                <h:outputText value="Média umidade: " />
-                                <h:outputText value="#{groups.umidadeMedia}%" style="font-weight: bold"/>
-
-                                <h:outputText value="Desvio padrão umidade: " />
-                                <h:outputText value="#{groups.umidadeDesvPad}%" style="font-weight: bold"/>
 
 
-                            </h:panelGrid>
-                        </p:outputPanel>
-                        <p:outputPanel>
-                            <h:panelGrid columns="2" cellpadding="5"> 
+                <p:dataTable value="#{requestdata3.returnStatistics()}" var="item" paginator="false" rows="15" >
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Parâmetro"/>
+                        </f:facet>
+                        <h:outputText value="#{item.parametro}" style="font-weight: bold"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Máximo"/>
+                        </f:facet>
+                        <h:outputText value="#{item.co2Max}" style="font-weight: bold"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Mínimo"/>
+                        </f:facet>
+                        <h:outputText value="#{item.co2Min}" style="font-weight: bold"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Média"/>
+                        </f:facet>
+                        <h:outputText value="#{item.co2Media}" style="font-weight: bold"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Desvio Padrão"/>
+                        </f:facet>
+                        <h:outputText value="#{item.co2DesvPad}" style="font-weight: bold"/>
+                    </p:column>
+                </p:dataTable>
 
-                                <h:outputText value="Máximo temperatura:" />
-                                <h:outputText value="#{groups.temperaturaMax} ºC" style="font-weight: bold"/>
+                <h:panelGrid columns="2">
+                    <p:outputPanel>
+                        <h:panelGrid columns="2" cellpadding="5"> 
+                            <h:outputText value="Resultado: " />
+                            <h:outputText value="#{requestdata3.returnAvgIAQCO2()}" style="font-weight: bold; font-size: 21px;"/>
 
-                                <h:outputText value="Mínimo temperatura: " />
-                                <h:outputText value="#{groups.temperaturaMin} ºC" style="font-weight: bold"/>
+                        </h:panelGrid>
+                    </p:outputPanel>
+                </h:panelGrid>
 
-                                <h:outputText value="Média temperatura: " />
-                                <h:outputText value="#{groups.temperaturaMedia} ºC" style="font-weight: bold"/>
-
-                                <h:outputText value="Desvio Padrão temperatura: " />
-                                <h:outputText value="#{groups.temperaturaDesvPad} ºC" style="font-weight: bold"/>
-
-                                <h:outputText value="Máximo luminosidade:" />
-                                <h:outputText value="#{groups.luxMax} Lux" style="font-weight: bold"/>
-
-                                <h:outputText value="Mínimo luminosidade: " />
-                                <h:outputText value="#{groups.luxMin} Lux" style="font-weight: bold"/>
-
-                                <h:outputText value="Média luminosidade: " />
-                                <h:outputText value="#{groups.luxMedia} Lux" style="font-weight: bold"/>
-
-                                <h:outputText value="Desvio Padrão luminosidade: " />
-                                <h:outputText value="#{groups.luxDesvPad} Lux" style="font-weight: bold"/>
-
-                                <h:outputText value="Máximo ruído:" />
-                                <h:outputText value="#{groups.dbMax} dB" style="font-weight: bold"/>
-
-                                <h:outputText value="Mínimo ruído: " />
-                                <h:outputText value="#{groups.dbMin} dB" style="font-weight: bold"/>
-
-                                <h:outputText value="Média ruído: " />
-                                <h:outputText value="#{groups.dbMedia} dB" style="font-weight: bold"/>
-
-                                <h:outputText value="Desvio Padrão ruído: " />
-                                <h:outputText value="#{groups.dbDesvPad} dB" style="font-weight: bold"/>
-
-                            </h:panelGrid>
-                        </p:outputPanel>
-                    </h:panelGrid>
-                </p:dataScroller>
 
                 <p:outputPanel style="background: #EEEEEE; width:930px; height: 35px;"><h3>IV - VARIAÇÕES GRÁFICAS - #{requestdata3.time()}</h3></p:outputPanel>
 
@@ -300,16 +244,6 @@
                     </hf:chart> 
                 </p:outputPanel>
 
-
-                <h:panelGrid columns="2">
-                    <p:outputPanel>
-                        <h:panelGrid columns="2" cellpadding="5"> 
-                            <h:outputText value="Resultado: " />
-                            <h:outputText value="#{requestdata3.returnAvgIAQCO2()}" style="font-weight: bold; font-size: 21px;"/>
-
-                        </h:panelGrid>
-                    </p:outputPanel>
-                </h:panelGrid>
                 <div style="text-align:center; ">
                     <p:outputLabel value="Powered by AirPure" style="font-size: 10px;"/>  
                 </div>
