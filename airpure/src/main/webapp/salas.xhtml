@@ -175,7 +175,7 @@
 
 
                     <!--Título-->
-                    <p:fieldset legend="Qualidade do Ar Interno" style="width:100%; border-width: 3px; color: black; text-align: center;">
+                    <p:fieldset legend="Qualidade do Ar Interno - Salas" style="width:100%; border-width: 3px; color: black; text-align: center;">
                         <section class="content-header">
                             <h1 style="color: black; text-align: center;">
                                 Intervalo de Tempo Monitorado
@@ -239,7 +239,9 @@
                                                 <h:outputText value="IAQ Atual: #{process2.iaqco2}" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
                                                 <h:form>
                                                     <p:commandButton styleClass="btn btn-success" action="#{requestdata3.putItOnSessionRoom(process1.id)}" onclick="PF('dlg1').show();" value="Relatório"/>
+                                                    <p:commandButton styleClass="btn btn-success" action="#{requestdata3.putItOnSession(process2.airpure.id)}" onclick="PF('dlg1').show();" value="Detalhar"/>
                                                 </h:form>
+
                                             </h:panelGrid>
                                             <h:panelGrid columns="1" style="background-color: white; border-radius: 10px; width: 85%; height: 100px; text-align: left;  margin: 30px; padding: 5px;">                              
 
@@ -251,54 +253,33 @@
 
                                         <h:panelGrid columns="7" style="width: 100%; " >
 
-                                            <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process2.tvoc,'TVOC')}; border-radius: 10px; width: 200px; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                            <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process2.tvoc,'TVOC')}; border-radius: 10px; width: 90%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
                                                 <h:outputLabel value="TVOC:" style="color: white; font-size: 18px;"/>
                                                 <h:panelGrid columns="2" style="margin:auto;"> 
                                                     <h:outputText value="#{process2.tvoc} ppb" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                                     <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process2.tvoc,'TVOC')};" width="20"/>       
                                                 </h:panelGrid>
                                             </h:panelGrid>
-                                            <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process2.co2,'CO2')}; border-radius: 10px; width: 200px; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                            <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process2.co2,'CO2')}; border-radius: 10px; width: 90%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
                                                 <h:outputLabel value="CO2:" style="color: white; font-size: 18px;"/>
                                                 <h:panelGrid columns="2" style="margin:auto;"> 
                                                     <h:outputText value="#{process2.co2} ppm" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                                     <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process2.co2,'CO2')};" width="20"/>       
                                                 </h:panelGrid>  
                                             </h:panelGrid>
-                                            <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process2.eco2,'eCO2')}; border-radius: 10px; width: 200px; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
-                                                <h:outputLabel value="eCO2:" style="color: white; font-size: 18px;"/>
-                                                <h:panelGrid columns="2" style="margin:auto;"> 
-                                                    <h:outputText value="#{process2.eco2} ppm" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
-                                                    <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process2.eco2,'eCO2')};" width="20"/>       
-                                                </h:panelGrid> 
-                                            </h:panelGrid>
-                                            <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process2.temperatura,'Temperatura')}; border-radius: 10px; width: 200px; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                            <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process2.temperatura,'Temperatura')}; border-radius: 10px; width: 90%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
                                                 <h:outputLabel value="Temperatura:" style="color: white; font-size: 18px;"/>
                                                 <h:panelGrid columns="2" style="margin:auto;"> 
                                                     <h:outputText value="#{process2.temperatura} ºC" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                                     <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process2.temperatura,'Temperatura')};" width="20"/>       
                                                 </h:panelGrid> 
                                             </h:panelGrid>
-                                            <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process2.umidade,'Umidade')}; border-radius: 10px; width: 200px; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                            <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process2.umidade,'Umidade')}; border-radius: 10px; width: 90%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
                                                 <h:outputLabel value="Umidade:" style="color: white; font-size: 18px;"/>
                                                 <h:panelGrid columns="2" style="margin:auto;"> 
                                                     <h:outputText value="#{process2.umidade}%" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                                     <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process2.umidade,'Umidade')};" width="20"/>       
                                                 </h:panelGrid> 
-                                            </h:panelGrid>
-                                            <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process2.db,'Ruído')}; border-radius: 10px; width: 200px; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
-                                                <h:outputLabel value="Ruído:" style="color: white; font-size: 18px;"/>
-                                                <h:panelGrid columns="2" style="margin:auto;"> 
-                                                    <h:outputText value="#{process2.db} dB" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
-                                                    <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process2.db,'Ruído')};" width="20"/>       
-                                                </h:panelGrid> 
-                                            </h:panelGrid>
-                                            <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process2.lux,'Luminosidade')}; border-radius: 10px; width: 200px; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
-                                                <h:outputLabel value="Luminosidade:" style="color: white; font-size: 18px;"/>
-                                                <h:panelGrid columns="2" style="margin:auto;"> 
-                                                    <h:outputText value="#{process2.lux} Lux" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
-                                                    <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process2.lux,'Luminosidade')};" width="20"/>       
-                                                </h:panelGrid>  
                                             </h:panelGrid>
 
 
@@ -339,22 +320,22 @@
 
         <script src="https://unpkg.com/gauge-chart@0.5.1/dist/bundle.js"></script>
         <script>
-                                                        // Element inside which you want to see the chart.
-                                                        let element1 = document.querySelector('#gaugeArea1')
+                                                         // Element inside which you want to see the chart.
+                                                         let element1 = document.querySelector('#gaugeArea1')
 
-                                                        let options1 = {
-                                                            arcColors: ['rgb(44, 151, 222)', 'lightgray'],
-                                                            arcDelimiters: [80],
-                                                            rangeLabel: ['0%', '100%'],
-                                                            centralLabel: '70%',
-                                                        }
+                                                         let options1 = {
+                                                             arcColors: ['rgb(44, 151, 222)', 'lightgray'],
+                                                             arcDelimiters: [80],
+                                                             rangeLabel: ['0%', '100%'],
+                                                             centralLabel: '70%',
+                                                         }
 
 
 
-                                                        // Drawing and updating the chart.  
-                                                        GaugeChart
-                                                                .gaugeChart(element1, 300, options1)
-                                                                .updateNeedle(70)
+                                                         // Drawing and updating the chart.  
+                                                         GaugeChart
+                                                                 .gaugeChart(element1, 300, options1)
+                                                                 .updateNeedle(70)
 
         </script>
 

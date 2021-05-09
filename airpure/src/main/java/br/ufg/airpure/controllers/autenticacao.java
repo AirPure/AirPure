@@ -57,7 +57,7 @@ public class autenticacao implements HttpSessionListener {
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
         if (((session.getAttribute("login").equals("usuario"))) == false) {
             try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("/airpure/sistema/home");
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/airpure/sistema/autenticacao");
             } catch (IOException ex) {
                 Logger.getLogger(autenticacao.class.getName()).log(Level.SEVERE, null, ex);
             }
