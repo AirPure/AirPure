@@ -193,6 +193,67 @@ public class autenticacao implements HttpSessionListener {
 
     }
 
+    public void insertHVAC() throws IOException {
+        Main.db = null;
+        BD.ConectarBD();
+        String array[] = new String[3];
+        //array = work.getId_hvac().split(",");
+        String sql = "INSERT INTO hvac (modelo,potencia,n_controle,n_patrimonio) VALUES ('" + work.getServicos()+ "','" + work.getProxima_execucao() + "','" + work.getExecutor()+ "','" + work.getId_hvac()+ "');";
+        System.out.println(sql);
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+
+            Main.sql.executeUpdate(sql);
+            System.out.println(sql);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+    }
+    public void insertAmbientes() throws IOException {
+        Main.db = null;
+        BD.ConectarBD();
+        String array[] = new String[3];
+        array = work.getSala().split(",");
+        String sql = "INSERT INTO ambientes (sala,predio,local,dimensao,capmaxima,id_hvac) VALUES ('" + work.getProxima_execucao()+ "','" + work.getServicos()+ "','" + work.getExecutor()+ "','" + work.getId_hvac()+ "','" + work.getData_execucao()+ "'," + array[0] + ");";
+        System.out.println(sql);
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+
+            Main.sql.executeUpdate(sql);
+            System.out.println(sql);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+    }
+
     // <==========================Função que efetua o login ao usuário. Além de verificar se a conta e senha existem e estão corretos, salva algumas informações em variáveis de sessão.==============================================================================================================================>
     public void doEfetuarLogin() throws IOException {
         Users usuario2 = new Users();

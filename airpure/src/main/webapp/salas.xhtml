@@ -121,6 +121,9 @@
                         <li class="active"><a href="/airpure/sistema/dispositivos"><i class="fa fa-bookmark"></i> <span>Dispositivos</span></a></li>
                         <li class="header">Cadastro</li>
                         <li class="active"><a href="/airpure/sistema/cadastroManutencao"><i class="fa fa-bookmark"></i> <span>Cadastro de Manutenções</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/cadastroDispositivo"><i class="fa fa-bookmark"></i> <span>Cadastro de Dispositivos</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/cadastroHVAC"><i class="fa fa-bookmark"></i> <span>Cadastro de A.C</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/cadastroAmbientes"><i class="fa fa-bookmark"></i> <span>Cadastro de Ambientes</span></a></li>
                         <li class="header">PMOC</li>
                         <li class="active"><a href="https://drive.google.com/file/d/1rRwyxUEk9pFfuDaoRK9A4li_BsfL7UDA/view?usp=sharing"><i class="fa fa-bookmark"></i> <span>Modelo</span></a></li>
                         <li class="active"><a href="/airpure/sistema/proximasManutencoes"><i class="fa fa-bookmark"></i> <span>Próximos Serviços</span></a></li>
@@ -320,22 +323,22 @@
 
         <script src="https://unpkg.com/gauge-chart@0.5.1/dist/bundle.js"></script>
         <script>
-                                                         // Element inside which you want to see the chart.
-                                                         let element1 = document.querySelector('#gaugeArea1')
+                                                        // Element inside which you want to see the chart.
+                                                        let element1 = document.querySelector('#gaugeArea1')
 
-                                                         let options1 = {
-                                                             arcColors: ['rgb(44, 151, 222)', 'lightgray'],
-                                                             arcDelimiters: [80],
-                                                             rangeLabel: ['0%', '100%'],
-                                                             centralLabel: '70%',
-                                                         }
+                                                        let options1 = {
+                                                            arcColors: ['rgb(44, 151, 222)', 'lightgray'],
+                                                            arcDelimiters: [80],
+                                                            rangeLabel: ['0%', '100%'],
+                                                            centralLabel: '70%',
+                                                        }
 
 
 
-                                                         // Drawing and updating the chart.  
-                                                         GaugeChart
-                                                                 .gaugeChart(element1, 300, options1)
-                                                                 .updateNeedle(70)
+                                                        // Drawing and updating the chart.  
+                                                        GaugeChart
+                                                                .gaugeChart(element1, 300, options1)
+                                                                .updateNeedle(70)
 
         </script>
 

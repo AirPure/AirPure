@@ -53,7 +53,7 @@ public class GeradorDeDados {
      */
     @Schedule(hour = "11", minute = "0", second = "0", persistent = false)
     public void gera() throws MalformedURLException, IOException, AddressException, MessagingException, InterruptedException {
-        System.out.println("Iniciando verificação para notificações.");
+        System.out.println("Iniciando verificação para notificações GERAL.");
         /*
         LocalTime now = LocalTime.now();
         System.out.println(now.getHour());

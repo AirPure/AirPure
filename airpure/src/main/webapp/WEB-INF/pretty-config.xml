@@ -80,6 +80,16 @@
         <view-id value="/sistema/cadastro_airpure.xhtml" />
     </url-mapping>
     
+    <url-mapping id="cadastroAmbientes">
+        <pattern value="/sistema/cadastroAmbientes" />
+        <view-id value="/sistema/cadastro_ambientes.xhtml" />
+    </url-mapping>
+    
+    <url-mapping id="cadastroHVAC">
+        <pattern value="/sistema/cadastroHVAC" />
+        <view-id value="/sistema/cadastro_hvac.xhtml" />
+    </url-mapping>
+    
     
     <url-mapping id="cadastroManutencao">
         <pattern value="/sistema/cadastroManutencao" />
