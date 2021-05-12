@@ -17,7 +17,7 @@
     "@types/react": "16.9.49",
     "@zeit/next-css": "1.0.1",
     "@zeit/next-sass": "1.0.1",
-    "chart.js": "2.9.3",
+    "chart.js": "2.9.4",
     "gulp": "4.0.2",
     "gulp-append-prepend": "1.0.8",
     "next": "9.5.4",
