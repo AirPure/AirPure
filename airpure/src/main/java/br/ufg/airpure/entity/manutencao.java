@@ -1,11 +1,13 @@
 package br.ufg.airpure.entity;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 public class manutencao implements Serializable {
 
     private Integer id; //PK
     private String data_execucao;   //Nome da sala
+    private Timestamp data_execucaots;   //Nome da sala
     private String proxima_execucao; //Nome do predio
     private String servicos; //Nome do local
     private String id_hvac; //Nome dos equipamentos instalados
@@ -13,6 +15,15 @@ public class manutencao implements Serializable {
     private String tipo; //Nome dos equipamentos instalados
     private String Sala; //Nome dos equipamentos instalados
 
+    public Timestamp getData_execucaots() {
+        return data_execucaots;
+    }
+
+    public void setData_execucaots(Timestamp data_execucaots) {
+        this.data_execucaots = data_execucaots;
+    }
+
+    
     public String getSala() {
         return Sala;
     }

@@ -118,15 +118,14 @@
                     <li>
 
                         <li class="active"><a href="/airpure/sistema/simpec"><i class="fa fa-home"></i> <span>Home</span></a></li>
-                        <li class="active"><a href="/airpure/sistema/dispositivos"><i class="fa fa-bookmark"></i> <span>Dispositivos</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/dispositivos"><i class="fa fa-list"></i> <span>Dispositivos</span></a></li>
                         <li class="header">Cadastro</li>
-                        <li class="active"><a href="/airpure/sistema/cadastroManutencao"><i class="fa fa-bookmark"></i> <span>Cadastro de Manutenções</span></a></li>
-                        <li class="active"><a href="/airpure/sistema/cadastroDispositivo"><i class="fa fa-bookmark"></i> <span>Cadastro de Dispositivos</span></a></li>
-                        <li class="active"><a href="/airpure/sistema/cadastroHVAC"><i class="fa fa-bookmark"></i> <span>Cadastro de A.C</span></a></li>
-                        <li class="active"><a href="/airpure/sistema/cadastroAmbientes"><i class="fa fa-bookmark"></i> <span>Cadastro de Ambientes</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/cadastroManutencao"><i class="fa fa-truck"></i> <span>Cadastro de Manutenções</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/cadastroDispositivo"><i class="fa fa-floppy-o"></i> <span>Cadastro de Dispositivos</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/cadastroHVAC"><i class="fa fa-snowflake-o"></i> <span>Cadastro de A.C</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/cadastroAmbientes"><i class="fa fa-bank"></i> <span>Cadastro de Ambientes</span></a></li>
                         <li class="header">PMOC</li>
-                        <li class="active"><a href="https://drive.google.com/file/d/1rRwyxUEk9pFfuDaoRK9A4li_BsfL7UDA/view?usp=sharing"><i class="fa fa-bookmark"></i> <span>Modelo</span></a></li>
-                        <li class="active"><a href="/airpure/sistema/proximasManutencoes"><i class="fa fa-bookmark"></i> <span>Próximos Serviços</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/proximasManutencoes"><i class="fa fa-calendar"></i> <span>Próximos Serviços</span></a></li>
                     </li>
 
 
@@ -236,39 +235,11 @@
                                             <h:panelGrid columns="1" style="background-color: white; border-radius: 10px; width: 85%; height: 100px; text-align: left;  margin: 30px; padding: 5px;">                              
                                                 <h:outputLabel value="Localização: Sala #{process1.sala}, do(a) #{process1.predio}, na(o)  #{process1.local}." style="color: black; font-size: 18px;"/>
                                                 <h:outputText value="Último Registro: #{process2.dataInString}" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
-                                                <h:outputText value="Modelo de Aparelho de Ar Condicionado: #{process1.equipamentos}" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
-                                                <h:outputText value="Capacidade Máxima: #{process1.capacidadeMaxima} pessoas" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
-                                                <h:outputText value="Dimensão do ambiente: #{process1.dimensao} m²" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
-                                                <h:outputText value="IAQ Atual: #{process2.iaqco2}" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
                                                 <h:form>
                                                     <p:commandButton styleClass="btn btn-success" action="#{requestdata3.putItOnSessionRoom(process1.id)}" onclick="PF('dlg1').show();" value="Relatório"/>
-                                                    <p:commandButton styleClass="btn btn-success" action="#{requestdata3.putItOnSession(process2.airpure.id)}" onclick="PF('dlg1').show();" value="Detalhar"/>
+                                                    <p:commandButton styleClass="btn btn-success" action="#{requestdata3.putItOnSession2(process2.airpure.id,process1.id)}" onclick="PF('dlg1').show();" value="Detalhar"/>
                                                 </h:form>
 
-                                            </h:panelGrid>
-                                            <h:panelGrid columns="1" style="background-color: white; border-radius: 10px; width: 85%; height: 100px; text-align: left;  margin: 30px; padding: 5px;">                              
-
-                                                <iframe style="width:100%; height: 250px; margin-top:5px"
-                                                        src="#{requestdata3.returnLocation(process2.airpure.id)}"></iframe>
-
-                                            </h:panelGrid>
-                                        </h:panelGrid>
-
-                                        <h:panelGrid columns="7" style="width: 100%; " >
-
-                                            <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process2.tvoc,'TVOC')}; border-radius: 10px; width: 90%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
-                                                <h:outputLabel value="TVOC:" style="color: white; font-size: 18px;"/>
-                                                <h:panelGrid columns="2" style="margin:auto;"> 
-                                                    <h:outputText value="#{process2.tvoc} ppb" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
-                                                    <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process2.tvoc,'TVOC')};" width="20"/>       
-                                                </h:panelGrid>
-                                            </h:panelGrid>
-                                            <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process2.co2,'CO2')}; border-radius: 10px; width: 90%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
-                                                <h:outputLabel value="CO2:" style="color: white; font-size: 18px;"/>
-                                                <h:panelGrid columns="2" style="margin:auto;"> 
-                                                    <h:outputText value="#{process2.co2} ppm" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
-                                                    <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process2.co2,'CO2')};" width="20"/>       
-                                                </h:panelGrid>  
                                             </h:panelGrid>
                                             <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process2.temperatura,'Temperatura')}; border-radius: 10px; width: 90%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
                                                 <h:outputLabel value="Temperatura:" style="color: white; font-size: 18px;"/>
@@ -277,16 +248,6 @@
                                                     <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process2.temperatura,'Temperatura')};" width="20"/>       
                                                 </h:panelGrid> 
                                             </h:panelGrid>
-                                            <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process2.umidade,'Umidade')}; border-radius: 10px; width: 90%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
-                                                <h:outputLabel value="Umidade:" style="color: white; font-size: 18px;"/>
-                                                <h:panelGrid columns="2" style="margin:auto;"> 
-                                                    <h:outputText value="#{process2.umidade}%" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
-                                                    <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process2.umidade,'Umidade')};" width="20"/>       
-                                                </h:panelGrid> 
-                                            </h:panelGrid>
-
-
-
                                         </h:panelGrid>
 
 

@@ -168,12 +168,16 @@ public class RequestData3 {
                 System.out.println(sql);
                 while (rs.next()) {
                     amostragens process = new amostragens();
+                    dispositivos device = new dispositivos();
                     process.setId(rs.getLong("id"));
                     process.setCo2(rs.getFloat("co2"));
+                    process.setIaqco2(rs.getFloat("iaq_co2"));
                     process.setEco2(rs.getFloat("eco2"));
                     process.setData(rs.getTimestamp("data"));
                     process.setDb(rs.getFloat("db"));
                     process.setLux(rs.getFloat("lux"));
+                    device.setId(rs.getInt("id_dispositivos"));
+                    process.setAirpure(device);
                     process.setTemperatura(rs.getFloat("temperatura"));
                     process.setUmidade(rs.getFloat("umidade"));
                     process.setTvoc(rs.getFloat("tvoc"));
@@ -184,6 +188,11 @@ public class RequestData3 {
                     } catch (NullPointerException E) {
                         E.printStackTrace();
                     }
+
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                    String strDate = formatter.format(process.getData());
+                    process.setDataInString(strDate);
+
                     registro1.add(process);
                 }
 
@@ -921,11 +930,15 @@ public class RequestData3 {
                 System.out.println(sql);
                 while (rs.next()) {
                     manutencao process = new manutencao();
-                    process.setData_execucao(rs.getString("data_execucao"));
+                    process.setData_execucaots(rs.getTimestamp("data_execucao"));
                     process.setExecutor(rs.getString("executor"));
                     process.setServicos(rs.getString("servicos"));
                     process.setTipo(rs.getString("tipo"));
                     process.setProxima_execucao(rs.getString("modelo"));
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                    String strDate = formatter.format(process.getData_execucaots());
+                    process.setData_execucao(strDate);
+
                     registro7.add(process);
                 }
 
@@ -968,10 +981,15 @@ public class RequestData3 {
                 System.out.println(sql);
                 while (rs.next()) {
                     manutencao process = new manutencao();
-                    process.setProxima_execucao(rs.getString("proxima_execucao"));
+                    process.setData_execucaots(rs.getTimestamp("proxima_execucao"));
                     process.setExecutor(rs.getString("executor"));
                     process.setData_execucao(rs.getString("modelo") + " | " + rs.getString("potencia") + " btus | " + rs.getString("tipo") + " | Patrimônio " + rs.getString("n_patrimonio"));
                     process.setSala("Sala " + rs.getString("sala") + ", no " + rs.getString("predio") + " da " + rs.getString("local"));
+
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                    String strDate = formatter.format(process.getData_execucaots());
+                    process.setProxima_execucao(strDate);
+
                     registro7.add(process);
                 }
 
@@ -1156,6 +1174,22 @@ public class RequestData3 {
             HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
             FacesContext.getCurrentInstance().getExternalContext().redirect("detalhar?smp_id=" + id);
             session.setAttribute("smp_id", id);
+
+            return "505.xhtml";
+        } catch (IOException ex) {
+            Logger.getLogger(RequestData3.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "";
+    }
+
+    public String putItOnSession2(int id, int id2) throws InterruptedException {
+
+        try {
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+            session.setAttribute("smp_id", id);
+            session.setAttribute("relatorio", id2);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("detalhar?smp_id=" + id);
 
             return "505.xhtml";
         } catch (IOException ex) {
