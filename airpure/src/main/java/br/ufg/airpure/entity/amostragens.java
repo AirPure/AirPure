@@ -21,6 +21,15 @@ public class amostragens implements Serializable {
     private dispositivos airpure; //Airpure relacionado
     private String dataInString; //Airpure relacionado
     private String localizacao; //Airpure relacionado
+    private String iaqco2Total; //Nome dos equipamentos instalados
+
+    public String getIaqco2Total() {
+        return iaqco2Total;
+    }
+
+    public void setIaqco2Total(String iaqco2Total) {
+        this.iaqco2Total = iaqco2Total;
+    }
 
     public String getLocalizacao() {
         return localizacao;
@@ -30,7 +39,6 @@ public class amostragens implements Serializable {
         this.localizacao = localizacao;
     }
 
-    
     public String getDataInString() {
         return dataInString;
     }
@@ -39,8 +47,6 @@ public class amostragens implements Serializable {
         this.dataInString = dataInString;
     }
 
-    
-    
     public Float getIaqco2() {
         return iaqco2;
     }
@@ -49,7 +55,6 @@ public class amostragens implements Serializable {
         this.iaqco2 = iaqco2;
     }
 
-    
     public dispositivos getAirpure() {
         return airpure;
     }
@@ -145,6 +150,5 @@ public class amostragens implements Serializable {
     public void setV_FIRMWARE(int V_FIRMWARE) {
         this.V_FIRMWARE = V_FIRMWARE;
     }
-
 
 }

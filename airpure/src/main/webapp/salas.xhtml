@@ -118,7 +118,7 @@
                     <li>
 
                         <li class="active"><a href="/airpure/sistema/simpec"><i class="fa fa-home"></i> <span>Home</span></a></li>
-                        <li class="active"><a href="/airpure/sistema/dispositivos"><i class="fa fa-list"></i> <span>Dispositivos</span></a></li>
+                        
                         <li class="header">Cadastro</li>
                         <li class="active"><a href="/airpure/sistema/cadastroManutencao"><i class="fa fa-truck"></i> <span>Cadastro de Manutenções</span></a></li>
                         <li class="active"><a href="/airpure/sistema/cadastroDispositivo"><i class="fa fa-floppy-o"></i> <span>Cadastro de Dispositivos</span></a></li>
@@ -142,23 +142,7 @@
                     Dashboard
                     <small style="color: white;">SIMPEC</small>
                 </h1>
-                <div align = "right">
-                    <h:panelGrid columns="2">
-                        <h1 style="color: white; float: left; font-size: 26px; margin-top: 0; padding-right: 5px">
-                            Ordenar por:    
-                            <!-- <small style="color: white;">SASO</small> -->
-                        </h1>
-                        <h:form>
-                            <h:panelGrid columns="2" style= "margin-top: 0!Important; padding: 0">
-                                <p:selectOneMenu value="#{autenticacao.usuario.nome}" effect="fold" editable="false" style="background-color:white;">
-                                    <f:selectItem itemLabel="Ordem Alfabética" itemValue="1"/>
-                                    <f:selectItem itemLabel="Temperatura" itemValue="2"/>
-                                </p:selectOneMenu>
-                                <p:commandButton styleClass="btn btn-success btn-block" value="Filtrar" action="#{autenticacao.defineOrdenacao()}" update="@form"/>
-                            </h:panelGrid>
-                        </h:form>
-                    </h:panelGrid>
-                </div>
+
             </section>
 
             <section class="content">
@@ -177,49 +161,25 @@
 
 
                     <!--Título-->
-                    <p:fieldset legend="Qualidade do Ar Interno - Salas" style="width:100%; border-width: 3px; color: black; text-align: center;">
-                        <section class="content-header">
-                            <h1 style="color: black; text-align: center;">
-                                Intervalo de Tempo Monitorado
-                                <small>Intervalo: #{requestdata3.time()}</small>
-                            </h1>
-                        </section>
-
-                        <h:form>  
-                            <p:menubar style="text-align: center;">
-                                <p:submenu label="Filtrar por" icon="pi pi-file">
-                                    <p:menuitem value="Data" onclick="filterByData()"/>
-                                    <p:separator />
-                                    <p:menuitem value="Sem Filtro" onclick="noFilter();PF('dlg1').show();" action="#{requestdata3.noFilterDatatable()}"/>
-                                </p:submenu>
-
-                            </p:menubar>
-                        </h:form>
-                        <p:panelGrid columns="1" style="min-width: 100%;">
-                            <h:outputLabel id="data" style="display: none">
-                                <h:outputLabel style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
-                                    <p:panelGrid columns="2">
-                                        <h1 style="color:black; display: flex; flex-direction: row; justify-content: center; align-items: center;">
-                                            Intervalo do histórico
-                                            <small style="color:black;">(dd/MM/yyyy)</small>
-                                        </h1>
-
-                                        <h:form style=" display: flex; flex-direction: row; justify-content: center; align-items: center">
-                                            <p:outputLabel value="Inicio: "/>
-                                            <p:inputMask value="#{requestdata3.inicio}" mask="99/99/9999" lang="ptbr" required="true" requiredMessage="Preencha os campos em branco."/>
-
-
-                                            <p:outputLabel value=" Fim: "/>
-                                            <p:inputMask value="#{requestdata3.fim}" mask="99/99/9999" lang="ptbr" required="true" requiredMessage="Preencha os campos em branco."/>
-
-                                            <p:commandButton action="#{requestdata3.datatableFilterData()}" onclick="PF('dlg1').show();" value="Filtrar" update="@all" style="text-align: center;"/> 
-                                        </h:form>
-                                    </p:panelGrid>
-
-                                </h:outputLabel>
-                            </h:outputLabel>
-                        </p:panelGrid>
-
+                    <p:fieldset legend="Ambientes Monitorados" style="width:100%; border-width: 3px; color: black; text-align: center;  font-weight: bold;">
+                        
+                        <div align = "right">
+                            <h:panelGrid columns="2">
+                                <h1 style="color: black; float: left; font-size: 26px; margin-top: 0; padding-right: 5px">
+                                    Ordenar por:    
+                                    <!-- <small style="color: white;">SASO</small> -->
+                                </h1>
+                                <h:form>
+                                    <h:panelGrid columns="2" style= "margin-top: 0!Important; padding: 0">
+                                        <p:selectOneMenu value="#{autenticacao.usuario.nome}" effect="fold" editable="false" style="background-color:white;">
+                                            <f:selectItem itemLabel="Ordem Alfabética" itemValue="1"/>
+                                            <f:selectItem itemLabel="Temperatura" itemValue="2"/>
+                                        </p:selectOneMenu>
+                                        <p:commandButton styleClass="btn btn-primary btn-block" value="Ordenar" action="#{autenticacao.defineOrdenacao()}" update="@form"/>
+                                    </h:panelGrid>
+                                </h:form>
+                            </h:panelGrid>
+                        </div>
                         <p:dataScroller id="fieldset_data1" value="#{requestdata3.returnAmbientes()}" var="process1" rendered="true">   
 
                             <!--Painel que separa os dispositivos-->
@@ -232,21 +192,23 @@
 
                                         <!--Dados-->
                                         <h:panelGrid columns="2" style="width: 100%; " >
-                                            <h:panelGrid columns="1" style="background-color: white; border-radius: 10px; width: 85%; height: 100px; text-align: left;  margin: 30px; padding: 5px;">                              
-                                                <h:outputLabel value="Localização: Sala #{process1.sala}, do(a) #{process1.predio}, na(o)  #{process1.local}." style="color: black; font-size: 18px;"/>
-                                                <h:outputText value="Último Registro: #{process2.dataInString}" style="font-weight: normal; color: black; text-align: center; font-size: 18px;"/>
+                                            <h:panelGrid columns="2" style="background-color: white; border-radius: 10px; width: 85%; height: 100px; text-align: left;  margin: 30px; padding: 5px;">                              
+                                                <h:outputLabel value="Localização:" style="color: black; font-size: 18px;"/>
+                                                <h:outputLabel value=" Sala #{process1.sala}, do(a) #{process1.predio}, na(o)  #{process1.local}." style="color: black; font-size: 18px; font-weight: bold; "/>
+                                                <h:outputText value="Último Registro:" style="font-weight: normal; color: black; text-align: center; font-size: 18px; "/>
+                                                <h:outputText value=" #{process2.dataInString}" style="color: black; text-align: center; font-size: 18px; font-weight: bold;"/>
                                                 <h:form>
-                                                    <p:commandButton styleClass="btn btn-success" action="#{requestdata3.putItOnSessionRoom(process1.id)}" onclick="PF('dlg1').show();" value="Relatório"/>
-                                                    <p:commandButton styleClass="btn btn-success" action="#{requestdata3.putItOnSession2(process2.airpure.id,process1.id)}" onclick="PF('dlg1').show();" value="Detalhar"/>
+                                                    <p:commandButton styleClass="btn btn-primary" action="#{requestdata3.putItOnSessionRoom(process1.id)}" onclick="PF('dlg1').show();" value="Relatório"/>
+                                                    <p:commandButton styleClass="btn btn-primary" action="#{requestdata3.putItOnSession2(process2.airpure.id,process1.id)}" onclick="PF('dlg1').show();" value="Detalhes"/>
                                                 </h:form>
 
                                             </h:panelGrid>
                                             <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process2.temperatura,'Temperatura')}; border-radius: 10px; width: 90%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
                                                 <h:outputLabel value="Temperatura:" style="color: white; font-size: 18px;"/>
                                                 <h:panelGrid columns="2" style="margin:auto;"> 
-                                                    <h:outputText value="#{process2.temperatura} ºC" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
-                                                    <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process2.temperatura,'Temperatura')};" width="20"/>       
+                                                    <h:outputText value="#{process2.temperatura} ºC" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>     
                                                 </h:panelGrid> 
+                                                <h:outputLabel value="#{requestdata3.returnImageParam(process2.temperatura,'Temperatura')}" style="color: white; font-size: 18px;"/>
                                             </h:panelGrid>
                                         </h:panelGrid>
 
@@ -259,7 +221,7 @@
 
 
                         <div style="text-align:center">
-                            <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/udf.png" width="100"/>   
+                            <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/udf.png" width="300"/>   
                         </div>
                         <div style="text-align:center">
                             <h:outputLabel value="Powered by AirPure | #{main.SVNRevision}" style="font-size: 10px;"/>
