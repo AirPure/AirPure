@@ -1,256 +1,451 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:hf="http://highfaces.org">
-    <style>
-        .ui-fieldset {
-            backgrond: #FFF;
-            color: #4f4f4f;
-            background-color: #EEE!Important;
-            border: none;
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:hf="http://highfaces.org"
+      xmlns:p="http://primefaces.org/ui">
 
-        }
-        .ui-panelgrid {
-            align-content: center;
-        }
-        .noHeader.ui-datatable table thead tr {
-            display: none;
-        }
-        .noColor.ui-datascroller .ui-datascroller-item {
-            background-color: #FFFFFF!Important;
-        }
-        .color.ui-datascroller .ui-datascroller-item {
-            background-color: #FFFFFF!Important;
-        }
-        @page {
-            size: A4;
-            margin: 0;
-        }
-
-    </style>
-    <SCRIPT type="text/javascript">
-        function imprime() {
-            window.print();
-        }
-        function myFunction() {
-            document.getElementById("teste2").style.display = "none";
-            window.print();
-            document.getElementById("teste2").style.display = "inline";
-        }
-        function redireciona() {
-            window.history.back();
-        }
-    </SCRIPT>
-    <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/logo1.png']}"/>
     <h:head>
-        <title>AirPure - Relatório</title>
+        <title>Dashboard - Geral</title>
+        <!-- Bootstrap core CSS -->
+
+        <link rel="stylesheet" type="text/css"
+              href="#{request.contextPath}/resources/bootstrap/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css"
+              href="#{request.contextPath}/resources/dist/css/AdminLTE.min.css" />
+        <link rel="stylesheet" type="text/css"
+              href="#{request.contextPath}/resources/dist/css/skins/skin-blue.min.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"/>
+        <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"/>
+
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/logo1.png']}"/>
+        <SCRIPT type="text/javascript">
+            var myVar = setInterval(redirect, 60000);
+            var myVar2 = setInterval(redirect2, 360000);
+            function redirect() {
+                $("#fieldset_colors").load(" #fieldset_colors > *");
+                $("#lastRegister").load(" #lastRegister > *");
+            }
+            function redirect2() {
+                window.location.reload(1);
+            }
+
+
+
+        </SCRIPT>
+        <!-- REQUIRED JS SCRIPTS -->
+        <SCRIPT type="text/javascript">
+            function imprime() {
+                window.print();
+            }
+            function myFunction() {
+                document.getElementById("teste2").style.display = "none";
+                window.print();
+                document.getElementById("teste2").style.display = "inline";
+            }
+            function redireciona() {
+                window.history.back();
+            }
+        </SCRIPT>
+        <style>
+            .dot {
+                height: 25px;
+                width: 25px;
+                border-radius: 50%;
+                display: inline-block;
+            }
+            html {
+                background-color: #222D32;
+            }
+
+        </style>
+
+
+
+
+
     </h:head>
-    <h:body onload="#{chartView.setnAmostra(1)}"></h:body>
-    <h:body style="background-color:#FFFFFF!important" id="geralzao" onload="#{autenticacao.verificacao()}">
 
-        <h:form>    
-            <div id="teste2">
-                <p></p>
-                <p:menubar style="background: #EEEEEE">
-                    <f:facet name="options">
-                        <p:commandButton type="button" value="Voltar" icon="pi pi-home" onclick="redireciona()">
-                        </p:commandButton>
-                        <p:commandButton type="button" value="Imprimir" icon="pi pi-home" onclick="myFunction()">
-                        </p:commandButton>
-                    </f:facet>
-                </p:menubar>
-            </div>
-        </h:form>
-        <h:form>
-
-            <p></p>
-            <p:fieldset style="width:950px; margin: 0px auto;">
-                <p:panelGrid columns="2" style="width:930px; text-align: center;">
-                    <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/logo2.png" width="150"/> 
-                    <h1>RELATÓRIO - QUALIDADE DO AR</h1>
-                </p:panelGrid>
-                <p:outputPanel style="background: #EEEEEE; width:930px; height: 35px;"><h3>I - INFORMAÇÕES DO AMBIENTE</h3></p:outputPanel>
-
-                <p:dataScroller value="#{requestdata3.returnAmbienteById()}" var="groups" rendered="true">
-                    <h:panelGrid columns="2" style="width:100%">
-                        <p:outputPanel>
-                            <h:panelGrid columns="2" cellpadding="5"> 
-                                <h:outputText value="Sala: " />
-                                <h:outputText value="#{groups.sala}" style="font-weight: bold"/>
-
-                                <h:outputText value="Prédio: " />
-                                <h:outputText value="#{groups.predio}" style="font-weight: bold"/>
-
-                                <h:outputText value="Câmpus: " />
-                                <h:outputText value="#{groups.local}" style="font-weight: bold"/>
-
-                                <h:outputText value="Capacidade máxima: " />
-                                <h:outputText value="#{groups.capacidadeMaxima} ocupantes" style="font-weight: bold"/>
-
-                                <h:outputText value="Dimensão do ambiente: " />
-                                <h:outputText value="#{groups.dimensao} m²" style="font-weight: bold"/>
-
-                                <h:outputText value="Equipamento Instalado: " />
-                                <h:outputText value="#{groups.equipamentos}" style="font-weight: bold"/>
-
-                                <h:outputText value="Nº de Controle do Equipamento: " />
-                                <h:outputText value="#{groups.n_Controle}" style="font-weight: bold"/>
-
-                                <h:outputText value="Nº de Patrimônio do Equipamento: " />
-                                <h:outputText value="#{groups.n_Patrimonio}" style="font-weight: bold"/>
+    <h:body onload="#{autenticacao.verificacao()}" ></h:body>
+    <h:body class="skin-blue sidebar-mini sidebar-collapse" >
 
 
-                            </h:panelGrid>
-                        </p:outputPanel>
-                    </h:panelGrid>
-                </p:dataScroller>
-                <p:outputPanel style="background: #EEEEEE; width:930px; height: 35px;"><h3>II - MANUTENÇÕES DOS APARELHOS DE AR CONDICIONADO</h3></p:outputPanel>
-                <p:dataTable value="#{requestdata3.retornaManutencoes()}" var="item" paginator="false" rows="15" >
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="Data Execução"></h:outputText>
-                        </f:facet>
-                        <h:outputText value="#{item.data_execucao}" style="font-weight: bold"><f:convertDateTime pattern="dd/MM/yyyy"/></h:outputText>
-                    </p:column>
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="Executor"/>
-                        </f:facet>
-                        <h:outputText value="#{item.executor}" style="font-weight: bold"/>
-                    </p:column>
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="Tipo"/>
-                        </f:facet>
-                        <h:outputText value="#{item.tipo}" style="font-weight: bold"/>
-                    </p:column>
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="HVAC"/>
-                        </f:facet>
-                        <h:outputText value="#{item.proxima_execucao}" style="font-weight: bold"/>
-                    </p:column>
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="Serviços"/>
-                        </f:facet>
-                        <h:outputText value="#{item.servicos}" style="font-weight: bold"/>
-                    </p:column>
-                </p:dataTable>
 
-                <p:outputPanel style="background: #EEEEEE; width:930px; height: 35px;"><h3>III - DADOS DA QUALIDADE DO AR - #{requestdata3.time()}</h3></p:outputPanel>
+        <!-- Main Header -->
+        <header class="main-header">
+
+            <!-- Logo -->
+            <a href="homePage.xhtml" class="logo">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/logo1.png" width="30"/> 
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg"><b>AirPure</b></span>
+            </a>
+
+            <!-- Header Navbar -->
+            <nav class="navbar navbar-static-top" role="navigation">
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                </a>
+
+                <h:form>
+                    <div class="pull-right">
+                        <p:commandButton styleClass="btn btn-danger btn-block" value="Sair" action="#{autenticacao.logOut()}" update="@form"/>
+                    </div>
+                </h:form>
+
+            </nav>
+
+        </header>
+        <!-- Left side column. contains the logo and sidebar -->
+        <aside class="main-sidebar" style="height: 100%!Important;">
+
+            <!-- sidebar: style can be found in sidebar.less -->
+            <section class="sidebar">
+
+                <!-- /.search form -->
+
+                <!-- Sidebar Menu -->
+                <ul class="sidebar-menu">
+                    <li class="header">Menu</li>
+                    <!-- Optionally, you can add icons to the links -->
+
+                    <li>
+
+                        <li class="active"><a href="/airpure/sistema/simpec"><i class="fa fa-home"></i> <span>Home</span></a></li>
+
+                        <li class="header">Cadastro</li>
+                        <li class="active"><a href="/airpure/sistema/cadastroManutencao"><i class="fa fa-truck"></i> <span>Cadastro de Manutenções</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/cadastroDispositivo"><i class="fa fa-floppy-o"></i> <span>Cadastro de Dispositivos</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/cadastroHVAC"><i class="fa fa-snowflake-o"></i> <span>Cadastro de A.C</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/cadastroAmbientes"><i class="fa fa-bank"></i> <span>Cadastro de Ambientes</span></a></li>
+                        <li class="header">PMOC</li>
+                        <li class="active"><a href="/airpure/sistema/proximasManutencoes"><i class="fa fa-calendar"></i> <span>Próximos Serviços</span></a></li>
+                    </li>
+
+
+                </ul>
+            </section>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper" style="overflow: scroll; background-size: 100%; background: url('resources/images/wp4094533.jpg') repeat !important;">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1 style="color: white;">
+                    Dashboard
+                    <small style="color: white;">SIMPEC</small>
+                </h1>
+            </section>
+
+            <section class="content">
+
+
+                <p:dialog header="Aguarde um momento..." widgetVar="dlg1" modal="true" resizable="false" draggable="false" closable="false">
+                    <div style="text-align: center">
+                        <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/ajaxloadingbar.gif" width="100"/>
+                    </div>
+                </p:dialog>
+
+
+
+                <h:panelGroup>
+
+
+
+                    <!--Título-->
 
 
 
 
-                <p:dataTable value="#{requestdata3.returnStatistics()}" var="item" paginator="false" rows="15" >
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="Parâmetro"/>
-                        </f:facet>
-                        <h:outputText value="#{item.parametro}" style="font-weight: bold"/>
-                    </p:column>
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="Máximo"/>
-                        </f:facet>
-                        <h:outputText value="#{item.co2Max}" style="font-weight: bold"/>
-                    </p:column>
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="Mínimo"/>
-                        </f:facet>
-                        <h:outputText value="#{item.co2Min}" style="font-weight: bold"/>
-                    </p:column>
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="Média"/>
-                        </f:facet>
-                        <h:outputText value="#{item.co2Media}" style="font-weight: bold"/>
-                    </p:column>
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="Desvio Padrão"/>
-                        </f:facet>
-                        <h:outputText value="#{item.co2DesvPad}" style="font-weight: bold"/>
-                    </p:column>
-                </p:dataTable>
 
-                <h:panelGrid columns="2">
-                    <p:outputPanel>
-                        <h:panelGrid columns="2" cellpadding="5"> 
-                            <h:outputText value="Resultado: " />
-                            <h:outputText value="#{requestdata3.returnAvgIAQCO2()}" style="font-weight: bold; font-size: 21px;"/>
+                    <h:body style="background-color:#FFFFFF!important" id="geralzao" onload="#{autenticacao.verificacao()}">
 
-                        </h:panelGrid>
-                    </p:outputPanel>
-                </h:panelGrid>
+                        <h:form>    
+                            <div id="teste2">
+                                <p></p>
+                                <p:menubar style="background: #EEEEEE">
+                                    <f:facet name="options">
+                                        <p:commandButton styleClass="btn btn-primary" type="button" value="Voltar" icon="pi pi-home" onclick="redireciona()">
+                                        </p:commandButton>
+                                        <p:commandButton styleClass="btn btn-primary" type="button" value="Imprimir" icon="pi pi-home" onclick="myFunction()">
+                                        </p:commandButton>
+                                    </f:facet>
+                                </p:menubar>
+                            </div>
+                        </h:form>
+                        <h:form>
 
+                            <p></p>
+                            <p:fieldset style="width:950px; margin: 0px auto;">
+                                <p:panelGrid columns="2" style="width:930px; text-align: left;">
+                                    <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/logo2.png" width="150"/> 
+                                    <h1>RELATÓRIO - QUALIDADE DO AR</h1>
+                                </p:panelGrid>
+                                <p:outputPanel style="background: #EEEEEE; width:930px; height: 35px;"><h3>I - INFORMAÇÕES DO AMBIENTE</h3></p:outputPanel>
 
-                <p:outputPanel style="background: #EEEEEE; width:930px; height: 35px;"><h3>IV - VARIAÇÕES GRÁFICAS - #{requestdata3.time()}</h3></p:outputPanel>
+                                <p:dataScroller value="#{requestdata3.returnAmbienteById()}" var="groups" rendered="true">
+                                    <h:panelGrid columns="2" style="width:100%">
+                                        <p:outputPanel>
+                                            <h:panelGrid columns="2" cellpadding="5"> 
+                                                <h:outputText value="Sala: " />
+                                                <h:outputText value="#{groups.sala}" style="font-weight: bold"/>
 
-                <p:outputPanel style="width:100%;">
-                    <hf:chart type="line" value="#{chartView3.registro1}" var="point"
-                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de CO2">
-                        <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
-                                      gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                    </hf:chart> 
-                </p:outputPanel>
-                <p:outputPanel style="width:100%;">
-                    <hf:chart type="line" value="#{chartView3.registro2}" var="point"
-                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de eCO2">
-                        <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
-                                      gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                    </hf:chart> 
-                </p:outputPanel>
-                <p:outputPanel style="width:100%;">
-                    <hf:chart type="line" value="#{chartView3.registro3}" var="point"
-                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Temperatura">
-                        <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
-                                      gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                    </hf:chart> 
-                </p:outputPanel>
-                <p:outputPanel style="width:100%;">
-                    <hf:chart type="line" value="#{chartView3.registro4}" var="point"
-                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Umidade">
-                        <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
-                                      gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                    </hf:chart> 
-                </p:outputPanel>
-                <p:outputPanel style="width:100%;">
-                    <hf:chart type="line" value="#{chartView3.registro5}" var="point"
-                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de dB">
-                        <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
-                                      gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                    </hf:chart> 
-                </p:outputPanel>
-                <p:outputPanel style="width:100%;">
-                    <hf:chart type="line" value="#{chartView3.registro6}" var="point"
-                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Lux">
-                        <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
-                                      gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                    </hf:chart> 
-                </p:outputPanel>
+                                                <h:outputText value="Prédio: " />
+                                                <h:outputText value="#{groups.predio}" style="font-weight: bold"/>
 
-                <p:outputPanel style="width:100%;">
-                    <hf:chart type="line" value="#{chartView3.registro7}" var="point"
-                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de TVOC">
-                        <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
-                                      gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                    </hf:chart> 
-                </p:outputPanel>
+                                                <h:outputText value="Câmpus: " />
+                                                <h:outputText value="#{groups.local}" style="font-weight: bold"/>
 
-                <div style="text-align:center; ">
-                    <p:outputLabel value="Powered by AirPure" style="font-size: 10px;"/>  
-                </div>
+                                                <h:outputText value="Capacidade máxima: " />
+                                                <h:outputText value="#{groups.capacidadeMaxima} ocupantes" style="font-weight: bold"/>
+
+                                                <h:outputText value="Dimensão do ambiente: " />
+                                                <h:outputText value="#{groups.dimensao} m²" style="font-weight: bold"/>
+
+                                                <h:outputText value="Equipamento Instalado: " />
+                                                <h:outputText value="#{groups.equipamentos}" style="font-weight: bold"/>
+
+                                                <h:outputText value="Nº de Controle do Equipamento: " />
+                                                <h:outputText value="#{groups.n_Controle}" style="font-weight: bold"/>
+
+                                                <h:outputText value="Nº de Patrimônio do Equipamento: " />
+                                                <h:outputText value="#{groups.n_Patrimonio}" style="font-weight: bold"/>
 
 
-            </p:fieldset>
-            <p></p>
-        </h:form>
+                                            </h:panelGrid>
+                                        </p:outputPanel>
+                                    </h:panelGrid>
+                                </p:dataScroller>
+                                <p:outputPanel style="background: #EEEEEE; width:930px; height: 35px;"><h3>II - MANUTENÇÕES DOS APARELHOS DE AR CONDICIONADO</h3></p:outputPanel>
+                                <p:dataTable value="#{requestdata3.retornaManutencoes()}" var="item" paginator="false" rows="15" >
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Data Execução"></h:outputText>
+                                        </f:facet>
+                                        <h:outputText value="#{item.data_execucao}" style="font-weight: bold"><f:convertDateTime pattern="dd/MM/yyyy"/></h:outputText>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Executor"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.executor}" style="font-weight: bold"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Tipo"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.tipo}" style="font-weight: bold"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="HVAC"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.proxima_execucao}" style="font-weight: bold"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Serviços"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.servicos}" style="font-weight: bold"/>
+                                    </p:column>
+                                </p:dataTable>
+
+                                <p:outputPanel style="background: #EEEEEE; width:930px; height: 35px;"><h3>III - DADOS DA QUALIDADE DO AR - #{requestdata3.time()}</h3></p:outputPanel>
+
+
+
+
+                                <p:dataTable value="#{requestdata3.returnStatistics()}" var="item" paginator="false" rows="15" >
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Parâmetro"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.parametro}" style="font-weight: bold"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Máximo"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.co2Max}" style="font-weight: bold"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Mínimo"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.co2Min}" style="font-weight: bold"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Média"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.co2Media}" style="font-weight: bold"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Desvio Padrão"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.co2DesvPad}" style="font-weight: bold"/>
+                                    </p:column>
+                                </p:dataTable>
+
+                                <h:panelGrid columns="2">
+                                    <p:outputPanel>
+                                        <h:panelGrid columns="2" cellpadding="5"> 
+                                            <h:outputText value="Resultado: " />
+                                            <h:outputText value="#{requestdata3.returnAvgIAQCO2()}" style="font-weight: bold; font-size: 21px;"/>
+
+                                        </h:panelGrid>
+                                    </p:outputPanel>
+                                </h:panelGrid>
+
+
+                                <p:outputPanel style="background: #EEEEEE; width:930px; height: 35px;"><h3>IV - VARIAÇÕES GRÁFICAS - #{requestdata3.time()}</h3></p:outputPanel>
+
+                                <p:outputPanel style="width:100%;">
+                                    <hf:chart type="line" value="#{chartView3.registro1}" var="point"
+                                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de CO2">
+                                        <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                                      gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                    </hf:chart> 
+                                </p:outputPanel>
+                                <p:outputPanel style="width:100%;">
+                                    <hf:chart type="line" value="#{chartView3.registro2}" var="point"
+                                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de eCO2">
+                                        <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                                      gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                    </hf:chart> 
+                                </p:outputPanel>
+                                <p:outputPanel style="width:100%;">
+                                    <hf:chart type="line" value="#{chartView3.registro3}" var="point"
+                                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Temperatura">
+                                        <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                                      gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                    </hf:chart> 
+                                </p:outputPanel>
+                                <p:outputPanel style="width:100%;">
+                                    <hf:chart type="line" value="#{chartView3.registro4}" var="point"
+                                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Umidade">
+                                        <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                                      gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                    </hf:chart> 
+                                </p:outputPanel>
+                                <p:outputPanel style="width:100%;">
+                                    <hf:chart type="line" value="#{chartView3.registro5}" var="point"
+                                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de dB">
+                                        <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                                      gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                    </hf:chart> 
+                                </p:outputPanel>
+                                <p:outputPanel style="width:100%;">
+                                    <hf:chart type="line" value="#{chartView3.registro6}" var="point"
+                                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Lux">
+                                        <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                                      gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                    </hf:chart> 
+                                </p:outputPanel>
+
+                                <p:outputPanel style="width:100%;">
+                                    <hf:chart type="line" value="#{chartView3.registro7}" var="point"
+                                              point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de TVOC">
+                                        <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                                      gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                    </hf:chart> 
+                                </p:outputPanel>
+
+                                <div style="text-align:center; ">
+                                    <p:outputLabel value="Powered by AirPure" style="font-size: 10px;"/>  
+                                </div>
+
+
+                            </p:fieldset>
+                            <p></p>
+                        </h:form>
+                        <h:form>    
+                            <div id="teste2">
+                                <p></p>
+                                <p:menubar style="background: #EEEEEE">
+                                    <f:facet name="options">
+                                        <p:commandButton styleClass="btn btn-primary" type="button" value="Voltar" icon="pi pi-home" onclick="redireciona()">
+                                        </p:commandButton>
+                                        <p:commandButton styleClass="btn btn-primary" type="button" value="Imprimir" icon="pi pi-home" onclick="myFunction()">
+                                        </p:commandButton>
+                                    </f:facet>
+                                </p:menubar>
+                            </div>
+                        </h:form>
+                    </h:body>
+
+
+                </h:panelGroup><!--Final Painel que separa os dispositivos-->
+
+
+                <!--Inserir aqui próximos dispositivos-->
+
+
+            </section>
+
+
+        </div><!-- /.content-wrapper -->
+        <!-- Add the sidebar's background. This div must be placed
+             immediately after the control sidebar -->
+        <div class="control-sidebar-bg"></div>
+
+
+        <!-- REQUIRED JS SCRIPTS -->
+
+        <script src="https://unpkg.com/gauge-chart@0.5.1/dist/bundle.js"></script>
+        <script>
+                                            // Element inside which you want to see the chart.
+                                            let element1 = document.querySelector('#gaugeArea1')
+
+                                            let options1 = {
+                                                arcColors: ['rgb(44, 151, 222)', 'lightgray'],
+                                                arcDelimiters: [80],
+                                                rangeLabel: ['0%', '100%'],
+                                                centralLabel: '70%',
+                                            }
+
+
+
+                                            // Drawing and updating the chart.  
+                                            GaugeChart
+                                                    .gaugeChart(element1, 300, options1)
+                                                    .updateNeedle(70)
+
+        </script>
+
+
+        <script>
+            // Element inside which you want to see the chart.
+            let element2 = document.querySelector('#gaugeArea2')
+
+            let options2 = {
+                arcColors: ['rgb(44, 151, 222)', 'lightgray'],
+                arcDelimiters: [80],
+                rangeLabel: ['0%', '100%'],
+                centralLabel: '70%',
+            }
+
+
+
+            // Drawing and updating the chart.  
+            GaugeChart
+                    .gaugeChart(element2, 300, options2)
+                    .updateNeedle(70)
+
+        </script>
+
+
+        <script type="text/javascript" src="#{request.contextPath}/resources/bootstrap/js/bootstrap.min.js"></script> <!-- Correio -->
+        <script type="text/javascript" src="#{request.contextPath}/resources/dist/js/app.min.js"></script> <!-- Correio -->
+
+
+
+
+
     </h:body>
+
 </html>

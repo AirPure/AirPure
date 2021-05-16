@@ -152,7 +152,7 @@ public class RequestData3 {
             Main.db = null;
             BD.ConectarBD();
             //String sql = "SELECT DISTINCT ON (id_dispositivos) id_dispositivos,* FROM amostragens WHERE id_dispositivos IN (SELECT id FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado +") ORDER BY id_dispositivos,id DESC;";
-            String sql = "SELECT * FROM amostragens WHERE id_dispositivos = " + parametro + " ORDER BY id DESC LIMIT 1;";
+            String sql = "SELECT *, (SELECT avg(iaq_co2) as iaq_co2_3 FROM amostragens WHERE id_dispositivos = " + parametro + " AND NOW() > data::timestamptz AND NOW() - data::timestamptz <= interval '3 hours' ),(SELECT avg(iaq_co2) as iaq_co2_5 FROM amostragens WHERE id_dispositivos = " + parametro + " AND NOW() > data::timestamptz AND NOW() - data::timestamptz <= interval '5 hours' )  FROM amostragens WHERE id_dispositivos = " + parametro + " ORDER BY id DESC LIMIT 1;";
 
             try {
                 Main.sql = Main.db.createStatement();
@@ -172,6 +172,7 @@ public class RequestData3 {
                     process.setId(rs.getLong("id"));
                     process.setCo2(rs.getFloat("co2"));
                     process.setIaqco2(rs.getFloat("iaq_co2"));
+                    process.setIaqco2Total(" Atual: " + rs.getFloat("iaq_co2") + " | Últimas 3 horas: " +  rs.getFloat("iaq_co2_3") + " | Últimas 5 horas: " + rs.getFloat("iaq_co2_5"));
                     process.setEco2(rs.getFloat("eco2"));
                     process.setData(rs.getTimestamp("data"));
                     process.setDb(rs.getFloat("db"));
@@ -1050,11 +1051,11 @@ public class RequestData3 {
             }
 
             if (value > minimo && value < maximo) {
-                return "/resources/images/ok.png";
+                return "Bom";
             } else if (value < minimo) {
-                return "/resources/images/ok.png";
+                return "Inadequado";
             } else {
-                return "/resources/images/bad.png";
+                return "Ruim";
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -1243,7 +1244,19 @@ public class RequestData3 {
             HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
             String startpoint = (String) session.getAttribute("startPoint");
             String endpoint = (String) session.getAttribute("endPoint");
-            return "(" + startpoint + " - " + endpoint + ")";
+            String inicioAux = "";
+            String fimAux = "";
+            String aux[];
+
+            aux = startpoint.split(Pattern.quote("/"));
+            inicioAux = aux[2] + "/" + aux[1] + "/" + aux[0];
+
+            aux = endpoint.split(Pattern.quote("/"));
+            fimAux = aux[2] + "/" + aux[1] + "/" + (aux[0]);
+            
+            
+            
+            return "(" + inicioAux + " - " + fimAux + ")";
 
         } catch (Exception ex) {
             ex.printStackTrace();
