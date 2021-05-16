@@ -23,20 +23,20 @@
         <SCRIPT type="text/javascript">
             var myVar = setInterval(redirect, 60000);
             var myVar2 = setInterval(redirect2, 360000);
-            
+
             function redirect() {
                 $("#fieldset_colors").load(" #fieldset_colors > *");
                 $("#lastRegister").load(" #lastRegister > *");
             }
-            
+
             function redirect2() {
                 window.location.reload(1);
             }
 
             function someMenu() {
                 var status = document.getElementById("lateralMenu").style.display;
-             
-                if (status == "none"){
+
+                if (status == "none") {
                     document.getElementById("lateralMenu").style.display = "block";
                 } else {
                     document.getElementById("lateralMenu").style.display = "none";
@@ -187,28 +187,52 @@
                 <h:panelGroup>
                     <p:fieldset legend="Consulta aos Dados" style="width:100%; border-width: 3px; color: black; text-align: center;">
                         <section class="content-header" id="lastRegister">
-                            <h1>I will working on it. In case of doubts, please check Trello for you see when.</h1>
-                        </section>
-
-                        <div align="right">
-                            <h:panelGrid columns="2">
-                                <h1 style="color: white; float: left; font-size: 26px; margin-top: 0; padding: 5px">
-                                    Dispositvo
-                                    <!-- <small style="color: white;">SASO</small> -->
-                                </h1>
-                                <h:form>
+                            <h:form style="float: left; position: relative; left: 26%">
+                                <div style="padding: 10px; float: left">
                                     <h:panelGrid columns="2">
-                                        <p:selectOneMenu value="#{autenticacao.usuario.nome}" effect="fold" editable="false">
-                                            <f:selectItem itemLabel="Selecione um" itemValue=""/>
-                                            <f:selectItems value="#{autenticacao.returnDispositivos()}"/>
-                                        </p:selectOneMenu>
-                                        <p:commandButton styleClass="btn btn-success btn-block" value="Filtrar" action="#{autenticacao.printText()}" update="@all"/>
+                                        <h1 style="color: black; float: left; font-size: 20px; margin-top: 0; padding: 5px">
+                                            Dispositivo
+                                            <!-- <small style="color: white;">SASO</small> -->
+                                        </h1>
+                                        <h:panelGrid columns="1">
+                                            <p:selectOneMenu value="#{autenticacao.usuario.nome}" effect="fold" editable="false" style="height: 32px; width: 70px">
+                                                <!--<f:selectItem itemLabel="Selecione um" itemValue=""/>-->
+                                                <f:selectItems value="#{autenticacao.returnDispositivos()}"/>
+                                            </p:selectOneMenu>
+                                        </h:panelGrid>
                                     </h:panelGrid>
-                                </h:form>
-                            </h:panelGrid>
-
-                        </div>
-
+                                </div>
+                                <div style="padding: 10px; float: left">
+                                    <h:panelGrid columns="4">
+                                        <h1 style="color: black; float: left; font-size: 20px; margin-top: 0; padding: 5px">Período de</h1>
+                                        <p:calendar class="datetime" value="#{calendarView.date4}" locale = "de" pattern="MM/dd/yyyy HH:mm:ss"/>
+                                            
+                                        <h1 style="color: black; float: left; font-size: 20px; margin-top: 0; padding: 5px">até</h1>
+                                        <p:calendar class="datetime" value="#{calendarView.date5}" locale = "de" pattern="yyyy/MM/dd HH:mm:ss"/>
+                                    </h:panelGrid>
+                                </div>
+                                <div style="padding: 10px; float: left">
+                                    <p:commandButton styleClass="btn btn-success btn-block" value="Consultar" action="#{autenticacao.printText()}" update="@all"/>
+                                </div>
+                            </h:form>
+                        </section> 
+                        
+                        <p:dialog header="Aguarde um momento..." widgetVar="dlg1" modal="true" resizable="false" draggable="false" closable="false">
+                            <div style="text-align: center">
+                                <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/ajaxloadingbar.gif" width="100"/>
+                            </div>
+                        </p:dialog>
+                        
+                        <!--Consulta que será usada aqui
+                        select * 
+                        from amostragens 
+                        where 
+                        id_dispositivos = 2 
+                        and 
+                        "data" between '2021-04-19' and '2021-04-20'; -->
+                        
+                        
+                        <!-- Dar para o gráfico apresentar todo valor da consulta ou teria que fazer a média? Se tem que fazer a média, vai calcular no banco ou em código?-->
                     </p:fieldset>
                 </h:panelGroup>
 
@@ -262,15 +286,36 @@
                     .updateNeedle(70)
 
         </script>
+        
+        <script type="text/javascript">
+        PrimeFaces.locales ['de'] = {
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            monthNamesShort: ['Jan', 'Feb', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Out', 'Nov', 'Dez'],
+            dayNames: ['Domingo','Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+            dayNamesShort: ['Dom','Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+            dayNamesMin: ['D','S', 'T', 'Q', 'Q ', 'S', 'S'],
+            weekHeader: 'Domingo',
+            firstDay: 1,
+            isRTL: false,
+            showMonthAfterYear: false,
+            yearSuffix: '',
+            timeText: 'Horário',
+            hourText: 'Hora',
+            minuteText: 'Minuto',
+            secondText: 'Segundo',
+            currentText: 'Aktuelles Datum',
+            ampm: false,
+            month: 'Mês',
+            week: 'Semana',
+            day: 'Dia',
+            allDayText: 'Dia Inteiro'
+        };
+    </script>
+        
 
 
         <script type="text/javascript" src="#{request.contextPath}/resources/bootstrap/js/bootstrap.min.js"></script> <!-- Correio -->
         <script type="text/javascript" src="#{request.contextPath}/resources/dist/js/app.min.js"></script> <!-- Correio -->
-
-
-
-
-
     </h:body>
 
 </html>

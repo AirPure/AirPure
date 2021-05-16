@@ -49,7 +49,7 @@
     </h:head>
 
     <h:body onload="#{autenticacao.verificacao()}" ></h:body>
-    <h:body class="hold-transition skin-blue sidebar-mini" >
+    <h:body class="skin-blue sidebar-mini sidebar-collapse" >
 
 
 
@@ -75,6 +75,7 @@
                         <p:commandButton styleClass="btn btn-danger btn-block" value="Sair" action="#{autenticacao.logOut()}" update="@form"/>
                     </div>
                 </h:form>
+       
 
             </nav>
 
@@ -95,14 +96,16 @@
                     <li>
 
                         <li class="active"><a href="/airpure/sistema/simpec"><i class="fa fa-home"></i> <span>Home</span></a></li>
-                        <li class="active"><a href="/airpure/sistema/dispositivos"><i class="fa fa-bookmark"></i> <span>Dispositivos</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/dispositivos"><i class="fa fa-list"></i> <span>Dispositivos</span></a></li>
                         <li class="header">Cadastro</li>
-                        <li class="active"><a href="/airpure/sistema/cadastroDispositivo"><i class="fa fa-bookmark"></i> <span>Cadastro de Dispositivos</span></a></li>
-                        <li class="active"><a href="/airpure/sistema/cadastroManutencao"><i class="fa fa-bookmark"></i> <span>Cadastro de Manutenções</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/cadastroManutencao"><i class="fa fa-truck"></i> <span>Cadastro de Manutenções</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/cadastroDispositivo"><i class="fa fa-floppy-o"></i> <span>Cadastro de Dispositivos</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/cadastroHVAC"><i class="fa fa-snowflake-o"></i> <span>Cadastro de A.C</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/cadastroAmbientes"><i class="fa fa-bank"></i> <span>Cadastro de Ambientes</span></a></li>
                         <li class="header">PMOC</li>
-                        <li class="active"><a href="https://drive.google.com/file/d/1rRwyxUEk9pFfuDaoRK9A4li_BsfL7UDA/view?usp=sharing"><i class="fa fa-bookmark"></i> <span>Modelo</span></a></li>
-                        <li class="active"><a href="/airpure/sistema/proximasManutencoes"><i class="fa fa-bookmark"></i> <span>Próximas Manutenções</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/proximasManutencoes"><i class="fa fa-calendar"></i> <span>Próximos Serviços</span></a></li>
                     </li>
+
 
 
                 </ul>
@@ -132,7 +135,7 @@
 
 
                 <h:panelGroup>
-                    <p:fieldset legend="Dados de Qualidade do Ar - Visualização de Dispositivos" style="width:100%; border-width: 3px; color: black; text-align: center;">
+                    <p:fieldset legend="Qualidade do Ar" style="width:100%; border-width: 3px; color: black; text-align: center;">
 
                         <p:dataScroller id="fieldset_data1" value="#{requestdata3.retornaDispositivo()}" var="process1" rendered="true"> 
 
@@ -144,12 +147,12 @@
                                         <h:panelGrid columns="1" style="text-align: center; margin: auto;">
                                             <section class="content-header" id="lastRegister">
                                                 <h1 style="color: black; text-align: center;">
-                                                    Última amostragem: #{process.data}
+                                                    Últimos valores: #{process.dataInString}
                                                 </h1>
                                             </section>
                                             <section class="content-header" id="lastRegister">
                                                 <h1 style="color: black; text-align: center;">
-                                                    ID Dipositivo: #{process1.id}
+                                                    Local de Instalação: #{process.localizacao}
                                                 </h1>
                                             </section>
                                             <section class="content-header" id="lastRegister">
@@ -158,10 +161,16 @@
                                                 </h1>
                                             </section>
                                             <h:form>
-                                                <p:commandButton action="#{requestdata3.putItOnSession(process1.id)}" onclick="PF('dlg1').show();" value="Detalhar"/>
+                                                <p:commandButton styleClass="btn btn-success" action="#{requestdata3.putItOnSession(process1.id)}" onclick="PF('dlg1').show();" value="Detalhar"/>
                                             </h:form>
                                         </h:panelGrid>
-                                        <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/foto_.png" style="width: 300px; height: 300px;"/>
+                                        <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process.tvoc,'CO2')}; border-radius: 10px; width: 200px; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                            <h:outputLabel value="IAQ:" style="color: white; font-size: 18px;"/>
+                                            <h:panelGrid columns="2" style="margin:auto;"> 
+                                                <h:outputText value="#{process.iaqco2}" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
+                                                <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process.tvoc,'CO2')};" width="20"/>       
+                                            </h:panelGrid>
+                                        </h:panelGrid>
                                     </h:panelGrid>
                                     <h:panelGrid columns="7" style="width: 100%; " >
 

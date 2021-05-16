@@ -1,49 +1,49 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
 
-		<script type="text/javascript">
-			var host = "ws://localhost:8080/airpure/apuracao"
-			var wSocket = new WebSocket(host);
-			var browserSupport = ("WebSocket" in window) ? true : false;
+    <script type="text/javascript">
+        var host = "ws://localhost:8080/airpure/apuracao"
+        var wSocket = new WebSocket(host);
+        var browserSupport = ("WebSocket" in window) ? true : false;
 
-			if (browserSupport) {
-				wSocket.onopen = function() {
-					//alert(" Web Socket is connected, sending data");
-					wSocket.send("ping");
-				};
-			} else {
-				// The browser doesn't support WebSocket
-				alert("WebSocket is NOT supported by your Browser!");
-			}
+        if (browserSupport) {
+            wSocket.onopen = function () {
+                //alert(" Web Socket is connected, sending data");
+                wSocket.send("ping");
+            };
+        } else {
+            // The browser doesn't support WebSocket
+            alert("WebSocket is NOT supported by your Browser!");
+        }
 
-			// called when a message is received
-			wSocket.onmessage = function(event) {
-				var received_msg = event.data;
+        // called when a message is received
+        wSocket.onmessage = function (event) {
+            var received_msg = event.data;
 // 				console.log(received_msg);
 //				var serie = JSON.parse(received_msg);
 //				console.log(serie)
- 				alert('server msg:' + received_msg);
+            alert('server msg:' + received_msg);
 //				var grafico = PF('grafico');
-				
-//				grafico.plot.replot({ series : serie});
-			};
 
-			// called when socket closes
-			wSocket.onclose = function() {
-				// websocket is closed.
-				console.log("Connection is closed...");
-			};
-		</script>
-		<h2>Dados de Apuração</h2>
-		<h:form id="formlogin">
-			<h:messages styleClass="erros" />
-			<fieldset>
-				<legend>Resultado parcial</legend>
-                                <legend>Teste#{dadosBean.dados}</legend>
-			</fieldset>
-		</h:form>
+//				grafico.plot.replot({ series : serie});
+        };
+
+        // called when socket closes
+        wSocket.onclose = function () {
+            // websocket is closed.
+            console.log("Connection is closed...");
+        };
+    </script>
+    <h2>Dados de Apuração</h2>
+    <h:form id="formlogin">
+        <h:messages styleClass="erros" />
+        <fieldset>
+            <legend>Resultado parcial</legend>
+            <legend>Teste#{dadosBean.dados}</legend>
+        </fieldset>
+    </h:form>
 
 </html>

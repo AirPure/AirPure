@@ -120,11 +120,13 @@
                         <li class="active"><a href="/airpure/sistema/simpec"><i class="fa fa-home"></i> <span>Home</span></a></li>
                         <li class="active"><a href="/airpure/sistema/dispositivos"><i class="fa fa-bookmark"></i> <span>Dispositivos</span></a></li>
                         <li class="header">Cadastro</li>
-                        <li class="active"><a href="/airpure/sistema/cadastroDispositivo"><i class="fa fa-bookmark"></i> <span>Cadastro de Dispositivos</span></a></li>
                         <li class="active"><a href="/airpure/sistema/cadastroManutencao"><i class="fa fa-bookmark"></i> <span>Cadastro de Manutenções</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/cadastroDispositivo"><i class="fa fa-bookmark"></i> <span>Cadastro de Dispositivos</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/cadastroHVAC"><i class="fa fa-bookmark"></i> <span>Cadastro de A.C</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/cadastroAmbientes"><i class="fa fa-bookmark"></i> <span>Cadastro de Ambientes</span></a></li>
                         <li class="header">PMOC</li>
                         <li class="active"><a href="https://drive.google.com/file/d/1rRwyxUEk9pFfuDaoRK9A4li_BsfL7UDA/view?usp=sharing"><i class="fa fa-bookmark"></i> <span>Modelo</span></a></li>
-                        <li class="active"><a href="/airpure/sistema/proximasManutencoes"><i class="fa fa-bookmark"></i> <span>Próximas Manutenções</span></a></li>
+                        <li class="active"><a href="/airpure/sistema/proximasManutencoes"><i class="fa fa-bookmark"></i> <span>Próximos Serviços</span></a></li>
                     </li>
 
 
@@ -159,11 +161,11 @@
 
 
                     <!--Título-->
-                    <p:fieldset legend="Próximas manutenções" style="width:100%; border-width: 3px; color: black; text-align: center;">
+                    <p:fieldset legend="Próximos Serviços" style="width:100%; border-width: 3px; color: black; text-align: center;">
                         <p:dataTable value="#{requestdata3.retornaProximasManutencoes()}" var="item" paginator="false" rows="15" >
                             <p:column>
                                 <f:facet name="header">
-                                    <h:outputText value="Data Execução Estipulada"/>
+                                    <h:outputText value="Data da Manutenção Estipulada"/>
                                 </f:facet>
                                 <h:outputText value="#{item.proxima_execucao}" style="font-weight: bold"/>
                             </p:column>
@@ -178,6 +180,12 @@
                                     <h:outputText value="Equipamento"/>
                                 </f:facet>
                                 <h:outputText value="#{item.data_execucao}" style="font-weight: bold"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Executor"/>
+                                </f:facet>
+                                <h:outputText value="#{item.executor}" style="font-weight: bold"/>
                             </p:column>
 
                         </p:dataTable>

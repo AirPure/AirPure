@@ -47,9 +47,11 @@
         <p:messages closable="true"/>
 
         <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/logo.png" style=" margin-left: auto; margin-right: auto; display: flex; flex-direction: row; justify-content: center; align-items: center;"/>
-        <div class="login-box" style="background-color:  #eeeeee; border-radius: 15px">
+        <div class="login-box" style="background-color:  #eeeeee; width: 800px!Important; border-radius: 15px">
             <div class="login-logo">
-                <p:link href="autenticacao.xhtml">AirPure</p:link>
+                <p:link>AirPure</p:link>
+                <h4>Cadastro de Manutenções para Aparelhos de Ar Condicionado</h4>
+
             </div>
             <!-- /.login-logo -->
 
@@ -61,40 +63,41 @@
             <div class="box login-box-body" style="background-color:  #eeeeee; border-radius: 15px">
                 <h:form>
                     <p:messages closable="true"/>
-                    Data de execução (dd/mm/yyyy hh:mm:ss):
+                    Data de execução:
                     <div class="form-group has-feedback">
-                        <p:inputText value="#{autenticacao.work.data_execucao}"  styleClass="form-control" placeholder="Data Execucao"
+                        <p:inputMask value="#{autenticacao.work.data_execucao}"  mask="99/99/9999" styleClass="form-control" placeholder="Data Execucao"
                                      required="true"
                                      requiredMessage="Login necessário."/>
-                        <i class="fa fa-envelope form-control-feedback" ></i>
                     </div>
-                    Proxima execução (dd/mm/yyyy hh:mm:ss):
+                    Proxima execução:
                     <div class="form-group has-feedback">
-                        <p:inputText value="#{autenticacao.work.proxima_execucao}" styleClass="form-control"
+                        <p:inputMask value="#{autenticacao.work.proxima_execucao}" mask="99/99/9999" styleClass="form-control"
                                      placeholder="Proxima Execucao" required="true"
                                      requiredMessage="Projeto necessário."/>
-                        <i class="fa fa-lock form-control-feedback" style="font-size: 18px"></i>
+
                     </div>
                     Serviços executados:
                     <div class="form-group has-feedback">
-                        <p:inputText value="#{autenticacao.work.servicos}" styleClass="form-control"
-                                     placeholder="Servicos executados" required="true"
-                                     requiredMessage="Ambiente necessário."/>
-                        <i class="fa fa-lock form-control-feedback" style="font-size: 18px"></i>
+                        <p:inputTextarea rows="6" cols="33" value="#{autenticacao.work.servicos}" styleClass="form-control"
+                                         placeholder="Servicos executados" required="true"
+                                         requiredMessage="Ambiente necessário."/>
+
                     </div>
                     Executor:
                     <div class="form-group has-feedback">
                         <p:inputText value="#{autenticacao.work.executor}" styleClass="form-control"
                                      placeholder="Executor" required="true"
                                      requiredMessage="Executor necessário."/>
-                        <i class="fa fa-lock form-control-feedback" style="font-size: 18px"></i>
+
                     </div>
-                    Tipo da manutenção  (Mensal, trimestral..)
+                    Tipo da manutenção:
                     <div class="form-group has-feedback">
-                        <p:inputText value="#{autenticacao.work.tipo}" styleClass="form-control"
-                                     placeholder="Tipo" required="true"
-                                     requiredMessage="Tipo necessário."/>
-                        <i class="fa fa-lock form-control-feedback" style="font-size: 18px"></i>
+                        <p:selectOneRadio id="console" value="#{autenticacao.work.tipo}" unselectable="true">
+                            <f:selectItem itemLabel="Mensal" itemValue="Mensal"/>
+                            <f:selectItem itemLabel="Trimestral" itemValue="Trimestral"/>
+                            <f:selectItem itemLabel="Semestral" itemValue="Semestral"/>
+                            <f:selectItem itemLabel="Anual" itemValue="Anual"/>
+                        </p:selectOneRadio>
                     </div>
                     Equipamento:
                     <div class="form-group has-feedback">
