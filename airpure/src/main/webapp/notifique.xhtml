@@ -77,7 +77,10 @@
                             <p:selectBooleanCheckbox value="#{autenticacao.range.iaq}" itemLabel="IAQ"/>
                         </h:panelGrid>
                         <h:panelGrid columns="1">
-                            <p:commandButton styleClass="btn btn-primary" value="Atualizar Preferências" id="btnAll" process="@all" update="grid msgs" action="#{autenticacao.atualizaPreferencias()}" class="botaoNotifique"/>
+                            <p:commandButton styleClass="btn btn-primary" value="Atualizar Preferências" id="btnAll" process="@all" update="grid msgs" action="#{autenticacao.atualizaPreferencias()}"/>
+
+                        </h:panelGrid>
+                        <h:panelGrid columns="1">
                             <p:commandButton styleClass="btn btn-primary" onclick="redireciona();" value="Voltar" update="@form"/>
                         </h:panelGrid>
                     </div>
