@@ -127,7 +127,7 @@
             .container .botaoNotifique:hover{
                 background: transparent;
                 box-shadow: 0 0 20px 10px hsla(204, 70%, 53%, 0.5);
-                color: black;
+                color: white;
             }
 
             .container .botaoNotifique:hover::before{
@@ -226,38 +226,38 @@
                             <p style = "text-align: center; font-size: 20px; margin-top: 0!Important">Digite seu e-mail e selecione os fatores aos qual deseja receber notificações para caso de estes estarem acima do limite.</p>
                             
                             <div class="container" style="min-height: 45vh">
-                                <h:form>
+                                <h:form id = "grid">
                                     <h1 style="margin: 0 0 24px 0; font-size: 20px; text-align: center; font-weight: bold">Notificar-me</h1>
                                     <div align = "center" style="font-size: 16px">
                                     <h:panelGrid columns="2" style="padding: 30px">
                                         <p:outputLabel for="email" value="E-mail" style = "padding: 10px; font-size: 18px"/>
-                                        <p:inputText id="email" value="#{basicView.text1}" placeholder="email@dominio.com" required="true" style = "width: 200px"/>
+                                        <p:inputText id="email" value="#{requestdata1.email}" placeholder="email@dominio.com" required="true" style = "width: 200px"/>
                                     </h:panelGrid>
                                     </div>
                                     <div align = "center" style="padding: 30px;">
                                         <p:outputLabel for="fatoresA" value="Fatores Ambientais" style = "padding: 10px; font-size: 18px"/>
-                                        <p:selectManyCheckbox id="fatoresA" value="#{checkboxView.selectedOptions}" layout="grid" columns="3" style = "font-size: 18px">
-                                            <f:selectItem itemLabel="Todos" itemValue="Option 1"/>
-                                            <f:selectItem itemLabel="Iluminamento" itemValue="Option 2"/>
-                                            <f:selectItem itemLabel="Ruído" itemValue="Option 3"/>
-                                            <f:selectItem itemLabel="Umidade" itemValue="Option 4"/>
-                                            <f:selectItem itemLabel="Temperatura" itemValue="Option 5"/>
-                                            <f:selectItem itemLabel="IAQ" itemValue="Option 6"/>
-                                            <f:selectItem itemLabel="CO2" itemValue="Option 7"/>
-                                            <f:selectItem itemLabel="TVOC" itemValue="Option 8"/>
-                                            <f:selectItem itemLabel="ECO2" itemValue="Option 9"/>
+                                        <p:selectManyCheckbox id="fatoresA" value="#{requestdata1.fatoresSelNotifique}" layout="grid" columns="3" style = "font-size: 18px">
+                                            <f:selectItem id="todas" itemLabel="Todos" itemValue="false"/>
+                                            <f:selectItem class="opt" itemLabel="Iluminamento" itemValue="false"/>
+                                            <f:selectItem class="opt" itemLabel="Ruído" itemValue="false"/>
+                                            <f:selectItem class="opt" itemLabel="Umidade" itemValue="false"/>
+                                            <f:selectItem class="opt" itemLabel="Temperatura" itemValue="false"/>
+                                            <f:selectItem class="opt" itemLabel="IAQ" itemValue="false"/>
+                                            <f:selectItem class="opt" itemLabel="CO2" itemValue="false"/>
+                                            <f:selectItem class="opt" itemLabel="TVOC" itemValue="false"/>
+                                            <f:selectItem class="opt" itemLabel="ECO2" itemValue="false"/>
                                         </p:selectManyCheckbox>
                                     </div>
                                     <div align = "center" style="padding: 30px">
                                         <h:panelGrid columns="2">
                                             <p:outputLabel for="dispositivos" value="Dispositivos" style = "padding: 10px; font-size: 18px"/>
-                                            <p:selectOneMenu id = "dispositivos" value="#{autenticacao.usuario.nome}" effect="fold" editable="false" style="background-color: white; width: 200px">
+                                            <p:selectOneMenu id = "dispositivos" value="#{requestdata1.dispNotifica}" effect="fold" editable="false" style="background-color: white; width: 200px">
                                                 <f:selectItems value="#{autenticacao.returnDispositivos()}"/>
                                             </p:selectOneMenu>
                                         </h:panelGrid>
                                     </div>
-                                    <p:commandButton value="Cadastrar" id="btnAll" process="@all" update="msgs" action="#{processView.save}" class="botaoNotifique"/>
-                                    <p:messages id="msgs"/> <!--Colocar mensagem de cadastro realizado com sucesso-->
+                                    <p:commandButton value="Cadastrar" id="btnAll" process="@all" update="grid msgs" action="#{requestdata1.saveDadosNotifica}" class="botaoNotifique"/>
+                                    <p:messages id="msgs" style="color: whitesmoke"/> <!--Colocar mensagem de cadastro realizado com sucesso-->
                                 </h:form> 
                             </div>
                         </section>
@@ -294,6 +294,24 @@
             function noFilter() {
                 document.getElementById("data").style.display = "none";
             }
+            
+            var checkboxT = document.querySelector('#todas');
+            var checkboxOpt = document.querySelectorAll('.opt');
+
+            checkboxT.addEventListener('change', function(){
+                if(this.checked){
+                   checkboxOpt.forEach(element => {
+                       element.checked = true;
+                   });
+                }
+                else{
+                    checkboxOpt.forEach(element => {
+                        element.checked = false;
+                    });    
+                }
+            });
+            
+            
         </SCRIPT>
         <script src="https://unpkg.com/gauge-chart@0.5.1/dist/bundle.js"></script>
         <script>

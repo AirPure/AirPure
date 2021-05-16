@@ -19,6 +19,7 @@ import java.util.TimeZone;
 import java.util.regex.Pattern;
 import org.json.*;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.PrimeFaces;
@@ -31,10 +32,37 @@ public class RequestData1 {
     String inicio;
     String fim;
     static String idOfAirpures;
+    private String email;
+    private String[] fatoresSelNotifique;
+    private String dispNotifica;
     private String dispositivo;
     private String dispositivoSelectOption;
     ArrayList<String> dispositivoAirpure;
 
+    public String[] getfatoresSelNotifique() {
+        return fatoresSelNotifique;
+    }
+    
+    public void setfatoresSelNotifique(String[] fatoresSelNotifique) {
+        this.fatoresSelNotifique = fatoresSelNotifique;
+    }
+    
+    public String getdispNotifica(){
+        return(dispNotifica);
+    }
+    
+    public void setdispNotifica(String dispNotifica){
+        this.dispNotifica = dispNotifica;
+    }
+    
+    public String getEmail() {
+        return email;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
     public ArrayList<amostragens> getRegistro1() {
         return registro1;
     }
@@ -71,6 +99,17 @@ public class RequestData1 {
      System.out.println("Valor do select: " + this.dispositivoSelectOption);
     }
    
+    public void saveDadosNotifica() {
+        FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage("Email: " + email + " Dispositivo: " + dispNotifica + " " + imprimirFatores()));
+    }
+    
+    public String imprimirFatores(){
+        String aux = String.join(",", getfatoresSelNotifique());
+        System.out.println(aux);
+        return(aux);
+    }
+    
     public ArrayList<String> returnDispositivos() {
 
         FacesContext facesContext = FacesContext.getCurrentInstance();
