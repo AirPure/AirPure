@@ -10,6 +10,81 @@ public class rangeParametros implements Serializable {
     private Float minimo;   //Valor minimo permitido
     private Float maximo;   //Valor maximo permitido
     private String norma; //Norma baseada
+    private boolean eco2;
+    private boolean co2;
+    private boolean umidade;
+    private boolean temperatura;
+    private boolean tvoc;
+    private boolean luminosidade;
+    private boolean ruido;
+    private boolean iaq;
+
+    public boolean isIaq() {
+        return iaq;
+    }
+
+    public void setIaq(boolean iaq) {
+        this.iaq = iaq;
+    }
+
+    
+    public boolean isEco2() {
+        return eco2;
+    }
+
+    public void setEco2(boolean eco2) {
+        this.eco2 = eco2;
+    }
+
+    public boolean isCo2() {
+        return co2;
+    }
+
+    public void setCo2(boolean co2) {
+        this.co2 = co2;
+    }
+
+    public boolean isUmidade() {
+        return umidade;
+    }
+
+    public void setUmidade(boolean umidade) {
+        this.umidade = umidade;
+    }
+
+    public boolean isTemperatura() {
+        return temperatura;
+    }
+
+    public void setTemperatura(boolean temperatura) {
+        this.temperatura = temperatura;
+    }
+
+    public boolean isTvoc() {
+        return tvoc;
+    }
+
+    public void setTvoc(boolean tvoc) {
+        this.tvoc = tvoc;
+    }
+
+    public boolean isLuminosidade() {
+        return luminosidade;
+    }
+
+    public void setLuminosidade(boolean luminosidade) {
+        this.luminosidade = luminosidade;
+    }
+
+    public boolean isRuido() {
+        return ruido;
+    }
+
+    public void setRuido(boolean ruido) {
+        this.ruido = ruido;
+    }
+    
+    
 
     public Integer getId() {
         return id;

@@ -201,12 +201,16 @@ public class RequestData1 {
             System.out.println(sql);
             while (rs.next()) {
                 amostragens process = new amostragens();
+                dispositivos disp = new dispositivos();
+                disp.setId(rs.getInt("id_dispositivos"));
                 process.setId(rs.getLong("id"));
                 process.setCo2(rs.getFloat("co2"));
+                process.setIaq(rs.getFloat("iaq_co2"));
                 process.setEco2(rs.getFloat("eco2"));
                 process.setData(rs.getTimestamp("data"));
                 process.setDb(rs.getFloat("db"));
                 process.setLux(rs.getFloat("lux"));
+                process.setAirpure(disp);
                 process.setTemperatura(rs.getFloat("temperatura"));
                 process.setUmidade(rs.getFloat("umidade"));
                 process.setTvoc(rs.getFloat("tvoc"));

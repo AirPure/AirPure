@@ -23,6 +23,15 @@ public class autenticacao implements HttpSessionListener {
     private Users usuario = new Users();
     private dispositivos airpure = new dispositivos();
     private manutencao work = new manutencao();
+    private rangeParametros range = new rangeParametros();
+
+    public rangeParametros getRange() {
+        return range;
+    }
+
+    public void setRange(rangeParametros range) {
+        this.range = range;
+    }
 
     public manutencao getWork() {
         return work;
@@ -162,6 +171,40 @@ public class autenticacao implements HttpSessionListener {
 
     }
 
+    public void atualizaPreferencias() throws IOException {
+        Main.db = null;
+        BD.ConectarBD();
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+        
+
+        String sql = "UPDATE usuario SET iaq=" + range.isIaq() + ", tvoc=" + range.isTvoc() + ",co2=" + range.isCo2()+ ", eco2=" + range.isEco2() + ",luminosidade=" + range.isLuminosidade()+ ",ruido=" + range.isLuminosidade() + ", umidade=" + range.isUmidade() + ", temperatura = " + range.isTemperatura() + " WHERE id = " + session.getAttribute("usuario") + ";";
+        System.out.println(sql);
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+
+            Main.sql.executeUpdate(sql);
+            System.out.println(sql);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Preferencias atualizadas com sucesso!"));
+
+    }
+
     public void insertManutencao() throws IOException {
         Main.db = null;
         BD.ConectarBD();
@@ -198,7 +241,7 @@ public class autenticacao implements HttpSessionListener {
         BD.ConectarBD();
         String array[] = new String[3];
         //array = work.getId_hvac().split(",");
-        String sql = "INSERT INTO hvac (modelo,potencia,n_controle,n_patrimonio) VALUES ('" + work.getServicos()+ "','" + work.getProxima_execucao() + "','" + work.getExecutor()+ "','" + work.getId_hvac()+ "');";
+        String sql = "INSERT INTO hvac (modelo,potencia,n_controle,n_patrimonio) VALUES ('" + work.getServicos() + "','" + work.getProxima_execucao() + "','" + work.getExecutor() + "','" + work.getId_hvac() + "');";
         System.out.println(sql);
         try {
             Main.sql = Main.db.createStatement();
@@ -223,12 +266,13 @@ public class autenticacao implements HttpSessionListener {
         }
 
     }
+
     public void insertAmbientes() throws IOException {
         Main.db = null;
         BD.ConectarBD();
         String array[] = new String[3];
         array = work.getSala().split(",");
-        String sql = "INSERT INTO ambientes (sala,predio,local,dimensao,capmaxima,id_hvac) VALUES ('" + work.getProxima_execucao()+ "','" + work.getServicos()+ "','" + work.getExecutor()+ "','" + work.getId_hvac()+ "','" + work.getData_execucao()+ "'," + array[0] + ");";
+        String sql = "INSERT INTO ambientes (sala,predio,local,dimensao,capmaxima,id_hvac) VALUES ('" + work.getProxima_execucao() + "','" + work.getServicos() + "','" + work.getExecutor() + "','" + work.getId_hvac() + "','" + work.getData_execucao() + "'," + array[0] + ");";
         System.out.println(sql);
         try {
             Main.sql = Main.db.createStatement();
@@ -523,6 +567,15 @@ public class autenticacao implements HttpSessionListener {
 
     }
     
+    public void atualizarDispositivos() throws IOException {
+        System.out.println("Valor do select: " + usuario.getNome());
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+        session.setAttribute("filtroAirPure", usuario.getNome());
+        FacesContext.getCurrentInstance().getExternalContext().redirect("consulta");
+
+    }
+
     public void defineOrdenacao() throws IOException {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
@@ -530,7 +583,7 @@ public class autenticacao implements HttpSessionListener {
         FacesContext.getCurrentInstance().getExternalContext().redirect("simpec");
 
     }
-    
+
     public void defineOrdenacaoProjeto() throws IOException {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);

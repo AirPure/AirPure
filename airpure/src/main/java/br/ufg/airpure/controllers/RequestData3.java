@@ -172,7 +172,7 @@ public class RequestData3 {
                     process.setId(rs.getLong("id"));
                     process.setCo2(rs.getFloat("co2"));
                     process.setIaqco2(rs.getFloat("iaq_co2"));
-                    process.setIaqco2Total(" Atual: " + rs.getFloat("iaq_co2") + " | Últimas 3 horas: " +  rs.getFloat("iaq_co2_3") + " | Últimas 5 horas: " + rs.getFloat("iaq_co2_5"));
+                    process.setIaqco2Total(" Atual: " + rs.getFloat("iaq_co2") + " | Últimas 3 horas: " + rs.getFloat("iaq_co2_3") + " | Últimas 5 horas: " + rs.getFloat("iaq_co2_5"));
                     process.setEco2(rs.getFloat("eco2"));
                     process.setData(rs.getTimestamp("data"));
                     process.setDb(rs.getFloat("db"));
@@ -1236,6 +1236,27 @@ public class RequestData3 {
         return "";
 
     }
+
+    public String noFilterDatatableIsabela() throws InterruptedException {
+        try {
+            Date data = new Date(System.currentTimeMillis());
+            Date data2 = new Date(System.currentTimeMillis());
+            data.setDate(data.getDate() + 1);
+            data2.setDate(data2.getDate());
+            SimpleDateFormat formatarDate = new SimpleDateFormat("yyyy/MM/dd");
+            try {
+                FacesContext facesContext = FacesContext.getCurrentInstance();
+                HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+                session.setAttribute("endPoint", formatarDate.format(data));
+                session.setAttribute("startPoint", formatarDate.format(data2));
+            } catch (Exception ex) {
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return "";
+
+    }
     // <===========Retorna o período de análise do filtro.=========================================================================================================================>
 
     public String time() {
@@ -1253,9 +1274,7 @@ public class RequestData3 {
 
             aux = endpoint.split(Pattern.quote("/"));
             fimAux = aux[2] + "/" + aux[1] + "/" + (aux[0]);
-            
-            
-            
+
             return "(" + inicioAux + " - " + fimAux + ")";
 
         } catch (Exception ex) {
