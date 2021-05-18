@@ -357,7 +357,6 @@ public class autenticacao implements HttpSessionListener {
             } else {
                 System.out.println("Usuario rejeitado!");
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuário e/ou senha incorreto.", "Usuário e/ou senha incorreto."));
-                FacesContext.getCurrentInstance().getExternalContext().redirect("/airpure/sistema/autenticacao");
             }
 
         } catch (NullPointerException e) {
