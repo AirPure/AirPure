@@ -23,18 +23,17 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.PrimeFaces;
+import org.primefaces.event.SelectEvent;
 
 @ViewScoped
 @ManagedBean(name = "requestdata1")
 public class RequestData1 {
-
     ArrayList<amostragens> registro1;
     String inicio;
     String fim;
     static String idOfAirpures;
     private String email;
     private String[] fatoresSelNotifique;
-    private String dispNotifica;
     private String dispositivo;
     private String dispositivoSelectOption;
     ArrayList<String> dispositivoAirpure;
@@ -45,14 +44,6 @@ public class RequestData1 {
     
     public void setfatoresSelNotifique(String[] fatoresSelNotifique) {
         this.fatoresSelNotifique = fatoresSelNotifique;
-    }
-    
-    public String getdispNotifica(){
-        return(dispNotifica);
-    }
-    
-    public void setdispNotifica(String dispNotifica){
-        this.dispNotifica = dispNotifica;
     }
     
     public String getEmail() {
@@ -97,56 +88,6 @@ public class RequestData1 {
     
     public void printText(){
      System.out.println("Valor do select: " + this.dispositivoSelectOption);
-    }
-   
-    public void saveDadosNotifica() {
-        FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage("Email: " + email + " Dispositivo: " + dispNotifica + " " + imprimirFatores()));
-    }
-    
-    public String imprimirFatores(){
-        String aux = String.join(",", getfatoresSelNotifique());
-        System.out.println(aux);
-        return(aux);
-    }
-    
-    public ArrayList<String> returnDispositivos() {
-
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
-        int idProjetoRelacionado = (int) session.getAttribute("projetoEnvolvido");
-        dispositivoAirpure = new ArrayList<String>();
-        Main.db = null;
-        BD.ConectarBD();
-        String sql = "SELECT * FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado + " ORDER BY id DESC;";
-
-        try {
-            Main.sql = Main.db.createStatement();
-        } catch (SQLException e) {
-            e.printStackTrace();
-
-        }
-
-        ResultSet rs = null;
-        try {
-
-            rs = Main.sql.executeQuery(sql);
-            System.out.println(sql);
-            while (rs.next()) {
-                dispositivoAirpure.add(rs.getString("nome"));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-
-        }
-        try {
-            Main.db.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
-
-        }
-        return dispositivoAirpure;
     }
 
     public void setIdOfAirpures(String idOfAirpures) {

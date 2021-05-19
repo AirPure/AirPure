@@ -177,7 +177,7 @@
                         </h1>
                         <h:form>
                             <h:panelGrid columns="2" style= "margin-top: 0!Important; padding: 0">
-                                <p:selectOneMenu value="#{autenticacao.usuario.nome}" effect="fold" editable="false">
+                                <p:selectOneMenu value="#{autenticacao.usuario.nome}" effect="fold" editable="false" style="background-color: white">
                                     <f:selectItems value="#{autenticacao.returnDispositivos()}"/>
                                 </p:selectOneMenu>
                                 <p:commandButton styleClass="btn btn-success btn-block" value="Filtrar" action="#{autenticacao.printText()}" update="@form"/>
