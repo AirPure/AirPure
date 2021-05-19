@@ -10,11 +10,14 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Named;
 import javax.servlet.http.HttpSession;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 
-@ManagedBean(name = "consultaRetorno")
+@ManagedBean
 @RequestScoped
 public class ConsultaRetorno { 
     private Date date4;
@@ -127,6 +130,7 @@ public class ConsultaRetorno {
         this.dConsulta2 = dConsulta2;
     }
 
+    
     public String getDispConsulta() {
         return dispConsulta;
     }
@@ -141,16 +145,16 @@ public class ConsultaRetorno {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         SimpleDateFormat format2 = new SimpleDateFormat("yyyy/MM/dd");
-        dConsulta1 = format2.format(event.getObject());
-        dateSel1 = format.format(event.getObject());
+        //dConsulta1 = format2.format(event.getObject());
+        //dateSel1 = format.format(event.getObject());
     }
     
     public void dataSelecionada2(SelectEvent<Date> event){
         FacesContext facesContext = FacesContext.getCurrentInstance();
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         SimpleDateFormat format2 = new SimpleDateFormat("yyyy/MM/dd");
-        dConsulta2 = format2.format(event.getObject());
-        this.dateSel2 = format.format(event.getObject());
+        //dConsulta2 = format2.format(event.getObject());
+        //this.dateSel2 = format.format(event.getObject());
     }
     
     public Date getDate5() {
@@ -172,7 +176,16 @@ public class ConsultaRetorno {
 //A parte do código abaixo é responsável por fazer a recuperação dos dados das membranas do banco de dados, que serão adicionados a arraylists e por sua vez serão usados nos gráficos.
 //<------------------------------------------------------------------------MEMBRANA 1--------------------------------------------------------------->
     public void formatandoData(){
-        if(dateSel1.compareTo(dateSel2) < 0 || dateSel1.compareTo(dateSel2) == 0){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
+        setDateSel1(formatter.format(date4));
+        setDateSel2(formatter.format(date5));
+        
+        SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy/MM/dd");  
+        setdConsulta1(formatter1.format(date4));
+        setdConsulta2(formatter1.format(date5));
+        
+        
+        if(dateSel1.compareTo(dateSel2) <= 0){
             this.setDateSel1(dateSel1 +  " 00:00:00");
             this.setdConsulta1(dConsulta1 +  " 00:00:00");
             this.setDateSel2(dateSel2 + " 23:59:59");
@@ -189,15 +202,15 @@ public class ConsultaRetorno {
             dConsulta1 = dConsulta2;
             dConsulta2 = aux;
             
-            this.setDateSel2(dateSel1 +  " 00:00:00");
-            this.setdConsulta1(dConsulta1 +  " 00:00:00");
-            this.setDateSel2(dateSel2 + " 23:59:59");
-            this.setdConsulta2(dConsulta2 + " 23:59:59");
+            setDateSel2(dateSel1 +  " 00:00:00");
+            setdConsulta1(dConsulta1 +  " 00:00:00");
+            setDateSel2(dateSel2 + " 23:59:59");
+            setdConsulta2(dConsulta2 + " 23:59:59");
         }
     }
     
-    public void dadosConsulta() {
-        this.formatandoData();
+    public void dadosConsulta() { 
+        formatandoData();
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Dispositivo: " + dispConsulta + " - Período: "  + dateSel1 + " a " + dateSel2));
     }
     

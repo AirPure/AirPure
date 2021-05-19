@@ -33,6 +33,11 @@
         <view-id value="/sistema/home_2.xhtml" />
     </url-mapping>
     
+    <url-mapping id="notifique">
+        <pattern value="/sistema/notifique" />
+        <view-id value="/sistema/notifique.xhtml" />
+    </url-mapping>
+    
     <url-mapping id="simpec">
         <pattern value="/sistema/simpec" />
         <view-id value="/sistema/salas.xhtml" />

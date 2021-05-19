@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+            <title>AirPure</title>
+        </f:facet>
+
+        <f:facet name="middle">
+            <h:outputStylesheet name="bootstrap/css/bootstrap.css" />
+
+            <h:outputStylesheet name="css/dashboard.css" />
+
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" />
+
+            <h:outputScript name="bootstrap/js/bootstrap.js" />
+        </f:facet>
+
+        <f:facet name="last">
+            <h:outputStylesheet name="css/font-awesome.css" />
+        </f:facet>
+
+    </h:head>
+    <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/logo1.png']}"/>
+
+    <SCRIPT type="text/javascript">
+        function redireciona() {
+            window.history.back();
+        }
+    </SCRIPT>
+
+    <h:body style="background: url('resources/images/wp4094533.jpg') repeat !important;">
+        <ui:include src="headerblank.xhtml" />
+        <ui:include src="content.xhtml" />
+
+        <p:messages closable="true"/>
+
+        <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/logo.png" style=" margin-left: auto; margin-right: auto; display: flex; flex-direction: row; justify-content: center; align-items: center;"/>
+        <div class="login-box" style="background-color:  #eeeeee; width: 800px!Important; border-radius: 15px">
+            <div class="login-logo">
+                <p:link>AirPure</p:link>
+
+            </div>
+            <!-- /.login-logo -->
+
+            <p:dialog header="Aguarde um momento..." widgetVar="dlg1" modal="true" resizable="false" draggable="false" closable="false">
+                <div style="text-align: center">
+                    <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/ajaxloadingbar.gif" width="100"/>
+                </div>
+            </p:dialog>
+            <div class="box login-box-body" style="background-color:  #eeeeee; border-radius: 15px">
+                <h:form id = "grid">
+
+                    <h1 style="margin: 0 0 24px 0; font-size: 20px; text-align: center; font-weight: bold">Notificar-me</h1> 
+                    <div align = "center" style="padding: 30px;">
+                        <p:outputLabel value="Fatores Ambientais" style = "padding: 10px; font-size: 18px"/>
+                        <h:panelGrid columns="3">
+
+                            <p:selectBooleanCheckbox value="#{autenticacao.range.luminosidade}" itemLabel="Iluminamento"/>
+                            <p:selectBooleanCheckbox value="#{autenticacao.range.ruido}" itemLabel="Ruído"/>
+                            <p:selectBooleanCheckbox value="#{autenticacao.range.umidade}" itemLabel="Umidade"/>
+                            <p:selectBooleanCheckbox value="#{autenticacao.range.temperatura}" itemLabel="Temperatura"/>
+                            <p:selectBooleanCheckbox value="#{autenticacao.range.co2}" itemLabel="CO2"/>
+                            <p:selectBooleanCheckbox value="#{autenticacao.range.tvoc}" itemLabel="TVOC"/>
+                            <p:selectBooleanCheckbox value="#{autenticacao.range.eco2}" itemLabel="ECO2"/>
+                            <p:selectBooleanCheckbox value="#{autenticacao.range.iaq}" itemLabel="IAQ"/>
+                        </h:panelGrid>
+                        <h:panelGrid columns="1">
+                            <p:commandButton styleClass="btn btn-primary" value="Atualizar Preferências" id="btnAll" process="@all" update="grid msgs" action="#{autenticacao.atualizaPreferencias()}"/>
+
+                        </h:panelGrid>
+                        <h:panelGrid columns="1">
+                            <p:commandButton styleClass="btn btn-primary" onclick="redireciona();" value="Voltar" update="@form"/>
+                        </h:panelGrid>
+                    </div>
+
+                    <p:messages id="msgs" style="color: whitesmoke"/> <!--Colocar mensagem de cadastro realizado com sucesso-->
+                </h:form> 
+
+                <div style="text-align: center;">
+                    <p:outputLabel value="Powered by AirPure | #{main.SVNRevision}" style="font-size: 10px; color: grey;" />
+                </div>
+
+
+            </div>
+            <!-- /.login-box-body -->
+        </div>
+
+    </h:body>
+</html>
