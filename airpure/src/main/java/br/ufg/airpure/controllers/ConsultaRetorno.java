@@ -19,7 +19,8 @@ import org.primefaces.event.SelectEvent;
 
 @ManagedBean
 @RequestScoped
-public class ConsultaRetorno { 
+public class ConsultaRetorno {
+
     private Date date4;
     private Date date5;
     private String dateSel1, dateSel2, dConsulta1, dConsulta2;
@@ -45,7 +46,7 @@ public class ConsultaRetorno {
     public List<chartRecord> printTextgetRegistro3() {
         return registro3;
     }
-    
+
     public void setRegistro3(List<chartRecord> registro3) {
         this.registro3 = registro3;
     }
@@ -130,7 +131,6 @@ public class ConsultaRetorno {
         this.dConsulta2 = dConsulta2;
     }
 
-    
     public String getDispConsulta() {
         return dispConsulta;
     }
@@ -138,25 +138,23 @@ public class ConsultaRetorno {
     public void setDispConsulta(String dispConsulta) {
         this.dispConsulta = dispConsulta;
     }
-    
-    
-    
-    public void dataSelecionada1(SelectEvent<Date> event){
+
+    public void dataSelecionada1(SelectEvent<Date> event) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         SimpleDateFormat format2 = new SimpleDateFormat("yyyy/MM/dd");
         //dConsulta1 = format2.format(event.getObject());
         //dateSel1 = format.format(event.getObject());
     }
-    
-    public void dataSelecionada2(SelectEvent<Date> event){
+
+    public void dataSelecionada2(SelectEvent<Date> event) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         SimpleDateFormat format2 = new SimpleDateFormat("yyyy/MM/dd");
         //dConsulta2 = format2.format(event.getObject());
         //this.dateSel2 = format.format(event.getObject());
     }
-    
+
     public Date getDate5() {
         return date5;
     }
@@ -164,114 +162,108 @@ public class ConsultaRetorno {
     public void setDate5(Date date5) {
         this.date5 = date5;
     }
-    
-    public String getdispConsulta(){
-        return(dispConsulta);
+
+    public String getdispConsulta() {
+        return (dispConsulta);
     }
-    
-    public void setdispConsulta(String dispConsulta){
+
+    public void setdispConsulta(String dispConsulta) {
         this.dispConsulta = dispConsulta;
     }
 
 //A parte do código abaixo é responsável por fazer a recuperação dos dados das membranas do banco de dados, que serão adicionados a arraylists e por sua vez serão usados nos gráficos.
 //<------------------------------------------------------------------------MEMBRANA 1--------------------------------------------------------------->
-    public void formatandoData(){
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
+    public void formatandoData() {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         setDateSel1(formatter.format(date4));
         setDateSel2(formatter.format(date5));
-        
-        SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy/MM/dd");  
+
+        SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy/MM/dd");
         setdConsulta1(formatter1.format(date4));
         setdConsulta2(formatter1.format(date5));
-        
-        
-        if(dateSel1.compareTo(dateSel2) <= 0){
-            this.setDateSel1(dateSel1 +  " 00:00:00");
-            this.setdConsulta1(dConsulta1 +  " 00:00:00");
+
+        if (dateSel1.compareTo(dateSel2) <= 0) {
+            this.setDateSel1(dateSel1 + " 00:00:00");
+            this.setdConsulta1(dConsulta1 + " 00:00:00");
             this.setDateSel2(dateSel2 + " 23:59:59");
             this.setdConsulta2(dConsulta2 + " 23:59:59");
-        }
-        else{
+        } else {
             String aux;
-            
+
             aux = dateSel1;
             dateSel1 = dateSel2;
             dateSel2 = aux;
-            
+
             aux = dConsulta1;
             dConsulta1 = dConsulta2;
             dConsulta2 = aux;
-            
-            setDateSel2(dateSel1 +  " 00:00:00");
-            setdConsulta1(dConsulta1 +  " 00:00:00");
+
+            setDateSel2(dateSel1 + " 00:00:00");
+            setdConsulta1(dConsulta1 + " 00:00:00");
             setDateSel2(dateSel2 + " 23:59:59");
             setdConsulta2(dConsulta2 + " 23:59:59");
         }
     }
-    
-    public void dadosConsulta() { 
+
+    public void dadosConsulta() {
         formatandoData();
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Dispositivo: " + dispConsulta + " - Período: "  + dateSel1 + " a " + dateSel2));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Dispositivo: " + dispConsulta + " - Período: " + dateSel1 + " a " + dateSel2));
+        reload();
     }
-    
+
     public ConsultaRetorno() {
+        System.out.println("RODANDO CONSULTA RETORNO");
         reload();
     }
 
     public void reload() {
-        if (registro1 != null) {
+        String x_value;
+        Double y_value;
+        registro1 = new ArrayList<>();
+        registro2 = new ArrayList<>();
+        registro3 = new ArrayList<>();
+        registro4 = new ArrayList<>();
+        registro5 = new ArrayList<>();
+        registro6 = new ArrayList<>();
+        registro7 = new ArrayList<>();
+        registro8 = new ArrayList<>();
 
-        } else {
-            String x_value;
-            Double y_value;
-            registro1 = new ArrayList<>();
-            registro2 = new ArrayList<>();
-            registro3 = new ArrayList<>();
-            registro4 = new ArrayList<>();
-            registro5 = new ArrayList<>();
-            registro6 = new ArrayList<>();
-            registro7 = new ArrayList<>();
-            registro8 = new ArrayList<>();
-            
-            Main.db = null;
-            BD.ConectarBD();
-            Main.db = null;
-            BD.ConectarBD();
-            
-            String sql = "SELECT * FROM amostragens WHERE id_dispositivos IN (SELECT id FROM dispositivos WHERE nome ILIKE '" + dispConsulta + "') AND data BETWEEN '" + dConsulta1 + "' AND '" + dConsulta2 + "' ORDER BY id ASC;";
+        Main.db = null;
+        BD.ConectarBD();
 
-            try {
-                Main.sql = Main.db.createStatement();
-            } catch (SQLException e) {
+        String sql = "SELECT * FROM amostragens WHERE id_dispositivos IN (SELECT id FROM dispositivos WHERE nome ILIKE '" + dispConsulta + "') AND data BETWEEN '" + dConsulta1 + "' AND '" + dConsulta2 + "' ORDER BY id ASC;";
+        System.out.println(sql);
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+        }
+        ResultSet rs;
+        try {
+            rs = Main.sql.executeQuery(sql);
+            System.out.println(sql);
+
+            while (rs.next()) {
+                x_value = (rs.getString("data"));
+                y_value = (rs.getDouble("co2"));
+                registro1.add(new chartRecord((x_value), y_value));
+                y_value = (rs.getDouble("eco2"));
+                registro2.add(new chartRecord((x_value), y_value));
+                y_value = (rs.getDouble("temperatura"));
+                registro3.add(new chartRecord((x_value), y_value));
+                y_value = (rs.getDouble("umidade"));
+                registro4.add(new chartRecord((x_value), y_value));
+                y_value = (rs.getDouble("db"));
+                registro5.add(new chartRecord((x_value), y_value));
+                y_value = (rs.getDouble("lux"));
+                registro6.add(new chartRecord((x_value), y_value));
+                y_value = (rs.getDouble("tvoc"));
+                registro7.add(new chartRecord((x_value), y_value));
+                y_value = (rs.getDouble("iaq"));
+                registro8.add(new chartRecord((x_value), y_value));
             }
-            ResultSet rs;
-            try {
-                rs = Main.sql.executeQuery(sql);
-                System.out.println(sql);
 
-                while (rs.next()) {
-                    x_value = (rs.getString("data"));
-                    y_value = (rs.getDouble("co2"));
-                    registro1.add(new chartRecord((x_value), y_value));
-                    y_value = (rs.getDouble("eco2"));
-                    registro2.add(new chartRecord((x_value), y_value));
-                    y_value = (rs.getDouble("temperatura"));
-                    registro3.add(new chartRecord((x_value), y_value));
-                    y_value = (rs.getDouble("umidade"));
-                    registro4.add(new chartRecord((x_value), y_value));
-                    y_value = (rs.getDouble("db"));
-                    registro5.add(new chartRecord((x_value), y_value));
-                    y_value = (rs.getDouble("lux"));
-                    registro6.add(new chartRecord((x_value), y_value));
-                    y_value = (rs.getDouble("tvoc"));
-                    registro7.add(new chartRecord((x_value), y_value));
-                    y_value = (rs.getDouble("iaq"));
-                    registro8.add(new chartRecord((x_value), y_value));
-                }
-
-                rs.close();
-            } catch (SQLException e) {
-            }
+            rs.close();
+        } catch (SQLException e) {
         }
 
     }
