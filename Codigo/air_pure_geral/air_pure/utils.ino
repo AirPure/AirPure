@@ -245,7 +245,7 @@ void vLowLED(void *pvParameters) {
   const int ledChannel = 0;
   const int resolution = 8;
   const int ledChannel2 = 1;
-  esp_task_wdt_init(8, true);
+  esp_task_wdt_init(4, true);
   esp_task_wdt_add(NULL);
   ledcSetup(ledChannel, freq, resolution);
   ledcAttachPin(ledPin, ledChannel);

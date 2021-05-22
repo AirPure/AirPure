@@ -84,9 +84,9 @@ if (isContadorPessoas == 1){ /*Se estiver no modo contador de pessoas, define as
 void loop() {
  
 if (isContadorPessoas == 1){ /*Se for contador de pessoas, verifica constantemente o estado dos pinos e envia ao Home Assistant periodicamente.*/
-
+estado = WORKING;
 distance1 = getDistance1();
- Serial.println((String)distance1);
+Serial.println((String)distance1);
 if(distance1 < 50){
   Serial.println("Detectei algo (1)...");
   delay(300);
@@ -101,7 +101,7 @@ if(distance1 < 50){
 
 
 distance2= getDistance2();
- Serial.println((String)distance2);
+Serial.println((String)distance2);
 if(distance2 < 50){
   Serial.println("Detectei algo (2)...");
   delay(300);

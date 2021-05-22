@@ -170,7 +170,6 @@ void mqttpublish() {
 
   //Leitura dos valores.
   Serial.println("Iniciando leitura dos sensores.");
-
     
   valorCO2 = leituraGas(); //Concentração de CO2 - MH-Z14A.
 
@@ -180,7 +179,6 @@ void mqttpublish() {
 
   dbLevel = readDb();//MAX9814 - Ruído
 
-  
   readLux();  //Leitura do BH1750
 
   /*Se o AirPure não esta no modo ESP-NOW, faz a verificação do nivel de CO2 e caso esteja alto, faz o envio de alerta para o Telegram.*/
@@ -204,8 +202,6 @@ void mqttpublish() {
     highCO2 = 0;
   }
   
-
-
   /*Faz a configuração para o OTA.*/
   configureOta();
 
