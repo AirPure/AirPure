@@ -105,7 +105,7 @@
                     <li>
 
                         <li class="active"><a href="/airpure/sistema/simpec"><i class="fa fa-home"></i> <span>Home</span></a></li>
-                        
+
                         <li class="header">Cadastro</li>
                         <li class="active"><a href="/airpure/sistema/cadastroManutencao"><i class="fa fa-truck"></i> <span>Cadastro de Manutenções</span></a></li>
                         <li class="active"><a href="/airpure/sistema/cadastroDispositivo"><i class="fa fa-floppy-o"></i> <span>Cadastro de Dispositivos</span></a></li>
@@ -223,7 +223,7 @@
                                                         <h:outputText value="Nº de Patrimônio do Equipamento: " style="font-weight: normal"/>
                                                         <h:outputText value="#{groups.n_Patrimonio}" style="font-weight: bold"/>
 
-                                                        
+
                                                         <h:outputText value="IAQ(CO2): " style="font-weight: normal"/>
                                                         <h:outputText value="#{process.iaqco2Total}" style="font-weight: bold"/>
 
@@ -362,53 +362,53 @@
 
                         </div>
 
-                        <h:panelGrid columns="1" style="margin: auto;">
-
-                            <p:outputPanel style="width:100%;">
-                                <hf:chart type="line" value="#{chartView3.registro1}" var="point"
-                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de CO2">
-                                    <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
-                                                  gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                                </hf:chart> 
-                            </p:outputPanel>
-                            <p:outputPanel style="width:100%;">
-                                <hf:chart type="line" value="#{chartView3.registro2}" var="point"
-                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de eCO2">
-                                    <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
-                                                  gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                                </hf:chart> 
-                            </p:outputPanel>
-                            <p:outputPanel style="width:100%;">
-                                <hf:chart type="line" value="#{chartView3.registro3}" var="point"
-                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Temperatura">
-                                    <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
-                                                  gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                                </hf:chart> 
-                            </p:outputPanel>
-                            <p:outputPanel style="width:100%;">
-                                <hf:chart type="line" value="#{chartView3.registro4}" var="point"
-                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Umidade">
-                                    <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
-                                                  gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                                </hf:chart> 
-                            </p:outputPanel>
-                            <p:outputPanel style="width:100%;">
-                                <hf:chart type="line" value="#{chartView3.registro5}" var="point"
-                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de dB">
-                                    <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
-                                                  gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                                </hf:chart> 
-                            </p:outputPanel>
-                            <p:outputPanel style="width:100%;">
-                                <hf:chart type="line" value="#{chartView3.registro6}" var="point"
-                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Iluminância">
-                                    <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
-                                                  gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                                </hf:chart> 
-                            </p:outputPanel>
 
 
-                        </h:panelGrid>
+                        <p:outputPanel style="width:100%;">
+                            <hf:chart type="line" value="#{chartView3.registro1}" var="point"
+                                      point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de CO2">
+                                <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                              gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                            </hf:chart> 
+                        </p:outputPanel>
+                        <p:outputPanel style="width:100%;">
+                            <hf:chart type="line" value="#{chartView3.registro2}" var="point"
+                                      point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de eCO2">
+                                <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                              gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                            </hf:chart> 
+                        </p:outputPanel>
+                        <p:outputPanel style="width:100%;">
+                            <hf:chart type="line" value="#{chartView3.registro3}" var="point"
+                                      point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Temperatura">
+                                <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                              gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                            </hf:chart> 
+                        </p:outputPanel>
+                        <p:outputPanel style="width:100%;">
+                            <hf:chart type="line" value="#{chartView3.registro4}" var="point"
+                                      point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Umidade">
+                                <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                              gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                            </hf:chart> 
+                        </p:outputPanel>
+                        <p:outputPanel style="width:100%;">
+                            <hf:chart type="line" value="#{chartView3.registro5}" var="point"
+                                      point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de dB">
+                                <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                              gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                            </hf:chart> 
+                        </p:outputPanel>
+                        <p:outputPanel style="width:100%;">
+                            <hf:chart type="line" value="#{chartView3.registro6}" var="point"
+                                      point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de Iluminância">
+                                <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
+                                              gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                            </hf:chart> 
+                        </p:outputPanel>
+
+
+
                         <p:outputPanel style="width:100%;">
                             <hf:chart type="line" value="#{chartView3.registro7}" var="point"
                                       point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de TVOC">
