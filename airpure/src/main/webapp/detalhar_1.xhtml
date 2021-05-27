@@ -259,13 +259,6 @@
                                     </h:panelGrid> 
                                     <h:outputLabel value="#{requestdata3.returnImageParam(process.co2,'CO2')}" style="color: white; font-size: 18px;"/>
                                 </h:panelGrid>
-                                <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process.eco2,'eCO2')}; border-radius: 10px; width: 90%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
-                                    <h:outputLabel value="eCO2:" style="color: white; font-size: 18px;"/>
-                                    <h:panelGrid columns="2" style="margin:auto;"> 
-                                        <h:outputText value="#{process.eco2} ppm" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
-                                    </h:panelGrid> 
-                                    <h:outputLabel value="#{requestdata3.returnImageParam(process.eco2,'eCO2')}" style="color: white; font-size: 18px;"/>
-                                </h:panelGrid>
                                 <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process.temperatura,'Temperatura')}; border-radius: 10px; width: 90%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
                                     <h:outputLabel value="Temperatura:" style="color: white; font-size: 18px;"/>
                                     <h:panelGrid columns="2" style="margin:auto;"> 
@@ -330,12 +323,6 @@
                                 </p:column>
                                 <p:column>
                                     <f:facet name="header">
-                                        <h:outputText value="ECO2"/>
-                                    </f:facet>
-                                    <h:outputText value="#{item.eco2}"/>
-                                </p:column>
-                                <p:column>
-                                    <f:facet name="header">
                                         <h:outputText value="LUMINOSIDADE"/>
                                     </f:facet>
                                     <h:outputText value="#{item.lux}"/>
@@ -367,13 +354,6 @@
                         <p:outputPanel style="width:100%;">
                             <hf:chart type="line" value="#{chartView3.registro1}" var="point"
                                       point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de CO2">
-                                <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
-                                              gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                            </hf:chart> 
-                        </p:outputPanel>
-                        <p:outputPanel style="width:100%;">
-                            <hf:chart type="line" value="#{chartView3.registro2}" var="point"
-                                      point="#{point.y_value}" tickLabel="#{point.x_value}" title="Variação de eCO2">
                                 <hf:chartAxis position="s" title="Valores" type="datetime" tickAngle="-45"
                                               gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
                             </hf:chart> 
