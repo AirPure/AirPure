@@ -737,25 +737,6 @@ public class RequestData3 {
             }
             try {
 
-                rs = Main.sql.executeQuery(sqleCO2);
-                System.out.println(sqleCO2);
-                while (rs.next()) {
-                    estatistica process = new estatistica();
-                    process.setParametro("eCO2 (ppm)");
-                    process.setCo2Max(rs.getFloat("maxeCO2"));
-                    process.setCo2Min(rs.getFloat("mineCO2"));
-                    process.setCo2Media(rs.getFloat("mediaeCO2"));
-                    process.setCo2DesvPad(rs.getFloat("desvPadeco2"));
-                    registro6.add(process);
-
-                }
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-
-            }
-            try {
-
                 rs = Main.sql.executeQuery(sqldb);
                 System.out.println(sqldb);
                 while (rs.next()) {

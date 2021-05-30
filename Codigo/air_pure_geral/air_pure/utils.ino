@@ -252,7 +252,6 @@ void vLowLED(void *pvParameters) {
   ledcSetup(ledChannel2, freq, resolution);
   ledcAttachPin(ledPin2, ledChannel2);
 
-  valorCO2 = leituraGas(); //Concentração de CO2 - MH-Z14A.
   float value = mapfloat(valorCO2, 390, 1200, 0, 255);
   ledcWrite(ledChannel2, 255 - value);
   
@@ -389,9 +388,9 @@ void sendData(String params) {
 /*Conectar ao Broker MQTT (ThingSpeak).*/
 void reconnect() {
   char clientID[9]; //Identificação do cliente.
-
+  int counter = 0;
 //Gerar ID do cliente.
-  while (!mqttClient.connected()) {
+  if (!mqttClient.connected()) {
     Serial.print("Tentando conexão MQTT...");
     for (int i = 0; i < 8; i++) {
       clientID[i] = alphanum[random(100)];

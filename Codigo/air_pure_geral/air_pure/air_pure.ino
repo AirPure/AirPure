@@ -44,6 +44,7 @@ if(wifiManager){
 
 /*Cria task que mantem a atualização do OTA.*/
 xTaskCreate(vLowSerial, "vLowSerial", 10000, NULL, 0, &task_low_serial);
+delay(1000);
 xTaskCreate(vLowLED, "vLowLED", 10000, NULL, 0, &task_low_led);
 if (isContadorPessoas == 1){ /*Se estiver no modo contador de pessoas, define as portas pre-definidas como entrada/saida.*/  
   init_WiFi(); /*Inicializa o WiFi*/
