@@ -390,7 +390,7 @@ void reconnect() {
   char clientID[9]; //Identificação do cliente.
   int counter = 0;
 //Gerar ID do cliente.
-  while (!mqttClient.connected()) {
+  if (!mqttClient.connected()) {
     Serial.print("Tentando conexão MQTT...");
     for (int i = 0; i < 8; i++) {
       clientID[i] = alphanum[random(100)];
@@ -408,11 +408,6 @@ void reconnect() {
       if (isWaitingForOta == 0) {
         ESP.restart();
       }
-    }
-
-    counter++;
-    if(counter>=60){ 
-      ESP.restart();
     }
   }
 }
