@@ -177,36 +177,37 @@
                     <p:fieldset id="fieldset_Geral" legend="Consulta aos Dados" style="width:100%; border-width: 3px; color: black; text-align: center;">
                         <section class="content-header" id="lastRegister">
                             <h:form id = "grid">
-                                <div style="padding: 10px; float: left">
-                                    <h:panelGrid columns="2">
-                                        <h1 style="color: black; float: left; font-size: 20px; margin-top: 0; padding: 5px">
-                                            Dispositivo
-                                            <!-- <small style="color: white;">SASO</small> -->
-                                        </h1>
-                                        <h:panelGrid columns="1">
-                                            <p:selectOneMenu value="#{consultaRetorno.dispConsulta}" effect="fold" editable="false" style="height: 32px; width: 70px">
-                                                <!--<f:selectItem itemLabel="Selecione um" itemValue=""/>-->
-                                                <f:selectItems value="#{autenticacao.returnDispositivos()}"/>
-                                            </p:selectOneMenu>
+                                <div  style="float: left; position: relative; left: 26%">
+                                    <div style="padding: 10px; float: left">
+                                        <h:panelGrid columns="2">
+                                            <h1 style="color: black; float: left; font-size: 20px; margin-top: 0; padding: 5px">
+                                                Dispositivo
+                                                <!-- <small style="color: white;">SASO</small> -->
+                                            </h1>
+                                            <h:panelGrid columns="1">
+                                                <p:selectOneMenu value="#{consultaRetorno.dispConsulta}" effect="fold" editable="false" style="height: 32px; width: 70px">
+                                                    <!--<f:selectItem itemLabel="Selecione um" itemValue=""/>-->
+                                                    <f:selectItems value="#{autenticacao.returnDispositivos()}"/>
+                                                </p:selectOneMenu>
+                                            </h:panelGrid>
                                         </h:panelGrid>
-                                    </h:panelGrid>
+                                    </div>
+                                    <div style="padding: 10px; float: left">
+                                        <h:panelGrid columns="4">
+                                            <h1 style="color: black; float: left; font-size: 20px; margin-top: 0; padding: 5px">Período de</h1>
+                                            <p:calendar value="#{consultaRetorno.date4}" locale = "de" pattern="dd/MM/yyyy">
+                                                <p:ajax event="dateSelect" listener="#{consultaRetorno.dataSelecionada1}"/>
+                                            </p:calendar>
+                                            <h1 style="color: black; float: left; font-size: 20px; margin-top: 0; padding: 5px">até</h1>
+                                            <p:calendar value="#{consultaRetorno.date5}" locale = "de" pattern="dd/MM/yyyy">
+                                                <p:ajax event="dateSelect" listener="#{consultaRetorno.dataSelecionada2}"/>
+                                            </p:calendar>
+                                        </h:panelGrid>
+                                    </div>
+                                    <div style="padding: 10px; float: left">
+                                        <p:commandButton styleClass="btn btn-success btn-block" value="Consultar" action="#{consultaRetorno.dadosConsulta()}" update="fieldset_Geral" oncomplete="mostraDiv()"/>
+                                    </div>
                                 </div>
-                                <div style="padding: 10px; float: left">
-                                    <h:panelGrid columns="4">
-                                        <h1 style="color: black; float: left; font-size: 20px; margin-top: 0; padding: 5px">Período de</h1>
-                                        <p:calendar value="#{consultaRetorno.date4}" locale = "de" pattern="dd/MM/yyyy">
-                                            <p:ajax event="dateSelect" listener="#{consultaRetorno.dataSelecionada1}"/>
-                                        </p:calendar>
-                                        <h1 style="color: black; float: left; font-size: 20px; margin-top: 0; padding: 5px">até</h1>
-                                        <p:calendar value="#{consultaRetorno.date5}" locale = "de" pattern="dd/MM/yyyy">
-                                            <p:ajax event="dateSelect" listener="#{consultaRetorno.dataSelecionada2}"/>
-                                        </p:calendar>
-                                    </h:panelGrid>
-                                </div>
-                                <div style="padding: 10px; float: left">
-                                    <p:commandButton styleClass="btn btn-success btn-block" value="Consultar" action="#{consultaRetorno.dadosConsulta()}" update="fieldset_Geral" oncomplete="mostraDiv()"/>
-                                </div>
-
                                 <div id="retornoConsulta" align = "center" style= "clear: both; padding: 20px; display: none">
                                     <h1 style="color: black; text-align: center; font-size: 22px; font-weight: bolder">Resultado da Consulta</h1>
                                     <p:messages id="msgs" style="color: black"/> <!--Colocar mensagem de cadastro realizado com sucesso-->

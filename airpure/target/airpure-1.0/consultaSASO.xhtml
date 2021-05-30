@@ -21,17 +21,6 @@
 
         <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/logo1.png']}"/>
         <SCRIPT type="text/javascript">
-            var myVar = setInterval(redirect, 60000);
-            var myVar2 = setInterval(redirect2, 360000);
-
-            function redirect() {
-                $("#fieldset_colors").load(" #fieldset_colors > *");
-                $("#lastRegister").load(" #lastRegister > *");
-            }
-
-            function redirect2() {
-                window.location.reload(1);
-            }
 
             function someMenu() {
                 var status = document.getElementById("lateralMenu").style.display;
@@ -185,110 +174,112 @@
 
 
                 <h:panelGroup>
-                    <p:fieldset legend="Consulta aos Dados" style="width:100%; border-width: 3px; color: black; text-align: center;">
+                    <p:fieldset id="fieldset_Geral" legend="Consulta aos Dados" style="width:100%; border-width: 3px; color: black; text-align: center;">
                         <section class="content-header" id="lastRegister">
-                            <h:form id = "grid" style="float: left; position: relative; left: 26%">
-                                <div style="padding: 10px; float: left">
-                                    <h:panelGrid columns="2">
-                                        <h1 style="color: black; float: left; font-size: 20px; margin-top: 0; padding: 5px">
-                                            Dispositivo
-                                            <!-- <small style="color: white;">SASO</small> -->
-                                        </h1>
-                                        <h:panelGrid columns="1">
-                                            <p:selectOneMenu value="#{consultaRetorno.dispConsulta}" effect="fold" editable="false" style="height: 32px; width: 70px">
-                                                <!--<f:selectItem itemLabel="Selecione um" itemValue=""/>-->
-                                                <f:selectItems value="#{autenticacao.returnDispositivos()}"/>
-                                            </p:selectOneMenu>
+                            <h:form id = "grid">
+                                <div  style="float: left; position: relative; left: 26%">
+                                    <div style="padding: 10px; float: left">
+                                        <h:panelGrid columns="2">
+                                            <h1 style="color: black; float: left; font-size: 20px; margin-top: 0; padding: 5px">
+                                                Dispositivo
+                                                <!-- <small style="color: white;">SASO</small> -->
+                                            </h1>
+                                            <h:panelGrid columns="1">
+                                                <p:selectOneMenu value="#{consultaRetorno.dispConsulta}" effect="fold" editable="false" style="height: 32px; width: 70px">
+                                                    <!--<f:selectItem itemLabel="Selecione um" itemValue=""/>-->
+                                                    <f:selectItems value="#{autenticacao.returnDispositivos()}"/>
+                                                </p:selectOneMenu>
+                                            </h:panelGrid>
                                         </h:panelGrid>
-                                    </h:panelGrid>
+                                    </div>
+                                    <div style="padding: 10px; float: left">
+                                        <h:panelGrid columns="4">
+                                            <h1 style="color: black; float: left; font-size: 20px; margin-top: 0; padding: 5px">Período de</h1>
+                                            <p:calendar value="#{consultaRetorno.date4}" locale = "de" pattern="dd/MM/yyyy">
+                                                <p:ajax event="dateSelect" listener="#{consultaRetorno.dataSelecionada1}"/>
+                                            </p:calendar>
+                                            <h1 style="color: black; float: left; font-size: 20px; margin-top: 0; padding: 5px">até</h1>
+                                            <p:calendar value="#{consultaRetorno.date5}" locale = "de" pattern="dd/MM/yyyy">
+                                                <p:ajax event="dateSelect" listener="#{consultaRetorno.dataSelecionada2}"/>
+                                            </p:calendar>
+                                        </h:panelGrid>
+                                    </div>
+                                    <div style="padding: 10px; float: left">
+                                        <p:commandButton styleClass="btn btn-success btn-block" value="Consultar" action="#{consultaRetorno.dadosConsulta()}" update="fieldset_Geral" oncomplete="mostraDiv()"/>
+                                    </div>
                                 </div>
-                                <div style="padding: 10px; float: left">
-                                    <h:panelGrid columns="4">
-                                        <h1 style="color: black; float: left; font-size: 20px; margin-top: 0; padding: 5px">Período de</h1>
-                                        <p:calendar value="#{consultaRetorno.date4}" locale = "de" pattern="dd/MM/yyyy">
-                                            <p:ajax event="dateSelect" listener="#{consultaRetorno.dataSelecionada1}"/>
-                                        </p:calendar>
-                                        <h1 style="color: black; float: left; font-size: 20px; margin-top: 0; padding: 5px">até</h1>
-                                        <p:calendar value="#{consultaRetorno.date5}" locale = "de" pattern="dd/MM/yyyy">
-                                            <p:ajax event="dateSelect" listener="#{consultaRetorno.dataSelecionada2}"/>
-                                        </p:calendar>
+                                <div id="retornoConsulta" align = "center" style= "clear: both; padding: 20px; display: none">
+                                    <h1 style="color: black; text-align: center; font-size: 22px; font-weight: bolder">Resultado da Consulta</h1>
+                                    <p:messages id="msgs" style="color: black"/> <!--Colocar mensagem de cadastro realizado com sucesso-->
+
+                                    <h:panelGrid columns="2" style="margin: auto;">
+                                        <p:outputPanel style="width:100%;">
+                                            <hf:chart type="line" value="#{consultaRetorno.registro1}" var="point"
+                                                      point="#{point.y_value}" tickLabel="#{point.x_value}" title="Dióxido de Carbono">
+                                                <hf:chartAxis position="s" title="Variação de Tempo" type="datetime" tickAngle="-45"
+                                                              gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                            </hf:chart> 
+                                        </p:outputPanel>
+                                        <p:outputPanel style="width:100%;">
+                                            <hf:chart type="line" value="#{consultaRetorno.registro2}" var="point"
+                                                      point="#{point.y_value}" tickLabel="#{point.x_value}" title="Dióxido de Carbono Equivalente">
+                                                <hf:chartAxis position="s" title="Variação de Tempo" type="datetime" tickAngle="-45"
+                                                              gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                            </hf:chart> 
+                                        </p:outputPanel>
+                                        <p:outputPanel style="width:100%;">
+                                            <hf:chart type="line" value="#{consultaRetorno.registro3}" var="point"
+                                                      point="#{point.y_value}" tickLabel="#{point.x_value}" title="Temperatura">
+                                                <hf:chartAxis position="s" title="Variação de Tempo" type="datetime" tickAngle="-45"
+                                                              gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                            </hf:chart> 
+                                        </p:outputPanel>
+                                        <p:outputPanel style="width:100%;">
+                                            <hf:chart type="line" value="#{consultaRetorno.registro4}" var="point"
+                                                      point="#{point.y_value}" tickLabel="#{point.x_value}" title="Umidade">
+                                                <hf:chartAxis position="s" title="Variação de Tempo" type="datetime" tickAngle="-45"
+                                                              gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                            </hf:chart> 
+                                        </p:outputPanel>
+                                        <p:outputPanel style="width:100%;">
+                                            <hf:chart type="line" value="#{consultaRetorno.registro5}" var="point"
+                                                      point="#{point.y_value}" tickLabel="#{point.x_value}" title="Ruído">
+                                                <hf:chartAxis position="s" title="Variação de Tempo" type="datetime" tickAngle="-45"
+                                                              gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                            </hf:chart> 
+                                        </p:outputPanel>
+                                        <p:outputPanel style="width:100%;">
+                                            <hf:chart type="line" value="#{consultaRetorno.registro6}" var="point"
+                                                      point="#{point.y_value}" tickLabel="#{point.x_value}" title="Iluminamento">
+                                                <hf:chartAxis position="s" title="Variação de Tempo" type="datetime" tickAngle="-45"
+                                                              gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                            </hf:chart> 
+                                        </p:outputPanel>
+                                        <p:outputPanel style="width:100%;">
+                                            <hf:chart type="line" value="#{consultaRetorno.registro7}" var="point"
+                                                      point="#{point.y_value}" tickLabel="#{point.x_value}" title="Compostos Orgânicos Voláteis Totais">
+                                                <hf:chartAxis position="s" title="Variação de Tempo" type="datetime" tickAngle="-45"
+                                                              gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                            </hf:chart> 
+                                        </p:outputPanel>
+                                        <p:outputPanel style="width:100%;">
+                                            <hf:chart type="line" value="#{consultaRetorno.registro8}" var="point"
+                                                      point="#{point.y_value}" tickLabel="#{point.x_value}" title="Índice de Qualidade do Ar">
+                                                <hf:chartAxis position="s" title="Variação de Tempo" type="datetime" tickAngle="-45"
+                                                              gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                            </hf:chart> 
+                                        </p:outputPanel>
                                     </h:panelGrid>
-                                </div>
-                                <div style="padding: 10px; float: left">
-                                    <p:commandButton styleClass="btn btn-success btn-block" value="Consultar" action="#{consultaRetorno.dadosConsulta()}" update="grid msgs" onclick="mostraDiv()" />
                                 </div>
                             </h:form>
-                            <div id="retornoConsulta" align = "center" style= "clear: both; padding: 20px; display: none">
-                                <h1 style="color: black; text-align: center; font-size: 22px; font-weight: bolder">Resultado da Consulta</h1>
-                                <p:messages id="msgs" style="color: black"/> <!--Colocar mensagem de cadastro realizado com sucesso-->
-                                
-                                <h:panelGrid columns="2" style="margin: auto;">
-                                    <p:outputPanel style="width:100%;">
-                                        <hf:chart type="line" value="#{consultaRetorno.registro1}" var="point"
-                                                  point="#{point.y_value}" tickLabel="#{point.x_value}" title="Dióxido de Carbono">
-                                            <hf:chartAxis position="s" title="Variação de Tempo" type="datetime" tickAngle="-45"
-                                                          gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                                        </hf:chart> 
-                                    </p:outputPanel>
-                                    <p:outputPanel style="width:100%;">
-                                        <hf:chart type="line" value="#{consultaRetorno.registro2}" var="point"
-                                                  point="#{point.y_value}" tickLabel="#{point.x_value}" title="Dióxido de Carbono Equivalente">
-                                            <hf:chartAxis position="s" title="Variação de Tempo" type="datetime" tickAngle="-45"
-                                                          gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                                        </hf:chart> 
-                                    </p:outputPanel>
-                                    <p:outputPanel style="width:100%;">
-                                        <hf:chart type="line" value="#{consultaRetorno.registro3}" var="point"
-                                                  point="#{point.y_value}" tickLabel="#{point.x_value}" title="Temperatura">
-                                            <hf:chartAxis position="s" title="Variação de Tempo" type="datetime" tickAngle="-45"
-                                                          gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                                        </hf:chart> 
-                                    </p:outputPanel>
-                                    <p:outputPanel style="width:100%;">
-                                        <hf:chart type="line" value="#{consultaRetorno.registro4}" var="point"
-                                                  point="#{point.y_value}" tickLabel="#{point.x_value}" title="Umidade">
-                                            <hf:chartAxis position="s" title="Variação de Tempo" type="datetime" tickAngle="-45"
-                                                          gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                                        </hf:chart> 
-                                    </p:outputPanel>
-                                    <p:outputPanel style="width:100%;">
-                                        <hf:chart type="line" value="#{consultaRetorno.registro5}" var="point"
-                                                  point="#{point.y_value}" tickLabel="#{point.x_value}" title="Ruído">
-                                            <hf:chartAxis position="s" title="Variação de Tempo" type="datetime" tickAngle="-45"
-                                                          gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                                        </hf:chart> 
-                                    </p:outputPanel>
-                                    <p:outputPanel style="width:100%;">
-                                        <hf:chart type="line" value="#{consultaRetorno.registro6}" var="point"
-                                                  point="#{point.y_value}" tickLabel="#{point.x_value}" title="Iluminamento">
-                                            <hf:chartAxis position="s" title="Variação de Tempo" type="datetime" tickAngle="-45"
-                                                          gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                                        </hf:chart> 
-                                    </p:outputPanel>
-                                    <p:outputPanel style="width:100%;">
-                                        <hf:chart type="line" value="#{consultaRetorno.registro7}" var="point"
-                                                  point="#{point.y_value}" tickLabel="#{point.x_value}" title="Compostos Orgânicos Voláteis Totais">
-                                            <hf:chartAxis position="s" title="Variação de Tempo" type="datetime" tickAngle="-45"
-                                                          gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                                        </hf:chart> 
-                                    </p:outputPanel>
-                                    <p:outputPanel style="width:100%;">
-                                        <hf:chart type="line" value="#{consultaRetorno.registro8}" var="point"
-                                                  point="#{point.y_value}" tickLabel="#{point.x_value}" title="Índice de Qualidade do Ar">
-                                            <hf:chartAxis position="s" title="Variação de Tempo" type="datetime" tickAngle="-45"
-                                                          gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                                        </hf:chart> 
-                                    </p:outputPanel>
-                                </h:panelGrid>
-                            </div>
                         </section> 
-                        
+
                         <p:dialog header="Aguarde um momento..." widgetVar="dlg1" modal="true" resizable="false" draggable="false" closable="false">
                             <div style="text-align: center">
                                 <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/ajaxloadingbar.gif" width="100"/>
                             </div>
                         </p:dialog>
-                        
+
                         <!--Consulta que será usada aqui
                         select * 
                         from amostragens 
@@ -315,10 +306,10 @@
         <!-- REQUIRED JS SCRIPTS -->
         <!-- REQUIRED JS SCRIPTS -->
         <SCRIPT type="text/javascript">
-            function mostraDiv(){
+            function mostraDiv() {
                 document.getElementById('retornoConsulta').style.display = "inherit";
             }
-            
+
             function redirect() {
                 window.location.href = "graphsDetailed.xhtml";
             }
@@ -355,32 +346,32 @@
                     .updateNeedle(70)
 
         </script>
-        
+
         <script type="text/javascript">
-        PrimeFaces.locales ['de'] = {
-            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-            monthNamesShort: ['Jan', 'Feb', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Out', 'Nov', 'Dez'],
-            dayNames: ['Domingo','Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
-            dayNamesShort: ['Dom','Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-            dayNamesMin: ['D','S', 'T', 'Q', 'Q ', 'S', 'S'],
-            weekHeader: 'Domingo',
-            firstDay: 1,
-            isRTL: false,
-            showMonthAfterYear: false,
-            yearSuffix: '',
-            timeText: 'Horário',
-            hourText: 'Hora',
-            minuteText: 'Minuto',
-            secondText: 'Segundo',
-            currentText: 'Aktuelles Datum',
-            ampm: false,
-            month: 'Mês',
-            week: 'Semana',
-            day: 'Dia',
-            allDayText: 'Dia Inteiro'
-        };
-    </script>
-        
+            PrimeFaces.locales ['de'] = {
+                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                monthNamesShort: ['Jan', 'Feb', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Out', 'Nov', 'Dez'],
+                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+                dayNamesMin: ['D', 'S', 'T', 'Q', 'Q ', 'S', 'S'],
+                weekHeader: 'Domingo',
+                firstDay: 1,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: '',
+                timeText: 'Horário',
+                hourText: 'Hora',
+                minuteText: 'Minuto',
+                secondText: 'Segundo',
+                currentText: 'Aktuelles Datum',
+                ampm: false,
+                month: 'Mês',
+                week: 'Semana',
+                day: 'Dia',
+                allDayText: 'Dia Inteiro'
+            };
+        </script>
+
 
 
         <script type="text/javascript" src="#{request.contextPath}/resources/bootstrap/js/bootstrap.min.js"></script> <!-- Correio -->
