@@ -78,7 +78,7 @@ def classificatePackage(conn, addr):
             # Se foi uma operacao de INSERT
             if operacao == 'INSERT':
                 print(comando);
-                valor = 10
+                valor = float(comando[5])
                 iaqCO2 = estatisticaIp("CO2", valor)
 
                 try:
