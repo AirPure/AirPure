@@ -51,7 +51,7 @@ public class GeradorDeDados {
      * E passa para o mecanismo de apuração
      *
      */
-    @Schedule(hour = "11", minute = "0", second = "0", persistent = false)
+    @Schedule(hour = "*", minute = "*/1", persistent = false)
     public void gera() throws MalformedURLException, IOException, AddressException, MessagingException, InterruptedException {
         System.out.println("Iniciando verificação para notificações GERAL.");
         /*
@@ -68,7 +68,7 @@ public class GeradorDeDados {
         String msg = "";
         String msgTelegram = "";
         //String sql = "SELECT DISTINCT ON (id_dispositivos) id_dispositivos,* FROM amostragens WHERE id_dispositivos IN (SELECT id FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado +") ORDER BY id_dispositivos,id DESC;";
-        sql = "SELECT avg(eCO2) AS eco2,avg(CO2) as co2,avg(lux) as lux,avg(tvoc) as tvoc,avg(db) as db,avg(umidade) as umidade,avg(temperatura) as temperatura,id_dispositivos,ambientes.sala,ambientes.predio,ambientes.local,usuario.email FROM amostragens INNER JOIN usuario ON id_projeto IN (select id_projeto from dispositivos where id = id_dispositivos) INNER JOIN ambientes ON ambientes.id IN (select id_ambientes FROM dispositivos WHERE id_projeto = usuario.id_projeto) WHERE (DATE_PART('Day',now() - data::timestamptz) < 1) group by id_dispositivos, ambientes.sala, ambientes.predio,ambientes.local,usuario.email ORDER BY id_dispositivos DESC";
+        sql = "SELECT avg(amostragens.eco2) AS eco2,avg(amostragens.co2) as co2,avg(amostragens.lux) as lux,avg(amostragens.tvoc) as tvoc,avg(db) as db,avg(amostragens.umidade) as umidade,avg(amostragens.temperatura) as temperatura,id_dispositivos,ambientes.sala,ambientes.predio,ambientes.local,usuario.email FROM amostragens INNER JOIN usuario ON id_projeto IN (select id_projeto from dispositivos where id = id_dispositivos) INNER JOIN ambientes ON ambientes.id IN (select id_ambientes FROM dispositivos WHERE id_projeto = usuario.id_projeto) WHERE (DATE_PART('Day',now() - data::timestamptz) < 1) group by id_dispositivos, ambientes.sala, ambientes.predio,ambientes.local,usuario.email ORDER BY id_dispositivos DESC";
         try {
             Main.sql = Main.db.createStatement();
         } catch (SQLException e) {
