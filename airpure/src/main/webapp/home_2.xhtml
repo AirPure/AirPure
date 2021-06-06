@@ -125,7 +125,15 @@
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <h1 style="color: white;">
-                    Dashboard
+                    <h:panelGrid columns="2">
+                        <div>
+                            Dashboard     
+                        </div>
+                        <h:form>
+                            <p:commandButton styleClass="btn btn-primary" style="margin-left: 20px;" action="#{autenticacao.selecionaQuestionario()}" onclick="PF('dlg1').show();" oncomplete="if(args.validationFailed){hideBar()}"
+                                             value="Acessar Questionário" update="@form"/>
+                        </h:form>
+                    </h:panelGrid>
                 </h1>
 
 
@@ -201,22 +209,22 @@
 
 
                                         <script>
-            // Element inside which you want to see the chart.
-            let element1#{process.id} = document.querySelector('#gaugeArea1#{process.id}')
+                                            // Element inside which you want to see the chart.
+                                            let element1#{process.id} = document.querySelector('#gaugeArea1#{process.id}')
 
-            let options1#{process.id} = {
-                arcColors: ['rgb(44, 151, 222)', 'lightgray'],
-                arcDelimiters: [#{requestdata2.returnIAQSalaArco(process1.id)}],
-                rangeLabel: ['0', '450'],
-                centralLabel: '#{requestdata2.returnIAQSala(process1.id)}',
-            }
+                                            let options1#{process.id} = {
+                                                arcColors: ['rgb(44, 151, 222)', 'lightgray'],
+                                                arcDelimiters: [#{requestdata2.returnIAQSalaArco(process1.id)}],
+                                                rangeLabel: ['0', '450'],
+                                                centralLabel: '#{requestdata2.returnIAQSala(process1.id)}',
+                                            }
 
 
 
-            // Drawing and updating the chart.  
-            GaugeChart
-                    .gaugeChart(element1#{process.id}, 300, options1#{process.id})
-                    .updateNeedle(70)
+                                            // Drawing and updating the chart.  
+                                            GaugeChart
+                                                    .gaugeChart(element1#{process.id}, 300, options1#{process.id})
+                                                    .updateNeedle(70)
 
                                         </script>
 

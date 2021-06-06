@@ -113,6 +113,13 @@ public class autenticacao implements HttpSessionListener {
         }
         FacesContext.getCurrentInstance().getExternalContext().redirect("/airpure/sistema/sipai");
     }
+    // <==========================Função de direciona para o questionario.==============================================================================================================================>
+
+    public void selecionaQuestionario() throws IOException {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+        FacesContext.getCurrentInstance().getExternalContext().redirect("/airpure/sistema/questionario");
+    }
     // <==========================Função de direciona para o sistema 3.==============================================================================================================================>
 
     public void selecionaSistema3() throws IOException {
