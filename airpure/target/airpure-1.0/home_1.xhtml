@@ -5,7 +5,17 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:hf="http://highfaces.org"
       xmlns:p="http://primefaces.org/ui">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async='async' src="https://www.googletagmanager.com/gtag/js?id=G-0N1WYCK7KM"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
 
+        gtag('config', 'G-0N1WYCK7KM');
+    </script>
     <h:head>
         <title>Dashboard SASO</title>
         <!-- Bootstrap core CSS -->
@@ -147,10 +157,10 @@
                 <!-- Sidebar Menu -->
                 <ul class="lateralMenu" id="lateralMenu">
                     <li><a href="#">Home</a></li>
-                    <li><a href="/airpure/sistema/saso/notificacoes">Notificações</a></li>
+                    <li><a href="/airpure/sistema/saso/consulta">Consulta aos Dados</a></li>
                     <li><a href="">Dispositivo</a>
                         <ul class="subMenu">
-                            <li><a href="/airpure/sistema/saso/consulta">Consulta aos Dados</a></li>
+                            <li><a href="/airpure/sistema/saso/notificacoes">Atualizar Preferências</a></li>
                             <li><a href="/airpure/sistema/saso/dispositivo/localizacao">Localização</a></li>
                         </ul>
                     </li>
@@ -205,19 +215,7 @@
                             <small>#{requestdata1.ultimoRegistroData()}</small>
                         </section>
                         <p:dataScroller id="fieldset_colors" value="#{requestdata1.returnLastSample()}" var="process" rendered="true">
-                            <h:panelGrid columns="7" style="width: 100%;" >
-                                <h:panelGrid columns="1" style="background-color: #{requestdata1.returnColorIndicator(process.tvoc, 'TVOC')}; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
-                                    <h:outputLabel value="TVOC:" style="color: black; font-size: 20px; font-weight: bold;"/>
-                                    <h:outputText value="#{process.tvoc} ppb" style="font-weight: bold; color: black; text-align: center; font-size: 35px;"/>
-                                </h:panelGrid>
-                                <h:panelGrid columns="1" style="background-color: #{requestdata1.returnColorIndicator(process.co2, 'CO2')}; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
-                                    <h:outputLabel value="CO2:" style="color: black; font-size: 20px; font-weight: bold"/>
-                                    <h:outputText value="#{process.co2} ppm" style="font-weight: bold; color: black; text-align: center; font-size: 35px;"/>
-                                </h:panelGrid>
-                                <h:panelGrid columns="1" style="background-color: #{requestdata1.returnColorIndicator(process.eco2, 'eCO2')}; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
-                                    <h:outputLabel value="eCO2:" style="color: black; font-size: 20px; font-weight: bold"/>
-                                    <h:outputText value="#{process.eco2} ppm" style="font-weight: bold; color: black; text-align: center; font-size: 35px;"/>
-                                </h:panelGrid>
+                            <h:panelGrid columns="3" style="width: 70%;margin: auto" >
                                 <h:panelGrid columns="1" style="background-color: #{requestdata1.returnColorIndicator(process.temperatura, 'Temperatura')}; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
                                     <h:outputLabel value="Temperatura:" style="color: black; font-size: 20px; font-weight: bold"/>
                                     <h:outputText value="#{process.temperatura} ºC" style="font-weight: bold; color: black; text-align: center; font-size: 35px;"/>
@@ -226,83 +224,68 @@
                                     <h:outputLabel value="Umidade:" style="color: black; font-size: 20px;font-weight: bold"/>
                                     <h:outputText value="#{process.umidade}%" style="font-weight: bold; color: black; text-align: center; font-size: 35px;"/>
                                 </h:panelGrid>
+                                <h:panelGrid columns="1" style="background-color: #{requestdata1.returnColorIndicator(process.co2, 'CO2')}; border-radius: 10px; width: 70%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                    <h:outputLabel value="CO2:" style="color: black; font-size: 20px; font-weight: bold"/>
+                                    <h:outputText value="#{process.co2} ppm" style="font-weight: bold; color: black; text-align: center; font-size: 35px;"/>
+                                </h:panelGrid>
+                                <h:panelGrid columns="1" style="background-color: #{requestdata1.returnColorIndicator(process.tvoc, 'TVOC')}; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                    <h:outputLabel value="TVOC:" style="color: black; font-size: 20px; font-weight: bold;"/>
+                                    <h:outputText value="#{process.tvoc} ppb" style="font-weight: bold; color: black; text-align: center; font-size: 35px;"/>
+                                </h:panelGrid>
                                 <h:panelGrid columns="1" style="background-color: #{requestdata1.returnColorIndicator(process.db, 'Ruído')}; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
                                     <h:outputLabel value="Ruído:" style="color: black; font-size: 20px;font-weight: bold"/>
                                     <h:outputText value="#{process.db} dB" style="font-weight: bold; color: black; text-align: center; font-size: 35px;"/>
                                 </h:panelGrid>
-                                <h:panelGrid columns="1" style="background-color: #{requestdata1.returnColorIndicator(process.lux, 'Luminosidade')}; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
+                                <h:panelGrid columns="1" style="background-color: #{requestdata1.returnColorIndicator(process.lux, 'Luminosidade')}; border-radius: 10px; width: 70%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
                                     <h:outputLabel value="Iluminamento:" style="color: black; font-size: 20px;font-weight: bold"/>
                                     <h:outputText value="#{process.lux} Lux" style="font-weight: bold; color: black; text-align: center; font-size: 35px;"/>
                                 </h:panelGrid>
                             </h:panelGrid>
                         </p:dataScroller>
 
-                        <section>
-                            <h1 style="color: black; text-align: center; font-size: 26px">IAQ Atual</h1>
-                            <small>#{requestdata1.ultimoRegistroData()}</small>
-                            <h:panelGrid columns="4" style="margin: auto;">
-                                <div id="gaugeArea1"></div>
-                            </h:panelGrid>
-                        </section>
-
                         <section class="content-header">
-                            <h1 style="color: black; text-align: center;">Variação dos Dados durante o Dia</h1>
+                            <h1 style="color: black; text-align: center;padding-bottom: 15px">Variação dos Dados durante o Dia</h1>
                         </section>
 
-                        <h:panelGrid columns="2" style="margin: auto;">
-
-                            <p:outputPanel style="width:100%;">
-                                <hf:chart type="line" value="#{chartView1.registro1}" var="point"
-                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Dióxido de Carbono">
-                                    <hf:chartAxis position="s" title="Variação de Tempo" type="datetime" tickAngle="-45"
-                                                  gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                                </hf:chart> 
-                            </p:outputPanel>
-                            <p:outputPanel style="width:100%;">
-                                <hf:chart type="line" value="#{chartView1.registro2}" var="point"
-                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Dióxido de Carbono Equivalente">
-                                    <hf:chartAxis position="s" title="Variação de Tempo" type="datetime" tickAngle="-45"
-                                                  gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                                </hf:chart> 
-                            </p:outputPanel>
-                            <p:outputPanel style="width:100%;">
+                        <h:panelGrid columns="1" style="width: 100%;margin: auto;">
+                            <p:outputPanel style="width:65%;margin: auto">
                                 <hf:chart type="line" value="#{chartView1.registro3}" var="point"
                                           point="#{point.y_value}" tickLabel="#{point.x_value}" title="Temperatura">
                                     <hf:chartAxis position="s" title="Variação de Tempo" type="datetime" tickAngle="-45"
                                                   gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
                                 </hf:chart> 
                             </p:outputPanel>
-                            <p:outputPanel style="width:100%;">
+                            <p:outputPanel style="width:65%;margin: auto">
                                 <hf:chart type="line" value="#{chartView1.registro4}" var="point"
                                           point="#{point.y_value}" tickLabel="#{point.x_value}" title="Umidade">
                                     <hf:chartAxis position="s" title="Variação de Tempo" type="datetime" tickAngle="-45"
                                                   gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
                                 </hf:chart> 
                             </p:outputPanel>
-                            <p:outputPanel style="width:100%;">
-                                <hf:chart type="line" value="#{chartView1.registro5}" var="point"
-                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Ruído">
+                            <p:outputPanel style="width:65%;margin: auto">
+                                <hf:chart type="line" value="#{chartView1.registro1}" var="point"
+                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Dióxido de Carbono">
                                     <hf:chartAxis position="s" title="Variação de Tempo" type="datetime" tickAngle="-45"
                                                   gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
                                 </hf:chart> 
                             </p:outputPanel>
-                            <p:outputPanel style="width:100%;">
-                                <hf:chart type="line" value="#{chartView1.registro6}" var="point"
-                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Iluminamento">
-                                    <hf:chartAxis position="s" title="Variação de Tempo" type="datetime" tickAngle="-45"
-                                                  gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
-                                </hf:chart> 
-                            </p:outputPanel>
-                            <p:outputPanel style="width:100%;">
+                            <p:outputPanel style="width:65%;margin: auto">
                                 <hf:chart type="line" value="#{chartView1.registro7}" var="point"
                                           point="#{point.y_value}" tickLabel="#{point.x_value}" title="Compostos Orgânicos Voláteis Totais">
                                     <hf:chartAxis position="s" title="Variação de Tempo" type="datetime" tickAngle="-45"
                                                   gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
                                 </hf:chart> 
                             </p:outputPanel>
-                            <p:outputPanel style="width:100%;">
-                                <hf:chart type="line" value="#{chartView1.registro8}" var="point"
-                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Índice de Qualidade do Ar">
+                            <p:outputPanel style="width:65%;margin: auto">
+                                <hf:chart type="line" value="#{chartView1.registro5}" var="point"
+                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Ruído">
+                                    <hf:chartAxis position="s" title="Variação de Tempo" type="datetime" tickAngle="-45"
+                                                  gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
+                                </hf:chart> 
+                            </p:outputPanel>
+                            <p:outputPanel style="width:65%;margin: auto">
+                                <hf:chart type="line" value="#{chartView1.registro6}" var="point"
+                                          point="#{point.y_value}" tickLabel="#{point.x_value}" title="Iluminamento">
                                     <hf:chartAxis position="s" title="Variação de Tempo" type="datetime" tickAngle="-45"
                                                   gridLineColor="#FFFF00" style="font-weight: bold; display: none;"/>
                                 </hf:chart> 
