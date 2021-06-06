@@ -49,24 +49,10 @@ consequentemente a saúde dos ocupantes.
 * :bust_in_silhouette: Lucas Felipe 
 * :bust_in_silhouette: Antonio Emílio
 
-
-### Esquemático
-<img src="https://cdn.discordapp.com/attachments/764880223560794172/813089331379830805/esquematico.png">
-<img src="https://cdn.discordapp.com/attachments/764880223560794172/782573039753363456/unknown.png">
-
 ### Canais ThingSpeak
 Canal 1 (1160801): [Clique Aqui](https://thingspeak.com/channels/1160801)</br>
 Canal 2 (1167146): [Clique Aqui](https://thingspeak.com/channels/1167146)</br>
 Canal 3 (1177969): [Clique Aqui](https://thingspeak.com/channels/1177969)</br>
 
-### API Keys
-MQTT PASS: 0QIMS6VELRQUUC0A (GERAL)</br>
-WRITE API KEY: WDPPXX2EI7II24E0 (AirPure - #001)</br>
-WRITE API KEY: EB6J5ATU4ETP7984 (AirPure - #002)</br>
-WRITE API KEY: W1OE6ARR4S0X2OAT (AirPure - #003)</br>
-
 ### Como visualizar a aplicação
-Para acessar, [clique aqui.](https://sites.google.com/view/airpure/pagina-inicial?authuser=0)</br>
-Para visualizar a dashboard que está sendo montada, [clique aqui.](https://airpuredashboard.vercel.app/admin/dashboard)</br>
 Para visualizar o website, [clique aqui.](https://airpurelanding.vercel.app/)
-Para visualizar o HomeAssistant, [clique aqui.](https://airpure-home-assistant.duckdns.org/lovelace/airpure2/)
