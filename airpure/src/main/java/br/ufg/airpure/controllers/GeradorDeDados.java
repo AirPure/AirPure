@@ -104,7 +104,7 @@ public class GeradorDeDados {
 
                 msg += "CO2 - Variacao media: " + amostra.getCo2() + " ppm  \n";
 
-                msg += "TVOC - Variacao media: " + amostra.getTvoc() + " ppb\n";
+                msg += "TVOC - Variacao media: " + amostra.getTvoc() + " μg/m³\n";
 
                 msg += "Temperatura - Variacao media: " + amostra.getTemperatura() + " ºC \n";
 
@@ -248,8 +248,8 @@ public class GeradorDeDados {
                     isNecessary = 1;
                 }
                 if (amostra.getTvoc() > process.getMaxTVOC() && r.isTvoc()) {
-                    msg += "TVOC - Variacao lida: " + amostra.getTvoc() + " ppb | Variacao maxima permitida: " + process.getMaxTVOC() + " ppb \n";
-                    msgTelegram += "TVOC: " + amostra.getTvoc() + " ppb - ";
+                    msg += "TVOC - Variacao lida: " + amostra.getTvoc() + " μg/m³ | Variacao maxima permitida: " + process.getMaxTVOC() + " μg/m³ \n";
+                    msgTelegram += "TVOC: " + amostra.getTvoc() + " μg/m³ - ";
                     isNecessary = 1;
                 }
                 if (amostra.getTemperatura() > process.getMaxTEMPERATURA() && r.isTemperatura()) {

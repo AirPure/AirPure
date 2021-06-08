@@ -451,9 +451,9 @@ public class RequestData3 {
 
             }
 
-            if (value > minimo && value < maximo) {
+            if (value > (minimo * 1.1) && value < (maximo * 0.9)) {
                 return "#4CAF50";
-            } else if (value < minimo) {
+            } else if ((value < (minimo * 1.1) && value > (minimo * 0.9)) || (value < (maximo * 1.1) && value > (maximo * 0.9))) {
                 return "#FF9800";
             } else {
                 return "#F44336";
@@ -684,7 +684,7 @@ public class RequestData3 {
                 System.out.println(sqlTVOC);
                 while (rs.next()) {
                     estatistica process = new estatistica();
-                    process.setParametro("TVOC (ppb)");
+                    process.setParametro("COVT (μg/m³)");
                     process.setCo2Max(rs.getFloat("maxTVOC"));
                     process.setCo2Min(rs.getFloat("minTVOC"));
                     process.setCo2Media(rs.getFloat("mediaTVOC"));
@@ -1031,9 +1031,9 @@ public class RequestData3 {
 
             }
 
-            if (value > minimo && value < maximo) {
+            if (value > (minimo * 1.1) && value < (maximo * 0.9)) {
                 return "Bom";
-            } else if (value < minimo) {
+            } else if ((value < (minimo * 1.1) && value > (minimo * 0.9)) || (value < (maximo * 1.1) && value > (maximo * 0.9))) {
                 return "Inadequado";
             } else {
                 return "Ruim";

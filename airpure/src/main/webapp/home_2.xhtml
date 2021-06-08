@@ -264,11 +264,11 @@
                                     <h:panelGrid columns="7" style="width: 100%; " >
 
                                         <h:panelGrid columns="1" style="width: 120px; height: 100px; text-align: center;  margin: 10px; padding: 5px;"> 
-                                            <h:outputLabel value="TVOC:" style="color: black; text-align: left;  font-size: 18px; font-weight: bold;"/>
+                                            <h:outputLabel value="COVT:" style="color: black; text-align: left;  font-size: 18px; font-weight: bold;"/>
                                             <h:outputLabel value="#{requestdata2.returnTexto(process.tvoc,'TVOC')}" style="color: black; text-align: left;  font-size: 18px;"/>
                                             <p:outputPanel style="background-color: #{requestdata2.returnColorParam(process.tvoc,'TVOC')}; border-radius: 20px; width: 120px; height: 70px; text-align: center;  margin: 10px; padding: 5px;">
                                                 <h:outputText value="#{process.tvoc}" style="font-weight: bold; color: white; text-align: center; font-size: 25px;"/>
-                                                <h:outputText value="ppb" style="font-weight: normal; color: white; text-align: left; font-size: 15px;"/>
+                                                <h:outputText value="μg/m³" style="font-weight: normal; color: white; text-align: left; font-size: 15px;"/>
                                             </p:outputPanel>      
                                         </h:panelGrid>
 
@@ -276,9 +276,9 @@
                                         <h:panelGrid columns="1" style="width: 120px; height: 100px; text-align: center;  margin: 10px; padding: 5px;"> 
                                             <h:outputLabel value="CO2:" style="color: black; text-align: left;  font-size: 18px; font-weight: bold;"/>
                                             <h:outputLabel value="#{requestdata2.returnTexto(process.co2,'CO2')}" style="color: black; text-align: left;  font-size: 18px;"/>
-                                            <p:outputPanel style="background-color: #{requestdata2.returnColorParam(process.co2,'CO2')}; border-radius: 20px; width: 120px; height: 70px; text-align: center;  margin: 10px; pabackground-color: #{requestdata2.returnColorParam(process.co2,'TVOC')};dding: 5px;">
+                                            <p:outputPanel style="background-color: #{requestdata2.returnColorParam(process.co2,'CO2')}; border-radius: 20px; width: 120px; height: 70px; text-align: center;  margin: 10px; pabackground-color: #{requestdata2.returnColorParam(process.co2,'CO2')};padding: 5px;">
                                                 <h:outputText value="#{process.co2}" style="font-weight: bold; color: white; text-align: center; font-size: 25px;"/>
-                                                <h:outputText value="ppb" style="font-weight: normal; color: white; text-align: left; font-size: 15px;"/>
+                                                <h:outputText value="μg/m³" style="font-weight: normal; color: white; text-align: left; font-size: 15px;"/>
                                             </p:outputPanel>      
                                         </h:panelGrid>
 

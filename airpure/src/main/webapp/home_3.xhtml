@@ -186,9 +186,9 @@
                                     <h:panelGrid columns="7" style="width: 100%; " >
 
                                         <h:panelGrid columns="1" style="background-color: #{requestdata3.returnColorParam(process.tvoc,'TVOC')}; border-radius: 10px; width: 200px; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
-                                            <h:outputLabel value="TVOC:" style="color: white; font-size: 18px;"/>
+                                            <h:outputLabel value="COVT:" style="color: white; font-size: 18px;"/>
                                             <h:panelGrid columns="2" style="margin:auto;"> 
-                                                <h:outputText value="#{process.tvoc} ppb" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
+                                                <h:outputText value="#{process.tvoc} μg/m³" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                                 <p:graphicImage library="images" value="#{FacesContext.getCurrentInstance().getExternalContext()}#{requestdata3.returnImageParam(process.tvoc,'TVOC')};" width="20"/>       
                                             </h:panelGrid>
                                         </h:panelGrid>

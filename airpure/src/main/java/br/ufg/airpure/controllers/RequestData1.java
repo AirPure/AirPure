@@ -28,6 +28,7 @@ import org.primefaces.event.SelectEvent;
 @ViewScoped
 @ManagedBean(name = "requestdata1")
 public class RequestData1 {
+
     ArrayList<amostragens> registro1;
     String inicio;
     String fim;
@@ -41,19 +42,19 @@ public class RequestData1 {
     public String[] getfatoresSelNotifique() {
         return fatoresSelNotifique;
     }
-    
+
     public void setfatoresSelNotifique(String[] fatoresSelNotifique) {
         this.fatoresSelNotifique = fatoresSelNotifique;
     }
-    
+
     public String getEmail() {
         return email;
     }
-    
+
     public void setEmail(String email) {
         this.email = email;
     }
-    
+
     public ArrayList<amostragens> getRegistro1() {
         return registro1;
     }
@@ -85,9 +86,9 @@ public class RequestData1 {
     public void setDispositivoAirpure(ArrayList<String> dispositivoAirpure) {
         this.dispositivoAirpure = dispositivoAirpure;
     }
-    
-    public void printText(){
-     System.out.println("Valor do select: " + this.dispositivoSelectOption);
+
+    public void printText() {
+        System.out.println("Valor do select: " + this.dispositivoSelectOption);
     }
 
     public void setIdOfAirpures(String idOfAirpures) {
@@ -324,50 +325,50 @@ public class RequestData1 {
     }
 
 // <===========Método que retorna a cor do quadrado do parametro.=========================================================================================================================>
-public String returnColorIndicator(Float value, String param) {
-    String color = "";
-    int minimo = 0;
-    int maximo = 0;
-    Main.db = null;
-    BD.ConectarBD();
-    String sql = "SELECT minimo,maximo FROM range WHERE tipo = '" + param + "';";
+    public String returnColorIndicator(Float value, String param) {
+        String color = "";
+        int minimo = 0;
+        int maximo = 0;
+        Main.db = null;
+        BD.ConectarBD();
+        String sql = "SELECT minimo,maximo FROM range WHERE tipo = '" + param + "';";
 
-    try {
-        Main.sql = Main.db.createStatement();
-    } catch (SQLException e) {
-        e.printStackTrace();
+        try {
+            Main.sql = Main.db.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
 
-    }
-
-    ResultSet rs = null;
-    try {
-
-        rs = Main.sql.executeQuery(sql);
-        System.out.println(sql);
-        while (rs.next()) {
-            minimo = rs.getInt("minimo");
-            maximo = rs.getInt("maximo");
         }
 
-    } catch (SQLException e) {
-        e.printStackTrace();
+        ResultSet rs = null;
+        try {
+
+            rs = Main.sql.executeQuery(sql);
+            System.out.println(sql);
+            while (rs.next()) {
+                minimo = rs.getInt("minimo");
+                maximo = rs.getInt("maximo");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Main.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+        if (value > (minimo * 1.1) && value < (maximo * 0.9)) {
+            return "#4CAF50";
+        } else if ((value < (minimo * 1.1) && value > (minimo * 0.9)) || (value < (maximo * 1.1) && value > (maximo * 0.9))) {
+            return "#FF9800";
+        } else {
+            return "#F44336";
+        }
 
     }
-    try {
-        Main.db.close();
-    } catch (SQLException ex) {
-        Logger.getLogger(RequestData1.class.getName()).log(Level.SEVERE, null, ex);
-
-    }
-
-    if (value >= minimo && value <= maximo) {
-        return "#00ac06";
-    } else if (value > maximo) {
-        return "#ff0000";
-    } else {
-        return "#ffff63";
-    }
-
-}
 // <============================================================================================================================================================================>
 }

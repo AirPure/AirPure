@@ -217,28 +217,28 @@
                         <p:dataScroller id="fieldset_colors" value="#{requestdata1.returnLastSample()}" var="process" rendered="true">
                             <h:panelGrid columns="3" style="width: 70%;margin: auto" >
                                 <h:panelGrid columns="1" style="background-color: #{requestdata1.returnColorIndicator(process.temperatura, 'Temperatura')}; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
-                                    <h:outputLabel value="Temperatura:" style="color: black; font-size: 20px; font-weight: bold"/>
-                                    <h:outputText value="#{process.temperatura} ºC" style="font-weight: bold; color: black; text-align: center; font-size: 35px;"/>
+                                    <h:outputLabel value="Temperatura:" style="color: white; font-size: 20px; font-weight: bold"/>
+                                    <h:outputText value="#{process.temperatura} ºC" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                 </h:panelGrid>
                                 <h:panelGrid columns="1" style="background-color: #{requestdata1.returnColorIndicator(process.umidade, 'Umidade')}; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
-                                    <h:outputLabel value="Umidade:" style="color: black; font-size: 20px;font-weight: bold"/>
-                                    <h:outputText value="#{process.umidade}%" style="font-weight: bold; color: black; text-align: center; font-size: 35px;"/>
+                                    <h:outputLabel value="Umidade:" style="color: white; font-size: 20px;font-weight: bold"/>
+                                    <h:outputText value="#{process.umidade}%" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                 </h:panelGrid>
                                 <h:panelGrid columns="1" style="background-color: #{requestdata1.returnColorIndicator(process.co2, 'CO2')}; border-radius: 10px; width: 70%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
-                                    <h:outputLabel value="CO2:" style="color: black; font-size: 20px; font-weight: bold"/>
-                                    <h:outputText value="#{process.co2} ppm" style="font-weight: bold; color: black; text-align: center; font-size: 35px;"/>
+                                    <h:outputLabel value="CO2:" style="color: white; font-size: 20px; font-weight: bold"/>
+                                    <h:outputText value="#{process.co2} ppm" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                 </h:panelGrid>
                                 <h:panelGrid columns="1" style="background-color: #{requestdata1.returnColorIndicator(process.tvoc, 'TVOC')}; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
-                                    <h:outputLabel value="TVOC:" style="color: black; font-size: 20px; font-weight: bold;"/>
-                                    <h:outputText value="#{process.tvoc} ppb" style="font-weight: bold; color: black; text-align: center; font-size: 35px;"/>
+                                    <h:outputLabel value="COVT:" style="color: white; font-size: 20px; font-weight: bold;"/>
+                                    <h:outputText value="#{process.tvoc} μg/m³" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                 </h:panelGrid>
                                 <h:panelGrid columns="1" style="background-color: #{requestdata1.returnColorIndicator(process.db, 'Ruído')}; border-radius: 10px; width: 85%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
-                                    <h:outputLabel value="Ruído:" style="color: black; font-size: 20px;font-weight: bold"/>
-                                    <h:outputText value="#{process.db} dB" style="font-weight: bold; color: black; text-align: center; font-size: 35px;"/>
+                                    <h:outputLabel value="Ruído:" style="color: white; font-size: 20px;font-weight: bold"/>
+                                    <h:outputText value="#{process.db} dB" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                 </h:panelGrid>
                                 <h:panelGrid columns="1" style="background-color: #{requestdata1.returnColorIndicator(process.lux, 'Luminosidade')}; border-radius: 10px; width: 70%; height: 100px; text-align: center;  box-shadow: 8px 8px 8px #888888; margin: 10px; padding: 10px;"> 
-                                    <h:outputLabel value="Iluminamento:" style="color: black; font-size: 20px;font-weight: bold"/>
-                                    <h:outputText value="#{process.lux} Lux" style="font-weight: bold; color: black; text-align: center; font-size: 35px;"/>
+                                    <h:outputLabel value="Iluminamento:" style="color: white; font-size: 20px;font-weight: bold"/>
+                                    <h:outputText value="#{process.lux} Lux" style="font-weight: bold; color: white; text-align: center; font-size: 35px;"/>
                                 </h:panelGrid>
                             </h:panelGrid>
                         </p:dataScroller>
