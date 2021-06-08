@@ -164,11 +164,39 @@ float readCCS811() {
   Serial.println("(OK)");
 }
 
+/*Faz o envio dos dados para o AirServer.*/
+void sendToAirServer(){
+  if (!client.connect("server01.matsoftwares.com.br", 1883)) {
+    Serial.println("Conexao socket falhou!");
+    return;
+  }
+      
+  client.print("INSERT " + String(temp, 2) + " " + String(umid, 2) + " " + String(eco2,2) + " " + String(voc, 2) + " " + String(valorCO2) + " " + String(dbLevel) + " " + String(lux) + " " +  String(AIRPURE_ID) + "\n");
+  delay(1000);
+  client.stop();
+  Serial.println("INSERT " + String(temp, 2) + " " + String(umid, 2) + " " + String(eco2,2) + " " + String(voc, 2) + " " + String(valorCO2) + " " + String(dbLevel) + " " + String(lux) + " " +  String(AIRPURE_ID));
+  
+  Serial.println("Conexao socket enviou os dados!");
+}
 
-/*Leitura e publicação dos dados para o ThingSpeak.*/
-void mqttpublish() {
+/*Faz o envio dos dados para o Google Sheets.*/
+void sendToSheets(){
+  Serial.println("Fazendo o envio para o Google Sheets.");
+  sendData(
+      String(
+          "Temperatura=" + String(temp, 2) + "&Umidade="
+              + String(umid, 2) + "&eCO2=" + String(eco2, 2)
+              + "&TVOC=" + String(voc, 2) + "&CO2="
+              + String(valorCO2) + "&Lux=" + String(lux, 5)
+              + "&Ruido=" + String(dbLevel, 2) + "&Alarme="
+              + String(highCO2, 2) + "&ID=" + String(AIRPURE_ID)
+              + "&V_FIRMWARE=" + String(V_FIRMWARE)));
+  Serial.println("Envio executado. Um novo envio será feito em um minuto.");
+}
 
-  //Leitura dos valores.
+/*Leitura dos sensores.*/
+void readSensors() {
+
   Serial.println("Iniciando leitura dos sensores.");
     
   valorCO2 = leituraGas(); //Concentração de CO2 - MH-Z14A.
@@ -181,40 +209,17 @@ void mqttpublish() {
 
   readLux();  //Leitura do BH1750
 
-  /*Se o AirPure não esta no modo ESP-NOW, faz a verificação do nivel de CO2 e caso esteja alto, faz o envio de alerta para o Telegram.*/
-  #if gatewayNodeMode == 0
+}
+
+
+/*Leitura e publicação dos dados para o ThingSpeak.*/
+void mqttpublish() {
+
   init_WiFi();  //Inicializa o WiFi
   Serial.println("Wifi conectado com sucesso!");
-
-  /*Obtem o horario atual atraves de NTP para envio de alerta.*/
-  getCurrentTime();
-
-  if (valorCO2 > 1000) {
-    highCO2 = 1;
-    Serial.println(
-        "Níveis de CO2 elevados. Fazendo envio de alerta pelo telegram.");
-    bot.sendMessage(CHAT_ID,
-        "Níveis de CO2 acima do tolerável! AIRPURE-ID: "
-            + String(AIRPURE_ID) + " | Valor aferido: "
-            + String(valorCO2) + " ppm. | " + String(formattedDate),
-        "");
-  } else {
-    highCO2 = 0;
-  }
   
-  /*Faz a configuração para o OTA.*/
-  configureOta();
+  /*Faz o envio dos dados para o ThingSpeak*/
+  sendToThingSpeak();
 
-  /*Cria task que mantem a atualização do OTA.*/
-  xTaskCreate(vLow, "vLow", 10000, NULL, 0, &task_low);
-
- #endif  /*endif gatewayNodeMode*/
-
- /*Faz o envio dos dados para o ThingSpeak*/
- sendToThingSpeak();
- 
- #if gatewayNodeMode == 1
-  sendToESPNOW();
- #endif /*endif gatewayNodeMode*/
 
 }

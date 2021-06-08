@@ -15,6 +15,47 @@ void delayTimes(int times){
   }
 }
 
+void getValuesFromNVS(){
+  
+  NVS.begin();  //Inicializa a memoria nao volátil
+  isContadorPessoas = NVS.getString("mode").toInt();
+  if(isContadorPessoas){
+    Serial.println("Contador de pessoas ATIVADO.");
+  } else {
+    Serial.println("Contador de pessoas DESATIVADO.");
+  }
+
+  isSendingAirServer = !NVS.getString("airserver").toInt();
+  wifiManager = !NVS.getString("wifiManager").toInt();
+  if(isSendingAirServer){
+    Serial.println("Envio ao AirServer ATIVADO.");
+  } else {
+    Serial.println("Envio ao AirServer DESATIVADO.");
+  }
+
+  if(wifiManager){
+    Serial.println("wifiManager ATIVADO.");
+  } else {
+    Serial.println("wifiManager DESATIVADO.");
+  }
+  
+  /*Obtem o ID do AirPure*/
+  AIRPURE_ID = NVS.getString("id").toInt();
+  Serial.println("ID AIRPURE: " + String(AIRPURE_ID));
+
+
+}
+
+/*Faz a configuração de GPIOS.*/
+void configureGPIOS(){
+  pinMode(ledPin, OUTPUT); 
+  pinMode(ledPin2,OUTPUT);
+  pinMode(dhtPin, INPUT); //Configurar modo dos pinos do DHT.
+  pinMode(0, INPUT_PULLUP);
+  pinMode(dbMeterPin, INPUT); //Configurar modo dos pinos do MAX9814.
+  attachInterrupt(0, isr, FALLING);
+}
+
 int getDistance1()
 {
     int distanciaCM;
@@ -124,6 +165,7 @@ void init_WiFi(){
   Serial.println("IP:"); 
   Serial.println(WiFi.localIP()); 
   }
+ Serial.println("Wifi conectado com sucesso!");
 }
 
 
@@ -245,7 +287,7 @@ void vLowLED(void *pvParameters) {
   const int ledChannel = 0;
   const int resolution = 8;
   const int ledChannel2 = 1;
-  esp_task_wdt_init(4, true);
+  esp_task_wdt_init(8, true);
   esp_task_wdt_add(NULL);
   ledcSetup(ledChannel, freq, resolution);
   ledcAttachPin(ledPin, ledChannel);
