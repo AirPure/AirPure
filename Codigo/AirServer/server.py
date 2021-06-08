@@ -80,6 +80,8 @@ def classificatePackage(conn, addr):
                 print(comando);
                 valor = float(comando[5])
                 iaqCO2 = estatisticaIp("CO2", valor)
+                tvocUg = float(comando[3])*4.5
+                comando[3] = str(tvocUg)
 
                 try:
                     connection = psycopg2.connect(user="postgres",
