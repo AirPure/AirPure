@@ -119,11 +119,10 @@ int distance2 = 0;
 int estado;
 int isContadorPessoas = 0;  
 int isSendingAirServer = 0;
+int sender = 0; int receiver = 0;
 int wifiManager = 0;
 const char* ssid = "eduroam"; // Eduroam SSID
 
-/*ESPNOW*/
-uint8_t broadcastAddress[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF }; /* MACADDRESS do gateway*/
 
 typedef struct struct_message {
   float a;

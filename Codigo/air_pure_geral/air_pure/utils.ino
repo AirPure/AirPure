@@ -7,7 +7,11 @@ Confira nosso repositório no GitHub: https://github.com/AirPure/AirPure
 Ultrasonic ultrasonic1(PORTA_TRIGGER1, PORTA_ECHO1);
 Ultrasonic ultrasonic2(PORTA_TRIGGER2, PORTA_ECHO2);
 
-
+/*ESPNOW*/
+uint8_t broadcastAddress[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+ 
+  // Register peer
+  esp_now_peer_info_t peerInfo;
 /*Função geral para delay*/
 void delayTimes(int times){
   for(int i = 0; i < times; i++){
@@ -23,6 +27,20 @@ void getValuesFromNVS(){
     Serial.println("Contador de pessoas ATIVADO.");
   } else {
     Serial.println("Contador de pessoas DESATIVADO.");
+  }
+
+    receiver = NVS.getString("receiver").toInt();
+  if(receiver){
+    Serial.println("receiver ATIVADO.");
+  } else {
+    Serial.println("receiver DESATIVADO.");
+  }
+
+      sender = NVS.getString("sender").toInt();
+  if(sender){
+    Serial.println("sender ATIVADO.");
+  } else {
+    Serial.println("sender DESATIVADO.");
   }
 
   isSendingAirServer = !NVS.getString("airserver").toInt();
@@ -263,6 +281,36 @@ void vLowSerial(void *pvParameters) {
 
       }
       
+
+            if (input.equals("sender")) {
+        if (NVS.getString("sender").toInt()){
+          NVS.setString("sender", "0");
+          Serial.println("sender ATIVADO.");
+          ESP.restart();
+        } else {
+          NVS.setString("sender", "1");
+          Serial.println("sender DESATIVADO.");
+          ESP.restart();
+        }
+            
+
+
+      }
+
+                  if (input.equals("receiver")) {
+        if (NVS.getString("receiver").toInt()){
+          NVS.setString("receiver", "0");
+          Serial.println("receiver ATIVADO.");
+          ESP.restart();
+        } else {
+          NVS.setString("receiver", "1");
+          Serial.println("receiver DESATIVADO.");
+          ESP.restart();
+        }
+            
+
+
+      }
       
       if (input.equals("help")) {
         Serial.println(
@@ -385,7 +433,7 @@ void vLowLED(void *pvParameters) {
 
 
 /*Faz o envio dos registros para o gateway ESPNOW*/
-void sendToESPNOW(String params) {
+void sendToESPNOW() {
   myData.a = temp;
   myData.b = umid;
   myData.c = eco2;
@@ -394,7 +442,7 @@ void sendToESPNOW(String params) {
   myData.f = lux;
   myData.g = dbLevel;
   myData.h = AIRPURE_ID;
-  myData.i = String(writeAPIKey[AIRPURE_ID-1]);
+  myData.i = "";
   
   // Send message via ESP-NOW
   esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &myData, sizeof(myData));
@@ -405,12 +453,7 @@ void sendToESPNOW(String params) {
   else {
   Serial.println("Erro ao enviar o pacote.");
   }
-  
-  //Delay de um minuto para a próxima amostragem
-  for(int timeoutOTA = 60; timeoutOTA > 0; timeoutOTA--){
-  delay(1000);
-  Serial.print(".");
-  }
+
 }
 
 /*Faz o envio dos registros para uma tabela do Google Sheets*/
@@ -536,94 +579,17 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
 void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len) {
   memcpy(&myData, incomingData, sizeof(myData));
 
-  init_WiFi();
-  Serial.println("Wifi conectado com sucesso!");
-
-//Configurar Broker MQTT - ThingSpeak.
-  mqttClient.setServer(server, 1883);
-
-//Conectar MQTT.
-  if (!mqttClient.connected()) {
-    reconnect();
-  }
-
   temp = myData.a;
   umid = myData.b;
   eco2 = myData.c;
   voc = myData.d;
   valorCO2 = myData.e;
   lux = myData.f;
+  dbLevel = myData.g;
+  AIRPURE_ID = myData.h;
 
-//String de dados para enviar a Thingspeak.
-  String dados = String(
-      "field1=" + String(myData.a, 2) + "&field2=" + String(myData.b, 2)
-          + "&field3=" + String(myData.c, 2) + "&field4="
-          + String(myData.d, 2) + "&field5=" + String(myData.e)
-          + "&field6=" + String(myData.f, 5) + "&field7="
-          + String(myData.g, 2) + "&field8=" + String(0));
-  int tamanho = dados.length();
-  char msgBuffer[tamanho];
-  dados.toCharArray(msgBuffer, tamanho + 1);
+sendToAirServer();
 
-//Cria uma String de tópico e publica os dados na Thingspeak.
-  String topicString = "channels/" + String(channelID[myData.h - 1])
-      + "/publish/" + String(myData.i);
-  tamanho = topicString.length();
-  char topicBuffer[tamanho];
-  topicString.toCharArray(topicBuffer, tamanho + 1);
-
-//Se tiver passado o tempo de intervalo de amostragem, faz o envio. Caso contrário, não faz nada.
-  Serial.println("Hora de enviar!");
-  Serial.println(msgBuffer);
-
-  int r = mqttClient.publish(topicBuffer, msgBuffer); //Publicar dados.
-
-  if (r) {
-    Serial.println("Envio feito com sucesso!");
-  } else {
-    Serial.println("Envio não foi feito!");
-    Serial.println("Resetando para evitar que isto aconteça novamente.");
-    delay(1000);
-    if (isWaitingForOta == 0) {
-      ESP.restart();
-    }
-  }
-  lastConnectionTime = millis();
-  delay(3000);  //Delay para término do envio
-  mqttClient.disconnect(); //Finaliza conexão após envio para tentar conexão com o Home-assistant
-  delay(1000); //Delay de 1s
-  mqttClient2.setServer(mqtt_server, 1883); //Configurar Broker MQTT - Home-assistant.
-
-//Conectar MQTT - HomeAssistant.
-  if (!mqttClient2.connected()) {
-    reconnect_ha();
-  }
-
-  mqttClient2.loop(); //Manter conexão MQTT.
-  if (!mqttClient2.connected()) {
-    Serial.println("Não foi possível publicar ao Home-assistant!");
-  } else {
-    homeassistant_publish();
-  }
-
-  delay(3000); //Delay para permitir que os dados sejam enviados antes de entrar no modo sleep.
-  mqttClient2.disconnect();
-
-  Serial.println("Fazendo o envio para o Google Sheets.");
-  sendData(
-      String(
-          "Temperatura=" + String(temp, 2) + "&Umidade="
-              + String(umid, 2) + "&eCO2=" + String(eco2, 2)
-              + "&TVOC=" + String(voc, 2) + "&CO2="
-              + String(valorCO2) + "&Lux=" + String(lux, 5)
-              + "&Ruido=" + String(dbLevel, 2) + "&Alarme="
-              + String(highCO2, 2) + "&ID="
-              + String(AIRPURE_ID)));
-  Serial.println("Envio executado. Um novo envio será feito em um minuto.");
-
-  delay(3000); //Delay para permitir que os dados sejam enviados antes de entrar no modo sleep.
-
-  ESP.restart();
 
 }
 
@@ -682,28 +648,33 @@ void homeassistant_publish_button() {
 
 /*Configura o ESPNOW.*/
 void configEspNOW() {
-  //Inicializa ESPNOW
+    // Set device as a Wi-Fi Station
   WiFi.mode(WIFI_STA);
+
+  // Init ESP-NOW
   if (esp_now_init() != ESP_OK) {
-    Serial.println("Erro ao inicializar ESP-NOW");
+    Serial.println("Error initializing ESP-NOW");
     return;
   }
 
+  // Once ESPNow is successfully Init, we will register for Send CB to
+  // get the status of Trasnmitted packet
   esp_now_register_send_cb(OnDataSent);
-  esp_now_peer_info_t peerInfo;
+ 
   memcpy(peerInfo.peer_addr, broadcastAddress, 6);
   peerInfo.channel = 0;  
   peerInfo.encrypt = false;
   
+  // Add peer        
   if (esp_now_add_peer(&peerInfo) != ESP_OK){
-    Serial.println("Falhou ao adicionar gateway.");
+    Serial.println("Failed to add peer");
     return;
   }
 }
 
 /*Configura o ESPNOW para gateway.*/
 void configGWEspNOW() {
-   WiFi.mode(WIFI_STA);
+      WiFi.mode(WIFI_AP_STA);
   
   if (esp_now_init() != ESP_OK) {
   Serial.println("Erro ao iniciar o ESP-NOW");

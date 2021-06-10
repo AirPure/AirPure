@@ -14,12 +14,13 @@ void IRAM_ATTR isr() {
 
 /*Setup*/
 void setup() {
-  /*Obtem os valores da NVS.*/
-  getValuesFromNVS();
+
   
   Serial.begin(115200); //Iniciar porta serial - USB.
   Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2); //Iniciar porta serial - UART.
 
+
+  getValuesFromNVS();
   /*Configura as GPIOS.*/
   configureGPIOS();
 
@@ -35,16 +36,26 @@ void setup() {
 
   /*Mostra o barramento i2c.*/
   i2cdetect();  
+
+  if (sender){
+    configEspNOW();
+  } else if (receiver){  
+    configGWEspNOW();
+    /*Inicializa a conexao WiFi*/
+    //init_WiFi();  
+  }
+
 }
 
 /*Loop*/
 void loop() {
+  if(!receiver){
   /*Estado de atividade do AirPure.*/
   estado = WORKING;
 
   /*Leitura dos sensores*/
   readSensors();  
-
+  if(!sender){
   /*Inicializa a conexao WiFi*/
   init_WiFi();  
 
@@ -60,6 +71,9 @@ void loop() {
 
   /*Procura pela ultima versao disponivel do software. Se estiver desatualizado, inicia o upgrade.*/
   lookForUpdates(); 
+  } else {
+    sendToESPNOW();
+  }
 
   /*Atualiza status de funcionamento.*/
   estado = ON_IDLE;
@@ -72,5 +86,5 @@ void loop() {
 
   /*Faz o restart periodico.*/
   ESP.restart();
-
+  }
 }

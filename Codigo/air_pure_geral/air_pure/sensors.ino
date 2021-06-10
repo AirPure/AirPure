@@ -166,6 +166,16 @@ float readCCS811() {
 
 /*Faz o envio dos dados para o AirServer.*/
 void sendToAirServer(){
+    Serial.println("INSERT " + String(temp, 2) + " " + String(umid, 2) + " " + String(eco2,2) + " " + String(voc, 2) + " " + String(valorCO2) + " " + String(dbLevel) + " " + String(lux) + " " +  String(AIRPURE_ID));
+
+  if(receiver){
+     esp_wifi_disconnect();
+     delay(100);
+
+    init_WiFi();
+
+  }
+
   if (!client.connect("server01.matsoftwares.com.br", 1883)) {
     Serial.println("Conexao socket falhou!");
     return;
@@ -174,8 +184,7 @@ void sendToAirServer(){
   client.print("INSERT " + String(temp, 2) + " " + String(umid, 2) + " " + String(eco2,2) + " " + String(voc, 2) + " " + String(valorCO2) + " " + String(dbLevel) + " " + String(lux) + " " +  String(AIRPURE_ID) + "\n");
   delay(1000);
   client.stop();
-  Serial.println("INSERT " + String(temp, 2) + " " + String(umid, 2) + " " + String(eco2,2) + " " + String(voc, 2) + " " + String(valorCO2) + " " + String(dbLevel) + " " + String(lux) + " " +  String(AIRPURE_ID));
-  
+ 
   Serial.println("Conexao socket enviou os dados!");
 }
 
