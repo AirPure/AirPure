@@ -7,8 +7,8 @@ Confira nosso repositório no GitHub: https://github.com/AirPure/AirPure
 Ultrasonic ultrasonic1(PORTA_TRIGGER1, PORTA_ECHO1);
 Ultrasonic ultrasonic2(PORTA_TRIGGER2, PORTA_ECHO2);
 
-/*ESPNOW*/
-uint8_t broadcastAddress[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+/*ESPNOW - MAC  A4:CF:12:75:67:00*/
+uint8_t broadcastAddress[] = {0xA4, 0xCF, 0x12, 0x75, 0x67, 0x00};
  
   // Register peer
   esp_now_peer_info_t peerInfo;
@@ -72,6 +72,7 @@ void configureGPIOS(){
   pinMode(0, INPUT_PULLUP);
   pinMode(dbMeterPin, INPUT); //Configurar modo dos pinos do MAX9814.
   attachInterrupt(0, isr, FALLING);
+  pinMode(2,OUTPUT);
 }
 
 int getDistance1()
@@ -297,7 +298,7 @@ void vLowSerial(void *pvParameters) {
 
       }
 
-                  if (input.equals("receiver")) {
+       if (input.equals("receiver")) {
         if (NVS.getString("receiver").toInt()){
           NVS.setString("receiver", "0");
           Serial.println("receiver ATIVADO.");
@@ -306,6 +307,11 @@ void vLowSerial(void *pvParameters) {
           NVS.setString("receiver", "1");
           Serial.println("receiver DESATIVADO.");
           ESP.restart();
+        }
+
+        if (input.equals("i2cdetect")){
+            /*Mostra o barramento i2c.*/
+            i2cdetect();  
         }
             
 
@@ -575,8 +581,31 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
           "Entregue" : "Falhou ao ser entregue");
 }
 
+/*Separa uma string*/
+String getValue(String data, char separator, int index)
+{
+  int found = 0;
+  int strIndex[] = {0, -1};
+  int maxIndex = data.length() - 1;
+
+  for (int i = 0; i <= maxIndex && found <= index; i++)
+  {
+    if (data.charAt(i) == separator || i == maxIndex)
+    {
+      found++;
+      strIndex[0] = strIndex[1] + 1;
+      strIndex[1] = (i == maxIndex) ? i + 1 : i;
+    }
+  }
+  return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
+}
+
 /*Callback de quando a função do ESPNOW é chamada*/
 void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len) {
+  delay(200);
+  digitalWrite(2,HIGH);
+  delay(200);
+  digitalWrite(2,LOW);
   memcpy(&myData, incomingData, sizeof(myData));
 
   temp = myData.a;
@@ -588,7 +617,23 @@ void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len) {
   dbLevel = myData.g;
   AIRPURE_ID = myData.h;
 
-sendToAirServer();
+  
+
+  /*Guarda as funcoes dentro da memoria RTC nao volatil.*/
+  if (recordCounter < maxRecords){
+    Serial.println("Salvando o pacote " + String(recordCounter) + " dentro da memoria RTC.");
+    if (recordCounter == 0){
+      valores = String("INSERT " + String(temp, 2) + " " + String(umid, 2) + " " + String(eco2,2) + " " + String(voc, 2) + " " + String(valorCO2) + " " + String(dbLevel) + " " + String(lux) + " " +  String(AIRPURE_ID));
+    } else {
+      valores += String("/INSERT " + String(temp, 2) + " " + String(umid, 2) + " " + String(eco2,2) + " " + String(voc, 2) + " " + String(valorCO2) + " " + String(dbLevel) + " " + String(lux) + " " +  String(AIRPURE_ID));
+    }
+    recordCounter++;
+  } else {
+    NVS.setString("blob", valores);
+    NVS.setInt("blobFull",1);
+    delay(1000);
+    ESP.restart();
+  }
 
 
 }
@@ -645,12 +690,24 @@ void homeassistant_publish_button() {
 
 }
 
+/*Obtem canal de comunicacao da rede WiFi*/
+int32_t getWiFiChannel(const char *ssid) {
 
+    if (int32_t n = WiFi.scanNetworks()) {
+        for (uint8_t i=0; i<n; i++) {
+            if (!strcmp(ssid, WiFi.SSID(i).c_str())) {
+                return WiFi.channel(i);
+            }
+        }
+    }
+
+    return 0;
+}
 /*Configura o ESPNOW.*/
 void configEspNOW() {
-    // Set device as a Wi-Fi Station
+  // Set device as a Wi-Fi Station
   WiFi.mode(WIFI_STA);
-
+  WiFi.disconnect();
   // Init ESP-NOW
   if (esp_now_init() != ESP_OK) {
     Serial.println("Error initializing ESP-NOW");
@@ -662,7 +719,7 @@ void configEspNOW() {
   esp_now_register_send_cb(OnDataSent);
  
   memcpy(peerInfo.peer_addr, broadcastAddress, 6);
-  peerInfo.channel = 0;  
+  peerInfo.channel = 1;  
   peerInfo.encrypt = false;
   
   // Add peer        
@@ -674,12 +731,13 @@ void configEspNOW() {
 
 /*Configura o ESPNOW para gateway.*/
 void configGWEspNOW() {
-      WiFi.mode(WIFI_AP_STA);
-  
+   WiFi.mode(WIFI_STA);
+  WiFi.disconnect();
+
   if (esp_now_init() != ESP_OK) {
   Serial.println("Erro ao iniciar o ESP-NOW");
   return;
   }
-  
+  Serial.println("Configurando GW.");
   esp_now_register_recv_cb(OnDataRecv);
 }

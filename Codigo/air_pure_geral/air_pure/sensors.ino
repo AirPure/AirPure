@@ -124,21 +124,8 @@ float readCCS811() {
   eco2Sum = 0;
   vocSum = 0;
   voc = 0;
-  for (int i = 0; i < 10; i++) {
-    if (ccs.available()) {
-      if (!ccs.readData()) {
-        eco2 = ccs.geteCO2(); //Ler eCO2 - CCS811.
-        voc = ccs.getTVOC(); //Ler TVOC - CCS811.
-        //Serial.println("eCO2: " + String(eco2) + " ppm| TVOC: " + String(voc) + " ppb");
-      } else {
-        Serial.println("Erro de leitura CCS811!");
-
-      }
-    }
-    delayTimes(1);
-  }
   Serial.println("Lendo TVOC...");
-  for (int i = 0; i < 20; i++) {
+  for (int i = 0; i < 5; i++) {
     if (ccs.available()) {
       if (!ccs.readData()) {
         eco2 = ccs.geteCO2(); //Ler eCO2 - CCS811.
@@ -153,8 +140,8 @@ float readCCS811() {
     delayTimes(1);
   }
   //Media dos valores...
-  eco2 = eco2Sum / 20;
-  voc = vocSum / 20;
+  eco2 = eco2Sum / 5;
+  voc = vocSum / 5;
 
   if (eco2 > 10000 || voc > 10000) {
     eco2 = 400;
@@ -166,25 +153,33 @@ float readCCS811() {
 
 /*Faz o envio dos dados para o AirServer.*/
 void sendToAirServer(){
-    Serial.println("INSERT " + String(temp, 2) + " " + String(umid, 2) + " " + String(eco2,2) + " " + String(voc, 2) + " " + String(valorCO2) + " " + String(dbLevel) + " " + String(lux) + " " +  String(AIRPURE_ID));
-
-  if(receiver){
-     esp_wifi_disconnect();
-     delay(100);
-
-    init_WiFi();
-
-  }
-
   if (!client.connect("server01.matsoftwares.com.br", 1883)) {
     Serial.println("Conexao socket falhou!");
     return;
   }
-      
-  client.print("INSERT " + String(temp, 2) + " " + String(umid, 2) + " " + String(eco2,2) + " " + String(voc, 2) + " " + String(valorCO2) + " " + String(dbLevel) + " " + String(lux) + " " +  String(AIRPURE_ID) + "\n");
-  delay(1000);
-  client.stop();
- 
+  if (receiver){
+  
+    String blob;
+    blob = NVS.getString("blob");
+
+    for (int i = 0; i < maxRecords; i++){
+
+      delay(1000);
+      Serial.println("Enviando pacote " + String(getValue(blob, '/', i)) + " recebido via ESP-NOW para conexao socket.");
+      client.print(String(getValue(blob, '/', i) + "\n"));
+  
+    }
+    NVS.setInt("blobFull",0);
+    client.stop();
+
+  } else {
+
+    client.print("INSERT " + String(temp, 2) + " " + String(umid, 2) + " " + String(eco2,2) + " " + String(voc, 2) + " " + String(valorCO2) + " " + String(dbLevel) + " " + String(lux) + " " +  String(AIRPURE_ID) + "\n");
+    delay(1000);
+    client.stop();
+  }
+  
+
   Serial.println("Conexao socket enviou os dados!");
 }
 

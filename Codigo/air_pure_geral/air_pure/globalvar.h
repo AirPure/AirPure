@@ -122,6 +122,8 @@ int isSendingAirServer = 0;
 int sender = 0; int receiver = 0;
 int wifiManager = 0;
 const char* ssid = "eduroam"; // Eduroam SSID
+int recordCounter = 0;
+String valores = "";
 
 
 typedef struct struct_message {

@@ -12,17 +12,21 @@ void IRAM_ATTR isr() {
   button1.pressed = true;
 }
 
+
 /*Setup*/
 void setup() {
 
-  
   Serial.begin(115200); //Iniciar porta serial - USB.
   Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2); //Iniciar porta serial - UART.
 
-
+  /*Obtem valores salvos na NVS*/
   getValuesFromNVS();
+
   /*Configura as GPIOS.*/
   configureGPIOS();
+
+    Serial.print("ESP Board MAC Address:  ");
+  Serial.println(WiFi.macAddress());
 
   /*Cria task que mantém a comunicacao Serial.*/
   xTaskCreate(vLowSerial, "vLowSerial", 10000, NULL, 0, &task_low_serial);
@@ -30,19 +34,24 @@ void setup() {
   /*Cria task que mantém o funcionamento do LED..*/
   xTaskCreate(vLowLED, "vLowLED", 10000, NULL, 0, &task_low_led);
 
-  int status = WL_IDLE_STATUS; //Estado da conexão wifi.
+  /*Status inicial da conexao WiFi*/
+  int status = WL_IDLE_STATUS; 
 
-  Wire.begin(); //Inicializa I2C
+  /*Inicializa o I2C*/
+  Wire.begin(); 
 
-  /*Mostra o barramento i2c.*/
-  i2cdetect();  
 
   if (sender){
     configEspNOW();
   } else if (receiver){  
-    configGWEspNOW();
-    /*Inicializa a conexao WiFi*/
-    //init_WiFi();  
+    if (NVS.getInt("blobFull") == 0){
+      configGWEspNOW();
+    } else {
+      init_WiFi();  
+      sendToAirServer();
+      Serial.println("Todos os pacotes enviados com sucesso. Reiniciando.");
+      ESP.restart();
+    }
   }
 
 }
@@ -78,11 +87,7 @@ void loop() {
   /*Atualiza status de funcionamento.*/
   estado = ON_IDLE;
   
-  /*Delay de um minuto para a próxima amostragem*/
-  for (int timeoutOTA = 60; timeoutOTA > 0; timeoutOTA--) {
-    delay(1000);
-    Serial.print(".");
-  }
+  delay(1000);
 
   /*Faz o restart periodico.*/
   ESP.restart();
