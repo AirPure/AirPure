@@ -17,7 +17,7 @@ Confira nosso repositório no GitHub: https://github.com/AirPure/AirPure
 #define CHAT_ID "1248387297"  //Seu ID no telegram.
 #define dhtType DHT22 //Tipo do sensor DHT.
 #define CCS811_ADDR 0x5A //Endereço I2C padrão
-#define maxRecords 400
+#define maxRecords 100
 #define mqtt_server "airpure-home-assistant.duckdns.org" //Endereço MQTT Home Assistant
 #define gatewayNodeMode 0 //Modo Node
 #define isGateway 0 //Modo GW

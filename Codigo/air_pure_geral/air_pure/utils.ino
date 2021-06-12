@@ -64,6 +64,7 @@ void getValuesFromNVS(){
 
 }
 
+
 /*Faz a configuração de GPIOS.*/
 void configureGPIOS(){
   pinMode(ledPin, OUTPUT); 
