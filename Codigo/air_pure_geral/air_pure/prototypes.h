@@ -12,6 +12,7 @@ Confira nosso repositório no GitHub: https://github.com/AirPure/AirPure
 #include <WiFi.h>
 #include <esp_now.h>
 #include <SPI.h>
+#include <esp_wifi.h>
 #include <Wire.h>
 #include <Adafruit_CCS811.h>
 #include <i2cdetect.h>
@@ -45,6 +46,7 @@ DHT dht(dhtPin, dhtType); //Objeto sensor de temperatura e umidade
 PubSubClient mqttClient(client);  //ThingSpeak
 PubSubClient mqttClient2(client); //HomeAssistant
 secureEsp32FOTA secureEsp32FOTA("esp32-fota-https", V_FIRMWARE);
+WiFiUDP udp;
 Adafruit_CCS811 ccs; //Objeto sensor de TVOC. //Instância do CCS811
 struct Button {
   const uint8_t PIN;

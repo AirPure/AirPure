@@ -183,6 +183,23 @@ void sendToAirServer(){
   Serial.println("Conexao socket enviou os dados!");
 }
 
+/*Faz o envio dos dados para o AirServer.*/
+void sendToAirServer(String resposta){
+  if (!client.connect("server01.matsoftwares.com.br", 1883)) {
+    Serial.println("Conexao socket falhou!");
+    return;
+  }
+  
+
+  client.print(resposta);
+  delay(1000);
+  client.stop();
+  
+  
+
+  Serial.println("Conexao socket enviou os dados!");
+}
+
 /*Faz o envio dos dados para o Google Sheets.*/
 void sendToSheets(){
   Serial.println("Fazendo o envio para o Google Sheets.");

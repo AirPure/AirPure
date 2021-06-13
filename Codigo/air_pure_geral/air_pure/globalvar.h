@@ -124,7 +124,14 @@ int wifiManager = 0;
 const char* ssid = "eduroam"; // Eduroam SSID
 int recordCounter = 0;
 String valores = "";
-
+const char* ssidLR = "kkkkk";//AP ssid
+const char* passwordLR = "12345678";//AP password
+const char* ssidRouterLR = "BMS";//STA router ssid
+const char* passwordRouterLR = "+556232853960";//STA router password
+char  replyPacket[] = "Hi there! Got the message :-)";  // a reply string to send back
+int espnow = 0;
+int timeoutConnection =  60;
+char incomingPacket[255];  // buffer for incoming packets
 
 typedef struct struct_message {
   float a;

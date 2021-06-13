@@ -29,6 +29,13 @@ void getValuesFromNVS(){
     Serial.println("Contador de pessoas DESATIVADO.");
   }
 
+  espnow = NVS.getString("espnow").toInt();
+  if(espnow){
+    Serial.println("espnow ATIVADO.");
+  } else {
+    Serial.println("espnow DESATIVADO.");
+  }
+
     receiver = NVS.getString("receiver").toInt();
   if(receiver){
     Serial.println("receiver ATIVADO.");
@@ -199,6 +206,136 @@ void vLow(void *pvParameters) {
   }
 }
 
+
+void configUDPsend(){
+
+    WiFi.mode( WIFI_STA );//for STA mode
+    //if mode LR config OK
+    int a= esp_wifi_set_protocol( WIFI_IF_STA, WIFI_PROTOCOL_LR );
+    if (a==0)
+    {
+      Serial.println(" ");
+      Serial.print("Error = ");
+      Serial.print(a);
+      Serial.println(" , Mode LR OK!");
+    }
+    else//if some error in LR config
+    {
+      Serial.println(" ");
+      Serial.print("Error = ");
+      Serial.print(a);
+      Serial.println(" , Error in Mode LR!");
+    }
+      
+    WiFi.begin(ssidLR, passwordLR);//this ssid is not visible
+
+    //Wifi connection, we connect to master
+    while (WiFi.status() != WL_CONNECTED) 
+    {
+      delay(500);
+      Serial.print(".");
+      timeoutConnection--;
+      if (!timeoutConnection){
+        ESP.restart();
+      }
+    }
+
+    Serial.println("WiFi connected");
+    Serial.print("IP address: ");
+    Serial.println(WiFi.localIP());
+  
+    udp.begin( 8888 );
+}
+
+void configUDPreceiver(){
+
+  
+    //second, we start AP mode with LR protocol
+    //This AP ssid is not visible whith our regular devices
+    WiFi.mode( WIFI_AP );//for AP mode
+    //here config LR mode
+    int a= esp_wifi_set_protocol( WIFI_IF_AP, WIFI_PROTOCOL_LR );
+    Serial.println(a);
+    WiFi.softAP(ssidLR, passwordLR);
+    Serial.println( WiFi.softAPIP() );
+    Serial.println("#");//for debug
+    delay( 1000 );
+    digitalWrite(5, LOW); 
+    udp.begin( 8888 );
+}
+
+const char *toStr( wl_status_t status ) {
+    switch( status ) {
+    case WL_NO_SHIELD: return "No shield";
+    case WL_IDLE_STATUS: return "Idle status";
+    case WL_NO_SSID_AVAIL: return "No SSID avail";
+    case WL_SCAN_COMPLETED: return "Scan compleded";
+    case WL_CONNECTED: return "Connected";
+    case WL_CONNECT_FAILED: return "Failed";
+    case WL_CONNECTION_LOST: return "Connection lost";
+    case WL_DISCONNECTED: return "Disconnected";
+    }
+    return "Unknown";
+}
+
+void receiveUDP(){
+
+    //if connection OK, execute command 'b' from master
+    int packetSize = udp.parsePacket();
+    if (packetSize)
+    {
+      // receive incoming UDP packets
+      Serial.printf("Received %d bytes from %s, port %d\n", packetSize, udp.remoteIP().toString().c_str(), udp.remotePort());
+      int len = udp.read(incomingPacket, 255);
+      if (len > 0)
+      {
+        incomingPacket[len] = 0;
+      }
+      Serial.printf("UDP packet contents: %s\n", incomingPacket);
+      
+      /*Guarda as funcoes dentro da memoria RTC nao volatil.*/
+      if (recordCounter < maxRecords){
+        Serial.println("Salvando o pacote " + String(recordCounter) + " dentro da memoria RTC.");
+        if (recordCounter == 0){
+          valores = String(incomingPacket);
+        } else {
+          valores += (String("/") + String(incomingPacket));
+        }
+        recordCounter++;
+      } else {
+        NVS.setString("blob", valores);
+        NVS.setInt("blobFull",1);
+        delay(1000);
+        ESP.restart();
+      }
+
+
+    }
+    udp.flush();
+}
+
+void sendUDP(){
+
+    String toSend = String("INSERT " + String(temp, 2) + " " + String(umid, 2) + " " + String(eco2,2) + " " + String(voc, 2) + " " + String(valorCO2) + " " + String(dbLevel) + " " + String(lux) + " " +  String(AIRPURE_ID) + "\n");
+    toSend.toCharArray(replyPacket, toSend.length());
+  
+    udp.beginPacket( { 192, 168, 4, 255 }, 8888 );//send a broadcast message
+    int i = 0;
+    while (replyPacket[i] != 0) 
+      udp.write((uint8_t)replyPacket[i++]);
+    
+    if ( !udp.endPacket() ){
+        Serial.println("Nao foi enviado!");
+        delay(100);
+        ESP.restart(); // When the connection is bad, the TCP stack refuses to work
+    }
+    else{
+          Serial.println("Enviado!"); 
+    }     
+    
+    delay( 1000 );//wait a second for the next message
+}
+
 /*Tasks*/
 void vLowSerial(void *pvParameters) {
   /*Iniciando o watchdog*/
@@ -269,6 +406,21 @@ void vLowSerial(void *pvParameters) {
 
       }
 
+      if (input.equals("espnow")) {
+        if (NVS.getString("espnow").toInt()){
+          NVS.setString("espnow", "0");
+          Serial.println("espnow ATIVADO.");
+          ESP.restart();
+        } else {
+          NVS.setString("espnow", "1");
+          Serial.println("espnow DESATIVADO.");
+          ESP.restart();
+        }
+
+
+      }
+
+
       if (input.equals("wifiManager")) {
         if (NVS.getString("wifiManager").toInt()){
           NVS.setString("wifiManager", "0");
@@ -284,7 +436,7 @@ void vLowSerial(void *pvParameters) {
       }
       
 
-            if (input.equals("sender")) {
+      if (input.equals("sender")) {
         if (NVS.getString("sender").toInt()){
           NVS.setString("sender", "0");
           Serial.println("sender ATIVADO.");
@@ -293,7 +445,7 @@ void vLowSerial(void *pvParameters) {
           NVS.setString("sender", "1");
           Serial.println("sender DESATIVADO.");
           ESP.restart();
-        }
+      }
             
 
 
@@ -309,14 +461,11 @@ void vLowSerial(void *pvParameters) {
           Serial.println("receiver DESATIVADO.");
           ESP.restart();
         }
+      }
 
-        if (input.equals("i2cdetect")){
-            /*Mostra o barramento i2c.*/
-            i2cdetect();  
-        }
-            
-
-
+      if (input.equals("i2cdetect")){
+          /*Mostra o barramento i2c.*/
+          i2cdetect();  
       }
       
       if (input.equals("help")) {

@@ -42,17 +42,35 @@ void setup() {
 
 
   if (sender){
-    configEspNOW();
-  } else if (receiver){  
-    if (NVS.getInt("blobFull") == 0){
-      configGWEspNOW();
+    if (espnow){
+      configEspNOW();
     } else {
-      init_WiFi();  
-      sendToAirServer();
-      Serial.println("Todos os pacotes enviados com sucesso. Reiniciando.");
-      ESP.restart();
+      configUDPsend();
     }
+  } else if (receiver){  
+    if (espnow){
+      if (NVS.getInt("blobFull") == 0){
+        configGWEspNOW();
+      } else {
+        init_WiFi();  
+        sendToAirServer();
+        Serial.println("Todos os pacotes enviados com sucesso. Reiniciando.");
+        ESP.restart();
+      }
+    }else {
+
+      if (NVS.getInt("blobFull") == 0){
+        configUDPreceiver();
+      } else {
+        init_WiFi();  
+        sendToAirServer();
+        Serial.println("Todos os pacotes enviados com sucesso. Reiniciando.");
+        ESP.restart();
+      }
+
+    
   }
+  } 
 
 }
 
@@ -81,15 +99,26 @@ void loop() {
   /*Procura pela ultima versao disponivel do software. Se estiver desatualizado, inicia o upgrade.*/
   lookForUpdates(); 
   } else {
-    sendToESPNOW();
+    if (espnow){
+      sendToESPNOW();
+    } else {
+      sendUDP();
+    }
   }
 
   /*Atualiza status de funcionamento.*/
   estado = ON_IDLE;
-  
-  delay(1000);
+
+
+   /*Delay de um minuto para a próxima amostragem*/
+  for (int timeoutOTA = 60; timeoutOTA > 0; timeoutOTA--) {
+    delay(1000);
+    Serial.print(".");
+  }
 
   /*Faz o restart periodico.*/
   ESP.restart();
+  } else {
+    receiveUDP();
   }
 }
