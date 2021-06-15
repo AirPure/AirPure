@@ -574,9 +574,9 @@ public class RequestData2 {
 
         }
 
-        if (value > (minimo * 1.1) && value < (maximo * 0.9)) {
+        if (value > (minimo * 1.05) && value < (maximo * 0.95)) {
             return "Bom";
-        } else if ((value < (minimo * 1.1) && value > (minimo * 0.9)) || (value < (maximo * 1.1) && value > (maximo * 0.9))) {
+        } else if ((value < (minimo * 1.05) && value > (minimo * 0.95)) || (value < (maximo * 1.05) && value > (maximo * 0.95))) {
             return "Inadequado";
         } else {
             return "Ruim";
