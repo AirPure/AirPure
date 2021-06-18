@@ -130,8 +130,8 @@ public class autenticacao implements HttpSessionListener {
         session.setAttribute("projetoEnvolvido", 3);
         Date data = new Date(System.currentTimeMillis());
         Date data2 = new Date(System.currentTimeMillis());
-        data.setDate(data.getDate() + 2);
-        data2.setDate(data2.getDate() - 2);
+        data.setDate(data.getDate() + 1);
+        data2.setDate(data2.getDate());
         SimpleDateFormat formatarDate = new SimpleDateFormat("yyyy/MM/dd");
         try {
             session.setAttribute("endPoint", formatarDate.format(data));
@@ -311,8 +311,8 @@ public class autenticacao implements HttpSessionListener {
         projetos projeto = new projetos();
         Date data = new Date(System.currentTimeMillis());
         Date data2 = new Date(System.currentTimeMillis());
-        data.setDate(data.getDate() + 2);
-        data2.setDate(data2.getDate() - 2);
+        data.setDate(data.getDate() + 1);
+        data2.setDate(data2.getDate());
         SimpleDateFormat formatarDate = new SimpleDateFormat("yyyy/MM/dd");
         int idCustomer = 0;
         Main.db = null;
