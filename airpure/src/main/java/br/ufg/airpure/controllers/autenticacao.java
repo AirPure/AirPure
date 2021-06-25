@@ -99,8 +99,8 @@ public class autenticacao implements HttpSessionListener {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
         session.setAttribute("login", "usuario");
-        session.setAttribute("usuario", 2);
-        session.setAttribute("projetoEnvolvido", 2);
+       // session.setAttribute("usuario", 2);
+       // session.setAttribute("projetoEnvolvido", 2);
         Date data = new Date(System.currentTimeMillis());
         Date data2 = new Date(System.currentTimeMillis());
         data.setDate(data.getDate() + 2);

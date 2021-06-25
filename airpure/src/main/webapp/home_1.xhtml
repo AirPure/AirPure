@@ -141,6 +141,10 @@
                     <div class="pull-right" style="padding: 5px">
                         <p:commandButton styleClass="btn btn-danger btn-block" value="Sair" action="#{autenticacao.logOut()}" update="@form"/>
                     </div>
+                    <div class="pull-right" style="padding: 5px">
+                        <p:commandButton styleClass="btn btn-primary btn-block" action="#{autenticacao.selecionaSistema2()}" onclick="PF('dlg1').show();" oncomplete="if(args.validationFailed){hideBar()}"
+                                         value="Visualização Geral" update="@form"/>
+                    </div>
                 </h:form>
 
             </nav>

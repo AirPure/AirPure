@@ -40,6 +40,9 @@
             function redirect2() {
                 window.location.reload(1);
             }
+            function redireciona() {
+                window.history.back();
+            }
 
 
 
@@ -90,6 +93,9 @@
                     <div class="pull-right">
                         <p:commandButton styleClass="btn btn-danger btn-block" value="Sair" action="#{autenticacao.logOut()}" update="@form"/>
                     </div>
+                    <div class="pull-right">
+                        <p:commandButton styleClass="btn btn-primary btn-block" onclick="redireciona();"
+                                         value="Voltar" update="@form"/></div>
                 </h:form>
 
             </nav>
@@ -132,6 +138,9 @@
                         <h:form>
                             <p:commandButton styleClass="btn btn-primary" style="margin-left: 20px;" action="#{autenticacao.selecionaQuestionario()}" onclick="PF('dlg1').show();" oncomplete="if(args.validationFailed){hideBar()}"
                                              value="Acessar Questionário" update="@form"/>
+
+
+
                         </h:form>
                     </h:panelGrid>
                 </h1>
