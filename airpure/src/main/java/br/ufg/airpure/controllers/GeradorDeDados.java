@@ -51,7 +51,7 @@ public class GeradorDeDados {
      * E passa para o mecanismo de apuração
      *
      */
-    @Schedule(hour = "*", minute = "*/1", persistent = false)
+    @Schedule(hour = "11", minute = "0", second = "0", persistent = false)
     public void gera() throws MalformedURLException, IOException, AddressException, MessagingException, InterruptedException {
         System.out.println("Iniciando verificação para notificações GERAL.");
         /*
@@ -142,7 +142,7 @@ public class GeradorDeDados {
                                 .parse(process.getEmail());
 
                         message.setRecipients(Message.RecipientType.TO, toUser);
-                        message.setSubject("AirPure - Alerta de variação");//Assunto
+                        message.setSubject("AirPure - Variação diária");//Assunto
                         message.setText(msg);
                         Transport.send(message);
 
@@ -306,10 +306,12 @@ public class GeradorDeDados {
                         Properties props = new Properties();
                         props.put("mail.smtp.auth", "true");
                         props.put("mail.smtp.starttls.enable", "true");
-                        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
                         props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
                         props.put("mail.smtp.host", "smtp.gmail.com");
                         props.put("mail.smtp.port", "587");
+                        props.put("mail.smtp.ssl.protocols", "TLSv1.1 TLSv1.2");
+                        props.put("mail.transport.protocol", "smtp");
+
 
                         Session session = Session.getInstance(props,
                                 new javax.mail.Authenticator() {
@@ -330,7 +332,7 @@ public class GeradorDeDados {
                                     .parse(process.getEmail());
 
                             message.setRecipients(Message.RecipientType.TO, toUser);
-                            message.setSubject("AirPure - Alerta de variação");//Assunto
+                            message.setSubject("AirPure - Alerta de Variação");//Assunto
                             message.setText(msg);
                             Transport.send(message);
 
