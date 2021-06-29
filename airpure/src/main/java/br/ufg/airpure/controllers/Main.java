@@ -15,7 +15,7 @@ public class Main extends Thread {
     public static Statement sql;      
     public static DatabaseMetaData dbmd;    
 
-    static String SVNRevision = "$Rev: 1 $";
+    static String SVNRevision = " V.244 ";
     static String username = "postgres";
     static String password = "10052019";
     static String database1 = "";

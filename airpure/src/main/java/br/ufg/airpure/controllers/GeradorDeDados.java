@@ -68,7 +68,7 @@ public class GeradorDeDados {
         String msg = "";
         String msgTelegram = "";
         //String sql = "SELECT DISTINCT ON (id_dispositivos) id_dispositivos,* FROM amostragens WHERE id_dispositivos IN (SELECT id FROM dispositivos WHERE id_projeto = " + idProjetoRelacionado +") ORDER BY id_dispositivos,id DESC;";
-        sql = "SELECT avg(amostragens.eco2) AS eco2,avg(amostragens.co2) as co2,avg(amostragens.lux) as lux,avg(amostragens.tvoc) as tvoc,avg(db) as db,avg(amostragens.umidade) as umidade,avg(amostragens.temperatura) as temperatura,id_dispositivos,ambientes.sala,ambientes.predio,ambientes.local,usuario.email FROM amostragens INNER JOIN usuario ON id_projeto IN (select id_projeto from dispositivos where id = id_dispositivos) INNER JOIN ambientes ON ambientes.id IN (select id_ambientes FROM dispositivos WHERE id_projeto = usuario.id_projeto) WHERE (DATE_PART('Day',now() - data::timestamptz) < 1) group by id_dispositivos, ambientes.sala, ambientes.predio,ambientes.local,usuario.email ORDER BY id_dispositivos DESC";
+        sql = "SELECT avg(amostragens.eco2) AS eco2,avg(amostragens.co2) as co2,avg(amostragens.lux) as lux,avg(amostragens.tvoc) as tvoc,avg(db) as db,avg(amostragens.umidade) as umidade,avg(amostragens.temperatura) as temperatura,id_dispositivos,ambientes.sala,ambientes.predio,ambientes.local,usuario.email FROM amostragens INNER JOIN usuario ON id_projeto IN (select id_projeto from dispositivos where id = amostragens.id_dispositivos LIMIT 1) INNER JOIN ambientes ON ambientes.id IN (select id_ambientes FROM dispositivos WHERE id_projeto = usuario.id_projeto LIMIT 1) WHERE (DATE_PART('Day',now() - data::timestamptz) < 1) group by id_dispositivos, ambientes.sala, ambientes.predio,ambientes.local,usuario.email ORDER BY id_dispositivos DESC";
         try {
             Main.sql = Main.db.createStatement();
         } catch (SQLException e) {
@@ -98,7 +98,7 @@ public class GeradorDeDados {
                 amostra.setUmidade(rs.getFloat("umidade"));
 
                 msg = "\n\nOla! Voce está recebendo este aviso porque solicitou um acompanhamento em tempo real.\n\n Seguem abaixo as medias lidas das ultimas 24 horas.\n\n";
-                msgTelegram = "Local: " + ambiente.getLocal() + " | Predio: " + ambiente.getPredio() + " | Sala: " + ambiente.getSala() + "\n";
+                msg = "Local: " + ambiente.getLocal() + " | Predio: " + ambiente.getPredio() + " | Sala: " + ambiente.getSala() + "\n";
 
                 msg += "ECO2 - Variacao media: " + amostra.getEco2() + " ppm\n";
 
