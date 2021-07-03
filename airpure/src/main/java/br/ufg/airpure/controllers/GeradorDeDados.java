@@ -99,9 +99,7 @@ public class GeradorDeDados {
 
                 msg = "\n\nOla! Voce está recebendo este aviso porque solicitou um acompanhamento em tempo real.\n\n Seguem abaixo as medias lidas das ultimas 24 horas.\n\n";
                 msg = "Local: " + ambiente.getLocal() + " | Predio: " + ambiente.getPredio() + " | Sala: " + ambiente.getSala() + "\n";
-
-                msg += "ECO2 - Variacao media: " + amostra.getEco2() + " ppm\n";
-
+                
                 msg += "CO2 - Variacao media: " + amostra.getCo2() + " ppm  \n";
 
                 msg += "TVOC - Variacao media: " + amostra.getTvoc() + " μg/m³\n";
@@ -237,11 +235,6 @@ public class GeradorDeDados {
                 msg = "\n\nOla! Voce está recebendo este aviso porque solicitou um acompanhamento em tempo real.\n\n Foram detectadas alteracoes de parametros fora dos limites pre-definidos.\n\n - Local: " + ambiente.getLocal() + " - Predio: " + ambiente.getPredio() + " - Sala: " + ambiente.getSala() + " \n";
                 msgTelegram = "Variacao detectada - Local: " + ambiente.getLocal() + " - Predio: " + ambiente.getPredio() + " - Sala: " + ambiente.getSala() + " - ";
 
-                if (amostra.getEco2() > process.getMaxECO2() && r.isEco2()) {
-                    msg += "ECO2 - Variacao lida: " + amostra.getEco2() + " ppm | Variacao maxima permitida: " + process.getMaxECO2() + " ppm \n";
-                    msgTelegram += "ECO2: " + amostra.getEco2() + " ppm - ";
-                    isNecessary = 1;
-                }
                 if (amostra.getCo2() > process.getMaxCO2() && r.isCo2()) {
                     msg += "CO2 - Variacao lida: " + amostra.getCo2() + " ppm | Variacao maxima permitida: " + process.getMaxCO2() + " ppm \n";
                     msgTelegram += "CO2: " + amostra.getCo2() + " ppm - ";
