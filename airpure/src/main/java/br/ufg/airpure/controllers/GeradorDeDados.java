@@ -100,17 +100,19 @@ public class GeradorDeDados {
                 msg = "\n\nOla! Voce está recebendo este aviso porque solicitou um acompanhamento em tempo real.\n\n Seguem abaixo as medias lidas das ultimas 24 horas.\n\n";
                 msg = "Local: " + ambiente.getLocal() + " | Predio: " + ambiente.getPredio() + " | Sala: " + ambiente.getSala() + "\n";
                 
-                msg += "CO2 - Variacao media: " + amostra.getCo2() + " ppm  \n";
+                msg += "CO2 - Valor medio: " + amostra.getCo2() + " ppm  \n";
 
-                msg += "TVOC - Variacao media: " + amostra.getTvoc() + " μg/m³\n";
+                msg += "TVOC - Valor medio: " + amostra.getTvoc() + " μg/m³\n";
 
-                msg += "Temperatura - Variacao media: " + amostra.getTemperatura() + " ºC \n";
+                msg += "Temperatura - Valor medio: " + amostra.getTemperatura() + " ºC \n";
 
-                msg += "Umidade - Variacao media: " + amostra.getUmidade() + " % \n";
+                msg += "Umidade - Valor medio: " + amostra.getUmidade() + " % \n";
 
-                msg += "Ruído - Variacao media: " + amostra.getDb() + " dB \n";
+                msg += "Ruído - Valor medio: " + amostra.getDb() + " dB \n";
 
-                msg += "Luminosidade - Variacao media: " + amostra.getLux() + " lux | \n";
+                msg += "Luminosidade - Valor medio: " + amostra.getLux() + " lux | \n";
+                
+                msg += "\nAtt.\nEquipe AirPure";
 
                 if (process.getEmail() != null) {
                     Properties props = new Properties();
